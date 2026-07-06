@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  database:
+    container_name: jsf-pf-platform-db-dev-ctnr
+    image: rsdata/jsf-pf-platform-db-dev:latest
+    build:
+      context: ../../..
+      dockerfile: ./infra/docker/develop/database/Dockerfile
+      args:
+        - TZ=America/Sao_Paulo
+    env_file:
+      - ./database/.database.env
+    volumes:
+      - pgsql-data:/var/lib/pgsql/pgdata
+      - '/etc/timezone:/etc/timezone:ro'
+      - '/etc/localtime:/etc/localtime:ro'
+    ports:
+      - "5001:5001"
+    networks:
+      - default-dev-net
+    restart: unless-stopped
+
+  tomcat:
+    container_name: jsf-pf-starter-app-tomcat-dev-ctnr
+    image: rsdata/jsf-pf-starter-app-tomcat-dev:latest
+    build:
+      context: ../../..
+      dockerfile: ./infra/docker/develop/tomcat/Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../../../jsfstarterapp:/usr/local/tomcat/webapps
+    networks:
+      - default-dev-net
+    restart: unless-stopped
+
+
+networks:
+  default-dev-net:
+    driver: bridge
+
+volumes:
+  pgsql-data:
+    name: jsf-pf-platform-pgsql-data
