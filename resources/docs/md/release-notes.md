@@ -24,7 +24,7 @@
         - Criação ad-hoc de um repositório no Github, haja vista a carência de acessos no Gitlab corporativo;
         - Implementação da estrutura preliminar da infraestrutura do projeto, contendo as camadas de scripts de automação e virtualização via Docker.
 - **07/07/2026**
-    - Intervalo de tempo dedicado: **07:46 - **
+    - Intervalo de tempo dedicado: **07:46 -**
         - Ajustes na documentação do projeto;
 
 ---
