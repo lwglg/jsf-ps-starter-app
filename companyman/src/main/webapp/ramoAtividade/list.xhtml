@@ -1,0 +1,76 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces"
+                template="/WEB-INF/template/layout.xhtml">
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true"/>
+
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Novo Ramo de Atividade" icon="pi pi-plus"
+                                     actionListener="#{ramoAtividadeBean.prepararNovo()}"
+                                     oncomplete="PF('dlgNovo').show()"
+                                     update="dlgNovoContent"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:dataTable id="tabela" var="ramo" value="#{ramoAtividadeBean.lista}"
+                         paginator="true" rows="10" emptyMessage="Nenhum ramo de atividade cadastrado."
+                         style="margin-top:15px">
+                <p:column headerText="Descrição">
+                    <h:outputText value="#{ramo.descricao}"/>
+                </p:column>
+                <p:column headerText="Ações" style="width:140px; text-align:center">
+                    <p:commandButton icon="pi pi-pencil" styleClass="rounded-button"
+                                      actionListener="#{ramoAtividadeBean.prepararEdicao(ramo)}"
+                                      oncomplete="PF('dlgEditar').show()"
+                                      update=":form:dlgEditarContent"/>
+                    <p:commandButton icon="pi pi-trash" styleClass="rounded-button ui-button-danger"
+                                      actionListener="#{ramoAtividadeBean.remover(ramo.id)}"
+                                      update=":form:tabela :form:growl">
+                        <p:confirm header="Confirmação" message="Deseja realmente remover este ramo de atividade?"
+                                   icon="pi pi-exclamation-triangle"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <p:dialog header="Novo Ramo de Atividade" widgetVar="dlgNovo" modal="true" width="400" showEffect="fade">
+            <h:form id="formNovo">
+                <h:panelGroup id="dlgNovoContent" layout="block">
+                    <p:outputLabel for="descricao" value="Descrição"/>
+                    <p:inputText id="descricao" value="#{ramoAtividadeBean.novoRegistro.descricao}"
+                                 required="true" maxlength="150" style="width:100%"/>
+                    <br/>
+                    <p:commandButton value="Salvar" icon="pi pi-check" style="margin-top:15px"
+                                      actionListener="#{ramoAtividadeBean.salvar}"
+                                      oncomplete="PF('dlgNovo').hide()"
+                                      update=":form:tabela :form:growl"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Editar Ramo de Atividade" widgetVar="dlgEditar" modal="true" width="400" showEffect="fade">
+            <h:form id="formEditar">
+                <h:panelGroup id="dlgEditarContent" layout="block">
+                    <p:outputLabel for="descricaoEdit" value="Descrição"/>
+                    <p:inputText id="descricaoEdit" value="#{ramoAtividadeBean.selecionado.descricao}"
+                                 required="true" maxlength="150" style="width:100%"/>
+                    <br/>
+                    <p:commandButton value="Atualizar" icon="pi pi-check" style="margin-top:15px"
+                                      actionListener="#{ramoAtividadeBean.atualizar}"
+                                      oncomplete="PF('dlgEditar').hide()"
+                                      update=":form:tabela :form:growl"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+        <p:confirmDialog global="true">
+            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"/>
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>

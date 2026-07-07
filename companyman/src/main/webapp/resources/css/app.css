@@ -1,0 +1,12 @@
+body {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f6f9;
+}
+.content-wrapper {
+    padding: 20px 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.ui-datatable td, .ui-datatable th {
+    font-size: 0.95rem;
+}

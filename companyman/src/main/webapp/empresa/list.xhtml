@@ -1,0 +1,162 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces"
+                template="/WEB-INF/template/layout.xhtml">
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true"/>
+
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Nova Empresa" icon="pi pi-plus"
+                                     actionListener="#{empresaBean.prepararNovo()}"
+                                     oncomplete="PF('dlgNovo').show()"
+                                     update="dlgNovoContent"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:dataTable id="tabela" var="empresa" value="#{empresaBean.lista}"
+                         paginator="true" rows="10" emptyMessage="Nenhuma empresa cadastrada."
+                         style="margin-top:15px">
+                <p:column headerText="Nome Fantasia">
+                    <h:outputText value="#{empresa.nomeFantasia}"/>
+                </p:column>
+                <p:column headerText="Razão Social">
+                    <h:outputText value="#{empresa.razaoSocial}"/>
+                </p:column>
+                <p:column headerText="CNPJ">
+                    <h:outputText value="#{empresa.cnpj}"/>
+                </p:column>
+                <p:column headerText="Fundação">
+                    <h:outputText value="#{empresa.dataFundacao}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Ramo de Atividade">
+                    <h:outputText value="#{empresa.ramoAtividade.descricao}"/>
+                </p:column>
+                <p:column headerText="Tipo">
+                    <h:outputText value="#{empresa.tipoEmpresa.descricao}"/>
+                </p:column>
+                <p:column headerText="Faturamento">
+                    <h:outputText value="#{empresa.faturamento}">
+                        <f:convertNumber type="currency" currencySymbol="R$ "/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Ações" style="width:140px; text-align:center">
+                    <p:commandButton icon="pi pi-pencil" styleClass="rounded-button"
+                                      actionListener="#{empresaBean.prepararEdicao(empresa)}"
+                                      oncomplete="PF('dlgEditar').show()"
+                                      update=":form:dlgEditarContent"/>
+                    <p:commandButton icon="pi pi-trash" styleClass="rounded-button ui-button-danger"
+                                      actionListener="#{empresaBean.remover(empresa.id)}"
+                                      update=":form:tabela :form:growl">
+                        <p:confirm header="Confirmação" message="Deseja realmente remover esta empresa?"
+                                   icon="pi pi-exclamation-triangle"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <p:dialog header="Nova Empresa" widgetVar="dlgNovo" modal="true" width="500" showEffect="fade">
+            <h:form id="formNovo">
+                <h:panelGroup id="dlgNovoContent" layout="block">
+                    <p:outputLabel for="nomeFantasia" value="Nome Fantasia"/>
+                    <p:inputText id="nomeFantasia" value="#{empresaBean.novoRegistro.nomeFantasia}"
+                                 required="true" maxlength="80" style="width:100%"/>
+
+                    <p:outputLabel for="razaoSocial" value="Razão Social"/>
+                    <p:inputText id="razaoSocial" value="#{empresaBean.novoRegistro.razaoSocial}"
+                                 required="true" maxlength="120" style="width:100%"/>
+
+                    <p:outputLabel for="cnpj" value="CNPJ"/>
+                    <p:inputMask id="cnpj" value="#{empresaBean.novoRegistro.cnpj}"
+                                 mask="99.999.999/9999-99" required="true" style="width:100%"/>
+
+                    <p:outputLabel for="dataFundacao" value="Data de Fundação"/>
+                    <p:calendar id="dataFundacao" value="#{empresaBean.novoRegistro.dataFundacao}"
+                                pattern="dd/MM/yyyy" required="true" navigator="true"
+                                yearRange="c-100:c" style="width:100%"/>
+
+                    <p:outputLabel for="ramoAtividade" value="Ramo de Atividade"/>
+                    <p:selectOneMenu id="ramoAtividade" value="#{empresaBean.novoRegistro.ramoAtividade}"
+                                      required="true" converter="ramoAtividadeConverter" style="width:100%">
+                        <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{empresaBean.ramosAtividade}" var="ramo"
+                                       itemLabel="#{ramo.descricao}" itemValue="#{ramo}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="tipoEmpresa" value="Tipo de Empresa"/>
+                    <p:selectOneMenu id="tipoEmpresa" value="#{empresaBean.novoRegistro.tipoEmpresa}"
+                                      required="true" style="width:100%">
+                        <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{empresaBean.tiposEmpresa}" var="tipo"
+                                       itemLabel="#{tipo.descricao}" itemValue="#{tipo}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="faturamento" value="Faturamento"/>
+                    <p:inputNumber id="faturamento" value="#{empresaBean.novoRegistro.faturamento}"
+                                    symbol="R$ " decimalPlaces="2" required="true" style="width:100%"/>
+
+                    <p:commandButton value="Salvar" icon="pi pi-check" style="margin-top:15px"
+                                      actionListener="#{empresaBean.salvar}"
+                                      oncomplete="PF('dlgNovo').hide()"
+                                      update=":form:tabela :form:growl"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Editar Empresa" widgetVar="dlgEditar" modal="true" width="500" showEffect="fade">
+            <h:form id="formEditar">
+                <h:panelGroup id="dlgEditarContent" layout="block">
+                    <p:outputLabel for="nomeFantasiaEdit" value="Nome Fantasia"/>
+                    <p:inputText id="nomeFantasiaEdit" value="#{empresaBean.selecionado.nomeFantasia}"
+                                 required="true" maxlength="80" style="width:100%"/>
+
+                    <p:outputLabel for="razaoSocialEdit" value="Razão Social"/>
+                    <p:inputText id="razaoSocialEdit" value="#{empresaBean.selecionado.razaoSocial}"
+                                 required="true" maxlength="120" style="width:100%"/>
+
+                    <p:outputLabel for="cnpjEdit" value="CNPJ"/>
+                    <p:inputMask id="cnpjEdit" value="#{empresaBean.selecionado.cnpj}"
+                                 mask="99.999.999/9999-99" required="true" style="width:100%"/>
+
+                    <p:outputLabel for="dataFundacaoEdit" value="Data de Fundação"/>
+                    <p:calendar id="dataFundacaoEdit" value="#{empresaBean.selecionado.dataFundacao}"
+                                pattern="dd/MM/yyyy" required="true" navigator="true"
+                                yearRange="c-100:c" style="width:100%"/>
+
+                    <p:outputLabel for="ramoAtividadeEdit" value="Ramo de Atividade"/>
+                    <p:selectOneMenu id="ramoAtividadeEdit" value="#{empresaBean.selecionado.ramoAtividade}"
+                                      required="true" converter="ramoAtividadeConverter" style="width:100%">
+                        <f:selectItems value="#{empresaBean.ramosAtividade}" var="ramo"
+                                       itemLabel="#{ramo.descricao}" itemValue="#{ramo}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="tipoEmpresaEdit" value="Tipo de Empresa"/>
+                    <p:selectOneMenu id="tipoEmpresaEdit" value="#{empresaBean.selecionado.tipoEmpresa}"
+                                      required="true" style="width:100%">
+                        <f:selectItems value="#{empresaBean.tiposEmpresa}" var="tipo"
+                                       itemLabel="#{tipo.descricao}" itemValue="#{tipo}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="faturamentoEdit" value="Faturamento"/>
+                    <p:inputNumber id="faturamentoEdit" value="#{empresaBean.selecionado.faturamento}"
+                                    symbol="R$ " decimalPlaces="2" required="true" style="width:100%"/>
+
+                    <p:commandButton value="Atualizar" icon="pi pi-check" style="margin-top:15px"
+                                      actionListener="#{empresaBean.atualizar}"
+                                      oncomplete="PF('dlgEditar').hide()"
+                                      update=":form:tabela :form:growl"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+        <p:confirmDialog global="true">
+            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"/>
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>
