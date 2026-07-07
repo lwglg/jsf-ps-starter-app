@@ -33,14 +33,13 @@ Para este projeto em particular, adaptei esse esquema da seguinte forma:
 ./infra
 ├── docker
 │   ├── develop                     # Infra do ambiente de desenvolvimento (similar para produção)
-│   │   ├── jsfstarterapp           # Aplicação JavaServer Faces
 │   │   ├── tomcat                  # Servidor Apache Tomcat v8.5.6
 │   │   ├── database                # Serviço PostgreSQL (banco de dados relacional)
 │   │   └── docker-compose.yml      # Declaração dos serviços em manifesto YAML
 │   └── production                  # Estrutura similar para produção)
 │       └── ...
 ├── resources                       # Recursos estáticos associados à documentação do projeto e correlatos
-├── jsfstarterapp                   # Implementação da aplicação propriamente dita
+├── companyman                      # Implementação da aplicação JSF/PF propriamente dita
 │   └── ...
 ├── scripts                         # Pasta com scripts que facilitam a automação do projeto
 ├── Makefile                        # Agrega os comandos 'make' que facilitam a manipulação do Docker Compose e dos scripts na pasta supracitada
@@ -95,7 +94,6 @@ Na raíz do projeto, execute os seguintes comandos:
 $ make build env=dev                # Realiza o build das imagens de todos os serviços, em ./infra/docker/develop/[nome-do-serviço]/Dockerfile
 $ make start env=dev c=database     # Inicia o banco de dados PostgreSQL, em modo detached (sem logs)  
 $ make start env=dev c=tomcat       # Inicia o Apache Tomcat, em modo detached (sem logs)
-$ make start env=dev c=starterapp   # Inicia a aplicação de ERP
 ```
 
 > [!IMPORTANT]
