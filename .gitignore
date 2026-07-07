@@ -1,3 +1,6 @@
+# Cache related
+.cache/
+
 # Compiled class file
 *.class
 
