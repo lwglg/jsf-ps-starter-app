@@ -3,12 +3,12 @@ name: Java CI Pipeline
 on:
   push:
     branches: [ master, develop ]
-    paths:
-      - 'companyman/**'
+    # paths:
+    #   - 'companyman/**'
   pull_request:
     branches: [ master, develop ]
-    paths:
-      - 'companyman/**'
+    # paths:
+    #   - 'companyman/**'
 
 jobs:
   build-and-test:
