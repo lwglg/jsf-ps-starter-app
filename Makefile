@@ -139,15 +139,3 @@ imganalysisci: ## Executa a análise de uma imagem Docker, em modo CI, dado uma 
 
 topology: ## Gera um diagrama dos serviços listados no arquivo YML do Docker Compose
 	@./scripts/generate-topology.sh topology $(env)
-
-
-
-mvn archetype:generate \
-  -DarchetypeGroupId=org.apache.maven.archetypes \
-  -DarchetypeArtifactId=maven-archetype-webapp \
-  -DarchetypeVersion=1.4 \
-  -DgroupId=com.rsdata \
-  -DartifactId=jsfstarterapp \
-  -Dversion=1.0-SNAPSHOT \
-  -DinteractiveMode=false
-
