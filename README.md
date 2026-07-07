@@ -1,12 +1,12 @@
-# RSData | JSF PF Starter Application (WiP)
+# RSData | CompanyMAN (WiP)
 
-Projeto inicial na RSData para familiarização com JavaServer Faces e PrimeFaces. O escopo básico está sendo Baseado neste [curso](https://www.youtube.com/watch?v=ezwgBvsd6Ps) da AlgaWorks.
+Ferramenta web para gerenciamento de registros de empresas e de seus possíveis ramos de atividades. Projeto inicial na RSData para familiarização com JavaServer Faces e PrimeFaces. O escopo básico está sendo Baseado neste [curso](https://www.youtube.com/watch?v=ezwgBvsd6Ps) da AlgaWorks.
 
 ## TOC
 
 <!-- TOC -->
 
-- [RSData | JSF PF Starter Application WiP](#rsdata--jsf-pf-starter-application-wip)
+- [RSData | CompanyMAN WiP](#rsdata--companyman-wip)
     - [TOC](#toc)
     - [O projeto](#o-projeto)
         - [Topologia](#topologia)
