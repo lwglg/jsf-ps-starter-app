@@ -1,4 +1,4 @@
-# RSData | JSF PF Starter Application
+# RSData | JSF PF Starter Application (WiP)
 
 Projeto inicial na RSData para familiarização com JavaServer Faces e PrimeFaces. O escopo básico está sendo Baseado neste [curso](https://www.youtube.com/watch?v=ezwgBvsd6Ps) da AlgaWorks.
 
@@ -6,9 +6,8 @@ Projeto inicial na RSData para familiarização com JavaServer Faces e PrimeFace
 
 <!-- TOC -->
 
-- [RSData | JSF PF Starter Application](#rsdata--jsf-pf-starter-application)
+- [RSData | JSF PF Starter Application WiP](#rsdata--jsf-pf-starter-application-wip)
     - [TOC](#toc)
-    - [Issues associadas do RedMine](#issues-associadas-do-redmine)
     - [O projeto](#o-projeto)
         - [Topologia](#topologia)
         - [Ambientes](#ambientes)
@@ -20,10 +19,6 @@ Projeto inicial na RSData para familiarização com JavaServer Faces e PrimeFace
     - [O que deseja fazer?](#o-que-deseja-fazer)
 
 <!-- /TOC -->
-
-## Issue(s) associada(s) do RedMine
-
-- [38828](https://redmine.rsdata.com.br/issues/38828)
 
 ## O projeto
 
@@ -38,9 +33,9 @@ Para este projeto em particular, adaptei esse esquema da seguinte forma:
 ./infra
 ├── docker
 │   ├── develop                     # Infra do ambiente de desenvolvimento (similar para produção)
-│   │   ├── jsfstarterapp           # Aplication JavaServer Faces
-│   │   ├── msgbroker               # Serviço BATS JetStream
-│   │   ├── database                # Serviço PostgreSQl
+│   │   ├── jsfstarterapp           # Aplicação JavaServer Faces
+│   │   ├── tomcat                  # Servidor Apache Tomcat v8.5.6
+│   │   ├── database                # Serviço PostgreSQL (banco de dados relacional)
 │   │   └── docker-compose.yml      # Declaração dos serviços em manifesto YAML
 │   └── production                  # Estrutura similar para produção)
 │       └── ...
@@ -121,3 +116,4 @@ make clean env=[dev | prod]         # Opcional. Remove os contêineres e a netwo
 ## O que deseja fazer?
 
 - [Voltar para o topo](#toc)
+- [Release notes](./resources/docs/md/release-notes.md)
