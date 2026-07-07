@@ -2,8 +2,8 @@ version: '3.9'
 
 services:
   database:
-    container_name: jsf-pf-platform-db-dev-ctnr
-    image: rsdata/jsf-pf-platform-db-dev:latest
+    container_name: companyman-db-dev-ctnr
+    image: rsdata/companyman-db-dev:latest
     build:
       context: ../../..
       dockerfile: ./infra/docker/develop/database/Dockerfile
@@ -22,15 +22,17 @@ services:
     restart: unless-stopped
 
   tomcat:
-    container_name: jsf-pf-starter-app-tomcat-dev-ctnr
-    image: rsdata/jsf-pf-starter-app-tomcat-dev:latest
+    container_name: companyman-tomcat-dev-ctnr
+    image: rsdata/companyman-tomcat-dev:latest
     build:
       context: ../../..
       dockerfile: ./infra/docker/develop/tomcat/Dockerfile
+    env_file:
+      - ./tomcat/.tomcat.env
     ports:
       - "8080:8080"
-    volumes:
-      - ../../../jsfstarterapp:/usr/local/tomcat/webapps
+    depends_on:
+      - database
     networks:
       - default-dev-net
     restart: unless-stopped
