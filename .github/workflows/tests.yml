@@ -14,7 +14,7 @@ concurrency:
 
 defaults:
   run:
-    working-directory: app
+    working-directory: companyman
 
 jobs:
 
@@ -40,7 +40,7 @@ jobs:
         uses: dorny/test-reporter@v1
         with:
           name: Resultado dos testes unitários
-          path: 'app/target/surefire-reports/*.xml'
+          path: 'companyman/target/surefire-reports/*.xml'
           reporter: java-junit
           fail-on-error: false
 
@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: surefire-reports
-          path: app/target/surefire-reports/
+          path: companyman/target/surefire-reports/
           retention-days: 15
           if-no-files-found: warn
 
@@ -81,7 +81,7 @@ jobs:
         uses: dorny/test-reporter@v1
         with:
           name: Resultado dos testes de integração
-          path: 'app/target/failsafe-reports/*.xml'
+          path: 'companyman/target/failsafe-reports/*.xml'
           reporter: java-junit
           fail-on-error: false
 
@@ -90,6 +90,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: failsafe-reports
-          path: app/target/failsafe-reports/
+          path: companyman/target/failsafe-reports/
           retention-days: 15
           if-no-files-found: warn
