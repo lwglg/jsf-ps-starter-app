@@ -7,6 +7,7 @@
 - [RSData | CompanyMAN | Casos de uso](#rsdata--companyman--casos-de-uso)
     - [TOC](#toc)
     - [Introdução](#introdu%C3%A7%C3%A3o)
+        - [Observação acerca da notação](#observa%C3%A7%C3%A3o-acerca-da-nota%C3%A7%C3%A3o)
     - [Ator do sistema](#ator-do-sistema)
     - [Diagrama geral](#diagrama-geral)
     - [UC1-UC4 e UCX - Gerenciar ramos de atividade](#uc1-uc4-e-ucx---gerenciar-ramos-de-atividade)
@@ -22,9 +23,9 @@
 
 Nesta seção, segue-se uma apresentação mais aprofundada dos conceitos que norteiam os casos de uso implmentados na plataforma, resultando na representação diagramática dos mesmos.
 
-> **Nota sobre a notação:**
->
-> O Mermaid (ferramenta usada para os demais diagramas deste projeto) não possui um tipo nativo de "diagrama de casos de uso" UML. Os diagramas abaixo são expressos com a sintaxe de *flowchart* do Mermaid, usando a forma "estádio" (`([...])`) para representar os casos de uso (elipses UML), retângulos para o ator e setas tracejadas com rótulo `<< include >>` para representar a relação de inclusão — preservando a semântica UML padrão.
+### Observação acerca da notação
+
+O Mermaid (ferramenta usada para os demais diagramas deste projeto) não possui um tipo nativo de "diagrama de casos de uso" UML. Os diagramas abaixo são expressos com a sintaxe de *flowchart* do Mermaid, usando a forma "estádio" (`([...])`) para representar os casos de uso (elipses UML), retângulos para o ator e setas tracejadas com rótulo `<< include >>` para representar a relação de inclusão — preservando a semântica UML padrão.
 
 ## Ator do sistema
 
