@@ -30,7 +30,7 @@
             - Tomada de decisão técnica concernente à estrutura preliminar do projeto sugerida no curso da AlgaWorks. Decidido que uma estrutura mais robusta para a aplicação seria implantada, ainda seguindo o padrão MVC.
             - Reestruturação da estrutura de dockerização e de scripts para comportar a implementação da aplicação propriamente dita;
             - Implementação da camada de domínio, i.e. **ramo de atividade** e **empresa**;
-            - Implementação das camadas utilitárias do backend, i.e. `exception`, `util`, com atenção especial à carga de dados inicial nas duas tabelas do banco (`ramo_atividade` e ``)
+            - Implementação das camadas utilitárias do backend, i.e. `exception`, `util`, com atenção especial à carga de dados inicial nas duas tabelas do banco (`ramo_atividade` e `empresa`) e à replicação de configurações via camada de abstração `JPAUtil` com variáveis de ambiente (visíveis somente ao container) em `persistence.xml` e em outros pontos.
         - **13:40 - 18:15**:
             - Implementação da camada de persistência, i.e. `service`, `model`;
             - Implementação da camada de infraestrutura, i.e. `controller` com os respectivos beans para consumo da UI JSF;
