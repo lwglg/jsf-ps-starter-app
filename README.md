@@ -34,11 +34,11 @@ Para este projeto em particular, adaptei esse esquema da seguinte forma:
 ```bash
 ./infra
 ├── docker
-│   ├── develop                     # Infra do ambiente de desenvolvimento (similar para produção)
+│   ├── develop                     # Infra do ambiente de desenvolvimento
 │   │   ├── tomcat                  # Servidor Apache Tomcat v8.5.6
 │   │   ├── database                # Serviço PostgreSQL (banco de dados relacional)
 │   │   └── docker-compose.yml      # Declaração dos serviços em manifesto YAML
-│   └── production                  # Estrutura similar para produção)
+│   └── production                  # Estrutura similar para produção
 │       └── ...
 ├── resources                       # Recursos estáticos associados à documentação do projeto e correlatos
 ├── companyman                      # Implementação da aplicação JSF/PF propriamente dita
@@ -51,8 +51,8 @@ Para este projeto em particular, adaptei esse esquema da seguinte forma:
 Através do `make`, via scripts de automação do Docker Compose implementados em um [Makefile](./Makefile), na raíz do projeto. Para conferir a documentação de cada script, basta executar no terminal
 
 ```bash
-make                                        # Sem nenhum comando, executa o fallback 'help'
-make help                                   # Explicitamente, mostra a documentação
+make                                # Sem nenhum comando, executa o fallback 'help'
+make help                           # Explicitamente, mostra a documentação
 ```
 
 ### Ambientes
@@ -115,5 +115,9 @@ make clean env=[dev | prod]         # Opcional. Remove os contêineres e a netwo
 
 ## O que deseja fazer?
 
-- [Voltar para o topo](#toc)
-- [Release notes](./resources/docs/md/release-notes.md)
+- [Voltar ao topo](#toc)
+- [Regras de negócio](./resources/docs/md/01-regras-de-negocio.md)
+- [Entidades de domínio](./resources/docs/md/02-entidades-dominio.md)
+- [Casos de uso](./resources/docs/md/03-casos-de-uso.md)
+- [Sequências](./resources/docs/md/04-sequencias-principais.md)
+- [Release notes](./resources/docs/md/05-release-notes.md)

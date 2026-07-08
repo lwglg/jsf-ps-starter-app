@@ -24,7 +24,7 @@
         - Criação ad-hoc de um repositório no Github, haja vista a carência de acessos no Gitlab corporativo;
         - Implementação da estrutura preliminar da infraestrutura do projeto, contendo as camadas de scripts de automação e virtualização via Docker.
 - **07/07/2026**
-    - Intervalos de tempo dedicado:
+    - Intervalos de tempo dedicados:
         - **07:46 - 12:30**:
             - Orientações ao Juan e Noah no que tange aos bloqueios iniciais para configuração do ambiente de trabalho;
             - Tomada de decisão técnica concernente à estrutura preliminar do projeto sugerida no curso da AlgaWorks. Decidido que uma estrutura mais robusta para a aplicação seria implantada, ainda seguindo o padrão MVC.
@@ -37,10 +37,19 @@
             - Implementação de testes unitários (um para cada domínio) e um teste de integração, para o ciclo completo de CRUD de uma empresa;
             - Implementação da pipeline de uma pipeline de CI, para execução dos testes;
 - **08/07/2026**:
-
+    - Intervalos de tempo dedicados:
+        - **07:40 - 12:25**:
+            - Condução de testes da pipeline de CI, com ênfase no job específico de execução do teste de integração implementado (ciclo de cadastro de empresa);
+            - Condução de testes explorátórios do sistema propriamente dito, de modo a identificar falhas na camada de validação de campos no cadastro e edição de empresas e ramo de atividades;
+            - Redação da documentação das diferentes camadas do sistema, i.e. **regras de negócio**, **entidades de domínio**, **casos de uso** e **sequências resultantes**
+        - **13:32 - 18:00**:
 ---
 
 ## O que deseja fazer?
 
-- [Voltar para o topo](#toc)
-- [Voltar para a raíz](../../../README.md)
+- [Voltar ao topo](#toc)
+- [Voltar à raíz](../../../README.md)
+- [Regras de negócio](./01-regras-de-negocio.md)
+- [Entidades de domínio](./02-entidades-dominio.md)
+- [Casos de uso](./03-casos-de-uso.md)
+- [Sequências principais](./04-sequencias-principais.md)
