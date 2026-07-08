@@ -16,7 +16,7 @@
 
         <hibernate.version>6.5.2.Final</hibernate.version>
         <faces.version>4.0.7</faces.version>
-        <primefaces.version>13.0.9</primefaces.version>
+        <primefaces.version>14.0.5</primefaces.version>
         <weld.version>5.1.2.Final</weld.version>
         <junit.version>5.10.2</junit.version>
         <testcontainers.version>1.19.7</testcontainers.version>
