@@ -111,7 +111,7 @@ erDiagram
     }
 ```
 
-## 6. Camadas que operam sobre o domínio
+## Camadas que operam sobre o domínio
 
 | Camada     | Classe                                                       | Responsabilidade                                                  |
 |------------|--------------------------------------------------------------|-------------------------------------------------------------------|

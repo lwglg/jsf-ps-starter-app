@@ -1,10 +1,10 @@
-# RSData | JSF PF Starter Application | Release Notes (WiP)
+# RSData | CompanyMAN | Release Notes
 
 ## TOC
 
 <!-- TOC -->
 
-- [RSData | JSF PF Starter Application | Release Notes WiP](#rsdata--jsf-pf-starter-application--release-notes-wip)
+- [RSData | CompanyMAN | Release Notes](#rsdata--companyman--release-notes)
     - [TOC](#toc)
     - [Issues associadas do RedMine](#issues-associadas-do-redmine)
     - [Evolução cronológica das entregas](#evolu%C3%A7%C3%A3o-cronol%C3%B3gica-das-entregas)
