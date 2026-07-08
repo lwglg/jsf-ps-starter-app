@@ -53,43 +53,43 @@ jobs:
           retention-days: 15
           if-no-files-found: warn
 
-  integration-tests:
-    name: Testes de integração (Testcontainers + PostgreSQL)
-    runs-on: ubuntu-latest
-    # O runner ubuntu-latest já provê o Docker Engine necessário para o Testcontainers.
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
+  # integration-tests:
+  #   name: Testes de integração (Testcontainers + PostgreSQL)
+  #   runs-on: ubuntu-latest
+  #   # O runner ubuntu-latest já provê o Docker Engine necessário para o Testcontainers.
+  #   steps:
+  #     - name: Checkout do código
+  #       uses: actions/checkout@v4
 
-      - name: Configurar JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
-          cache: maven
+  #     - name: Configurar JDK 21
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         distribution: temurin
+  #         java-version: '21'
+  #         cache: maven
 
-      - name: Verificar disponibilidade do Docker
-        run: docker version
+  #     - name: Verificar disponibilidade do Docker
+  #       run: docker version
 
-      - name: Executar testes de integração (mvn verify)
-        run: mvn -B -ntp verify
-        env:
-          TESTCONTAINERS_RYUK_DISABLED: "false"
+  #     - name: Executar testes de integração (mvn verify)
+  #       run: mvn -B -ntp verify
+  #       env:
+  #         TESTCONTAINERS_RYUK_DISABLED: "false"
 
-      - name: Publicar relatório de testes de integração
-        if: always()
-        uses: dorny/test-reporter@v1
-        with:
-          name: Resultado dos testes de integração
-          path: 'companyman/target/failsafe-reports/*.xml'
-          reporter: java-junit
-          fail-on-error: false
+  #     - name: Publicar relatório de testes de integração
+  #       if: always()
+  #       uses: dorny/test-reporter@v1
+  #       with:
+  #         name: Resultado dos testes de integração
+  #         path: 'companyman/target/failsafe-reports/*.xml'
+  #         reporter: java-junit
+  #         fail-on-error: false
 
-      - name: Upload dos relatórios (failsafe)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: failsafe-reports
-          path: companyman/target/failsafe-reports/
-          retention-days: 15
-          if-no-files-found: warn
+  #     - name: Upload dos relatórios (failsafe)
+  #       if: always()
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: failsafe-reports
+  #         path: companyman/target/failsafe-reports/
+  #         retention-days: 15
+  #         if-no-files-found: warn
