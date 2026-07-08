@@ -37,18 +37,18 @@ public class Empresa implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
-
+    
     @Column(name = "nome_fantasia", nullable = false, length = 80)
     private String nomeFantasia;
-
+    
     @Column(name = "razao_social", nullable = false, length = 120)
     private String razaoSocial;
-
+    
     @Column(name = "cnpj", nullable = false, length = 18)
     private String cnpj;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "data_fundacao", nullable = false)
+    @Column(name = "data_fundacao", nullable = true)
     private Date dataFundacao;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -59,8 +59,8 @@ public class Empresa implements Serializable {
     @Column(name = "tipo_empresa", nullable = false, length = 20)
     private TipoEmpresa tipoEmpresa;
 
-    @Column(name = "faturamento", nullable = false, precision = 10, scale = 2)
-    private BigDecimal faturamento;
+    @Column(name = "faturamento", nullable = true, precision = 10, scale = 2)
+    private BigDecimal faturamento = BigDecimal.ZERO;
 
     public Empresa() {
     }

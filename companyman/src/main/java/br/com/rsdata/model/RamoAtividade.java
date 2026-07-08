@@ -29,6 +29,7 @@ public class RamoAtividade implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+
     @Column(name = "descricao", nullable = false, length = 150)
     private String descricao;
 

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Managed bean (Controller) responsável pela tela de gerenciamento de Empresas.
  */
-@Named
+@Named("empresaBean")
 @SessionScoped
 public class EmpresaBean implements Serializable {
 
@@ -27,7 +27,7 @@ public class EmpresaBean implements Serializable {
     private final RamoAtividadeService ramoAtividadeService = new RamoAtividadeService();
 
     private List<Empresa> lista;
-    private Empresa selecionado;
+    private Empresa selecionado = new Empresa();
     private Empresa novoRegistro = new Empresa();
 
     public List<Empresa> getLista() {
@@ -71,6 +71,9 @@ public class EmpresaBean implements Serializable {
 
     public void salvar() {
         try {
+            // TODO: remove this check after proper bean validation layer is integrated
+            if (novoRegistro.getCnpj() == null) return;
+
             empresaService.salvar(novoRegistro);
             lista = null;
             novoRegistro = new Empresa();
@@ -82,6 +85,9 @@ public class EmpresaBean implements Serializable {
 
     public void atualizar() {
         try {
+            // Failsafe checking when rendering page for the first time
+            if (selecionado == null) return;
+
             empresaService.atualizar(selecionado);
             lista = null;
             addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Empresa atualizada com sucesso.");

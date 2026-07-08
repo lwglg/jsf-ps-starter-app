@@ -15,7 +15,7 @@ import java.util.List;
  * Managed bean (Controller) responsável pela tela de gerenciamento de
  * Ramos de Atividade.
  */
-@Named
+@Named("ramoAtividadeBean")
 @SessionScoped
 public class RamoAtividadeBean implements Serializable {
 
@@ -62,6 +62,9 @@ public class RamoAtividadeBean implements Serializable {
 
     public void salvar() {
         try {
+            // TODO: remove this check after proper bean validation layer is integrated
+            if (novoRegistro.getDescricao() == null) return;
+
             service.salvar(novoRegistro);
             lista = null;
             novoRegistro = new RamoAtividade();
@@ -73,6 +76,9 @@ public class RamoAtividadeBean implements Serializable {
 
     public void atualizar() {
         try {
+            // Failsafe checking when rendering page for the first time
+            if (selecionado == null) return;
+            
             service.atualizar(selecionado);
             lista = null;
             addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Ramo de atividade atualizado com sucesso.");
