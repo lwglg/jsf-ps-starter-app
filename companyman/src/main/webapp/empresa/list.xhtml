@@ -10,16 +10,23 @@
 
             <p:toolbar>
                 <p:toolbarGroup>
-                    <p:commandButton value="Nova Empresa" icon="pi pi-plus"
-                                     actionListener="#{empresaBean.prepararNovo()}"
-                                     oncomplete="PF('dlgNovo').show()"
-                                     update="dlgNovoContent"/>
+                    <p:commandButton
+                        value="Nova Empresa"
+                        icon="pi pi-plus"
+                        actionListener="#{empresaBean.prepararNovo()}"
+                        oncomplete="PF('dlgNovo').show()"
+                        update=":formNovo:dlgNovoContent"
+                    />
                 </p:toolbarGroup>
             </p:toolbar>
 
-            <p:dataTable id="tabela" var="empresa" value="#{empresaBean.lista}"
-                         paginator="true" rows="10" emptyMessage="Nenhuma empresa cadastrada."
-                         style="margin-top:15px">
+            <p:dataTable
+                id="tabela"
+                var="empresa"
+                value="#{empresaBean.lista}"
+                paginator="true" rows="10" emptyMessage="Nenhuma empresa cadastrada."
+                style="margin-top:15px"
+            >
                 <p:column headerText="Nome Fantasia">
                     <h:outputText value="#{empresa.nomeFantasia}"/>
                 </p:column>
@@ -46,15 +53,24 @@
                     </h:outputText>
                 </p:column>
                 <p:column headerText="Ações" style="width:140px; text-align:center">
-                    <p:commandButton icon="pi pi-pencil" styleClass="rounded-button"
-                                      actionListener="#{empresaBean.prepararEdicao(empresa)}"
-                                      oncomplete="PF('dlgEditar').show()"
-                                      update=":form:dlgEditarContent"/>
-                    <p:commandButton icon="pi pi-trash" styleClass="rounded-button ui-button-danger"
-                                      actionListener="#{empresaBean.remover(empresa.id)}"
-                                      update=":form:tabela :form:growl">
-                        <p:confirm header="Confirmação" message="Deseja realmente remover esta empresa?"
-                                   icon="pi pi-exclamation-triangle"/>
+                    <p:commandButton
+                        icon="pi pi-pencil"
+                        styleClass="rounded-button"
+                        actionListener="#{empresaBean.prepararEdicao(empresa)}"
+                        oncomplete="PF('dlgEditar').show()"
+                        update=":formEditar:dlgEditarContent"
+                    />
+                    <p:commandButton
+                        icon="pi pi-trash"
+                        styleClass="rounded-button ui-button-danger"
+                        actionListener="#{empresaBean.remover(empresa.id)}"
+                        update=":form:tabela :form:growl"
+                    >
+                        <p:confirm
+                            header="Confirmação"
+                            message="Deseja realmente remover esta empresa?"
+                            icon="pi pi-exclamation-triangle"
+                        />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
@@ -66,19 +82,23 @@
                     <p:outputLabel for="nomeFantasia" value="Nome Fantasia"/>
                     <p:inputText id="nomeFantasia" value="#{empresaBean.novoRegistro.nomeFantasia}"
                                  required="true" maxlength="80" style="width:100%"/>
-
+                    <h:message for="nomeFantasia" style="color:red" />
+                    
                     <p:outputLabel for="razaoSocial" value="Razão Social"/>
                     <p:inputText id="razaoSocial" value="#{empresaBean.novoRegistro.razaoSocial}"
                                  required="true" maxlength="120" style="width:100%"/>
+                    <h:message for="razaoSocial" style="color:red" />
 
                     <p:outputLabel for="cnpj" value="CNPJ"/>
                     <p:inputMask id="cnpj" value="#{empresaBean.novoRegistro.cnpj}"
                                  mask="99.999.999/9999-99" required="true" style="width:100%"/>
+                    <h:message for="cnpj" style="color:red" />
 
                     <p:outputLabel for="dataFundacao" value="Data de Fundação"/>
                     <p:calendar id="dataFundacao" value="#{empresaBean.novoRegistro.dataFundacao}"
                                 pattern="dd/MM/yyyy" required="true" navigator="true"
                                 yearRange="c-100:c" style="width:100%"/>
+                    <h:message for="dataFundacao" style="color:red" />
 
                     <p:outputLabel for="ramoAtividade" value="Ramo de Atividade"/>
                     <p:selectOneMenu id="ramoAtividade" value="#{empresaBean.novoRegistro.ramoAtividade}"
@@ -100,34 +120,48 @@
                     <p:inputNumber id="faturamento" value="#{empresaBean.novoRegistro.faturamento}"
                                     symbol="R$ " decimalPlaces="2" required="true" style="width:100%"/>
 
-                    <p:commandButton value="Salvar" icon="pi pi-check" style="margin-top:15px"
-                                      actionListener="#{empresaBean.salvar}"
-                                      oncomplete="PF('dlgNovo').hide()"
-                                      update=":form:tabela :form:growl"/>
+                    <p:commandButton
+                        value="Salvar"
+                        icon="pi pi-check"
+                        style="margin-top:15px"
+                        actionListener="#{empresaBean.salvar()}"
+                        oncomplete="PF('dlgNovo').hide()"
+                        update=":form:tabela :form:growl"
+                    />
                 </h:panelGroup>
             </h:form>
         </p:dialog>
 
-        <p:dialog header="Editar Empresa" widgetVar="dlgEditar" modal="true" width="500" showEffect="fade">
+        <p:dialog
+            header="Editar Empresa"
+            widgetVar="dlgEditar"
+            modal="true"
+            width="500"
+            showEffect="fade"
+        >
             <h:form id="formEditar">
                 <h:panelGroup id="dlgEditarContent" layout="block">
                     <p:outputLabel for="nomeFantasiaEdit" value="Nome Fantasia"/>
                     <p:inputText id="nomeFantasiaEdit" value="#{empresaBean.selecionado.nomeFantasia}"
                                  required="true" maxlength="80" style="width:100%"/>
-
+                    <h:message for="nomeFantasiaEdit" style="color:red" />
+                    
                     <p:outputLabel for="razaoSocialEdit" value="Razão Social"/>
                     <p:inputText id="razaoSocialEdit" value="#{empresaBean.selecionado.razaoSocial}"
                                  required="true" maxlength="120" style="width:100%"/>
-
+                    <h:message for="nomeFantasiaEdit" style="color:red" />
+                    
                     <p:outputLabel for="cnpjEdit" value="CNPJ"/>
                     <p:inputMask id="cnpjEdit" value="#{empresaBean.selecionado.cnpj}"
                                  mask="99.999.999/9999-99" required="true" style="width:100%"/>
+                    <h:message for="cnpjEdit" style="color:red" />
 
                     <p:outputLabel for="dataFundacaoEdit" value="Data de Fundação"/>
                     <p:calendar id="dataFundacaoEdit" value="#{empresaBean.selecionado.dataFundacao}"
                                 pattern="dd/MM/yyyy" required="true" navigator="true"
                                 yearRange="c-100:c" style="width:100%"/>
-
+                    <h:message for="dataFundacaoEdit" style="color:red" />
+                    
                     <p:outputLabel for="ramoAtividadeEdit" value="Ramo de Atividade"/>
                     <p:selectOneMenu id="ramoAtividadeEdit" value="#{empresaBean.selecionado.ramoAtividade}"
                                       required="true" converter="ramoAtividadeConverter" style="width:100%">
@@ -145,9 +179,9 @@
                     <p:outputLabel for="faturamentoEdit" value="Faturamento"/>
                     <p:inputNumber id="faturamentoEdit" value="#{empresaBean.selecionado.faturamento}"
                                     symbol="R$ " decimalPlaces="2" required="true" style="width:100%"/>
-
+                    
                     <p:commandButton value="Atualizar" icon="pi pi-check" style="margin-top:15px"
-                                      actionListener="#{empresaBean.atualizar}"
+                                      actionListener="#{empresaBean.atualizar()}"
                                       oncomplete="PF('dlgEditar').hide()"
                                       update=":form:tabela :form:growl"/>
                 </h:panelGroup>
