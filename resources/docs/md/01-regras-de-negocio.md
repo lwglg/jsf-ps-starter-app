@@ -8,7 +8,9 @@
     - [TOC](#toc)
     - [Introdução](#introdu%C3%A7%C3%A3o)
     - [Ciclo de vida de persistência do registro](#ciclo-de-vida-de-persist%C3%AAncia-do-registro)
+        - [Observações](#observa%C3%A7%C3%B5es)
     - [Estado da interação na interface diálogos PrimeFaces](#estado-da-intera%C3%A7%C3%A3o-na-interface-di%C3%A1logos-primefaces)
+        - [Observações](#observa%C3%A7%C3%B5es)
     - [O que deseja fazer?](#o-que-deseja-fazer)
 
 <!-- /TOC -->
@@ -43,12 +45,11 @@ stateDiagram-v2
     REMOVIDO --> [*]
 ```
 
-> **Notas:**
-> 
-> - A transição `INEXISTENTE → PERSISTIDO` só ocorre após a validação de duplicidade em `EmpresaService.salvar()` / `RamoAtividadeService.salvar()`.
-> - `remover()` primeiro verifica a existência do registro (`buscarPorId`), lançando `EntityNotFoundException` caso não exista
->   (transição implícita "tentativa sobre estado `REMOVIDO`/`INEXISTENTE`", omitida do diagrama por não alterar estado).
-> - A restrição de `RamoAtividade` só ser removido sem empresas associadas é garantida pelo banco de dados (constraint `NOT NULL` + FK), não pela camada de serviço.
+### Observações
+ 
+- A transição `INEXISTENTE → PERSISTIDO` só ocorre após a validação de duplicidade em `EmpresaService.salvar()` / `RamoAtividadeService.salvar()`.
+- `remover()` primeiro verifica a existência do registro (`buscarPorId`), lançando `EntityNotFoundException` caso não exista (transição implícita "tentativa sobre estado `REMOVIDO`/`INEXISTENTE`", omitida do diagrama por não alterar estado).
+- A restrição de `RamoAtividade` só ser removido sem empresas associadas é garantida pelo banco de dados (constraint `NOT NULL` + FK), não pela camada de serviço.
 
 ## Estado da interação na interface (diálogos PrimeFaces)
 
@@ -73,14 +74,10 @@ stateDiagram-v2
     Removendo --> Ocioso: remover(id) concluído <br/> (mensagem growl de sucesso)
 ```
 
-> **Notas de comportamento observadas na implementação atual:**
-> 
-> - O callback `oncomplete="PF('dlgNovo').hide()"` é disparado **sempre** ao final da requisição AJAX, independentemente de o backend ter lançado `DuplicateEntityException` ou não. Ou seja, mesmo em caso de duplicidade, o
-> diálogo é fechado e o aviso é exibido apenas via `p:growl` — o usuário precisa reabrir o diálogo e reinserir os dados caso deseje corrigir. Isso está documentado aqui como comportamento real do sistema (não como
-> requisito), sendo uma oportunidade de melhoria futura (ex.: usar `<f:event>`/`update` condicional para manter o diálogo aberto em caso de erro de validação).
-> 
-> - Não há estado de "carregando lista" separado — a listagem (`getLista()`) é recalculada de forma *lazy* sempre que `lista == null`, o que ocorre automaticamente após qualquer `salvar`, `atualizar` ou `remover` 
-> bem-sucedido (o bean invalida o cache atribuindo `lista = null`).
+### Observações
+
+- O callback `oncomplete="PF('dlgNovo').hide()"` é disparado **sempre** ao final da requisição AJAX, independentemente de o backend ter lançado `DuplicateEntityException` ou não. Ou seja, mesmo em caso de duplicidade, o diálogo é fechado e o aviso é exibido apenas via `p:growl` — o usuário precisa reabrir o diálogo e reinserir os dados caso deseje corrigir. Isso está documentado aqui como comportamento real do sistema (não como requisito), sendo uma oportunidade de melhoria futura (ex.: usar `<f:event>`/`update` condicional para manter o diálogo aberto em caso de erro de validação). 
+- Não há estado de "carregando lista" separado — a listagem (`getLista()`) é recalculada de forma *lazy* sempre que `lista == null`, o que ocorre automaticamente após qualquer `salvar`, `atualizar` ou `remover` bem-sucedido (o bean invalida o cache atribuindo `lista = null`).
 
 ---
 
