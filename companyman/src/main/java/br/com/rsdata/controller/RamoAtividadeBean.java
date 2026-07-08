@@ -10,7 +10,6 @@ import jakarta.inject.Named;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Managed bean (Controller) responsável pela tela de gerenciamento de

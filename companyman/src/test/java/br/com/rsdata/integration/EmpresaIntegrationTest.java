@@ -33,12 +33,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @Testcontainers
 class EmpresaIntegrationTest {
-
+    
     @Container
+    @SuppressWarnings("resource")
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-            .withDatabaseName("empresa_db_test")
-            .withUsername("empresa_user")
-            .withPassword("empresa_pass");
+            .withDatabaseName("companyman_db_test")
+            .withUsername("test_user")
+            .withPassword("test_pass");
 
     private RamoAtividadeService ramoAtividadeService;
     private EmpresaService empresaService;
@@ -51,11 +52,13 @@ class EmpresaIntegrationTest {
         System.setProperty("DB_USER", postgres.getUsername());
         System.setProperty("DB_PASSWORD", postgres.getPassword());
         JPAUtil.reset();
+        postgres.start();
     }
 
     @AfterAll
     static void encerrarConexao() {
         JPAUtil.close();
+        postgres.stop();
     }
 
     @BeforeEach
@@ -90,6 +93,7 @@ class EmpresaIntegrationTest {
         RamoAtividade ramo = ramoAtividadeService.salvar(new RamoAtividade("Logística"));
 
         Empresa empresa = new Empresa();
+        
         empresa.setNomeFantasia("Rota Certa Transportes");
         empresa.setRazaoSocial("Rota Certa Transportes e Logística LTDA");
         empresa.setCnpj("11.111.111/0001-11");
