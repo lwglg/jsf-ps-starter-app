@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -29,7 +31,8 @@ public class RamoAtividade implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-
+    @NotBlank(message = "A descrição é obrigatória.")
+    @Size(min = 3, max = 150, message = "A descrição deve ter entre 3 e 150 caracteres.")
     @Column(name = "descricao", nullable = false, length = 150)
     private String descricao;
 

@@ -1,5 +1,6 @@
 package br.com.rsdata.model;
 
+import br.com.rsdata.validation.CNPJ;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,6 +16,12 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -37,30 +44,44 @@ public class Empresa implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
-    
+
+    @NotBlank(message = "O nome fantasia é obrigatório.")
+    @Size(max = 80, message = "O nome fantasia deve ter no máximo 80 caracteres.")
     @Column(name = "nome_fantasia", nullable = false, length = 80)
     private String nomeFantasia;
-    
+
+    @NotBlank(message = "A razão social é obrigatória.")
+    @Size(max = 120, message = "A razão social deve ter no máximo 120 caracteres.")
     @Column(name = "razao_social", nullable = false, length = 120)
     private String razaoSocial;
-    
+
+    @NotBlank(message = "O CNPJ é obrigatório.")
+    @Size(max = 18, message = "O CNPJ deve ter no máximo 18 caracteres.")
+    @CNPJ(message = "CNPJ inválido: verifique os dígitos informados.")
     @Column(name = "cnpj", nullable = false, length = 18)
     private String cnpj;
 
+    @NotNull(message = "A data de fundação é obrigatória.")
+    @PastOrPresent(message = "A data de fundação não pode ser uma data futura.")
     @Temporal(TemporalType.DATE)
-    @Column(name = "data_fundacao", nullable = true)
+    @Column(name = "data_fundacao", nullable = false)
     private Date dataFundacao;
 
+    @NotNull(message = "O ramo de atividade é obrigatório.")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ramo_atividade_id", nullable = false, foreignKey = @ForeignKey(name = "fk_empresa_ramo_atividade"))
     private RamoAtividade ramoAtividade;
 
+    @NotNull(message = "O tipo de empresa é obrigatório.")
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_empresa", nullable = false, length = 20)
     private TipoEmpresa tipoEmpresa;
 
-    @Column(name = "faturamento", nullable = true, precision = 10, scale = 2)
-    private BigDecimal faturamento = BigDecimal.ZERO;
+    @NotNull(message = "O faturamento é obrigatório.")
+    @DecimalMin(value = "0.00", inclusive = true, message = "O faturamento não pode ser negativo.")
+    @Digits(integer = 8, fraction = 2, message = "O faturamento deve ter no máximo 8 dígitos inteiros e 2 casas decimais.")
+    @Column(name = "faturamento", nullable = false, precision = 10, scale = 2)
+    private BigDecimal faturamento;
 
     public Empresa() {
     }
