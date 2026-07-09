@@ -1,6 +1,7 @@
 package br.com.rsdata.dao;
 
 import br.com.rsdata.util.JPAUtil;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
@@ -23,10 +24,12 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
     public T salvar(T entidade) {
         EntityManager em = JPAUtil.createEntityManager();
         EntityTransaction tx = em.getTransaction();
+        
         try {
             tx.begin();
             em.persist(entidade);
             tx.commit();
+        
             return entidade;
         } catch (RuntimeException e) {
             if (tx.isActive()) {
@@ -42,15 +45,18 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
     public T atualizar(T entidade) {
         EntityManager em = JPAUtil.createEntityManager();
         EntityTransaction tx = em.getTransaction();
+        
         try {
             tx.begin();
             T merged = em.merge(entidade);
             tx.commit();
+        
             return merged;
         } catch (RuntimeException e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
+        
             throw e;
         } finally {
             em.close();
@@ -61,17 +67,22 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
     public void remover(UUID id) {
         EntityManager em = JPAUtil.createEntityManager();
         EntityTransaction tx = em.getTransaction();
+        
         try {
             tx.begin();
+        
             T entidade = em.find(classe, id);
+        
             if (entidade != null) {
                 em.remove(entidade);
             }
+        
             tx.commit();
         } catch (RuntimeException e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
+        
             throw e;
         } finally {
             em.close();
@@ -81,6 +92,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
     @Override
     public T buscarPorId(UUID id) {
         EntityManager em = JPAUtil.createEntityManager();
+
         try {
             return em.find(classe, id);
         } finally {
@@ -91,9 +103,10 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
     @Override
     public List<T> listarTodos() {
         EntityManager em = JPAUtil.createEntityManager();
+        
         try {
             return em.createQuery("SELECT e FROM " + classe.getSimpleName() + " e", classe)
-                    .getResultList();
+                .getResultList();
         } finally {
             em.close();
         }

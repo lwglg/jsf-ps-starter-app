@@ -17,12 +17,13 @@ public class RamoAtividadeDAO extends GenericDAOImpl<RamoAtividade> {
      */
     public RamoAtividade buscarPorDescricao(String descricao) {
         EntityManager em = JPAUtil.createEntityManager();
+        
         try {
             return em.createQuery(
-                            "SELECT r FROM RamoAtividade r WHERE lower(r.descricao) = lower(:descricao)",
-                            RamoAtividade.class)
-                    .setParameter("descricao", descricao)
-                    .getSingleResult();
+                "SELECT r FROM RamoAtividade r WHERE lower(r.descricao) = lower(:descricao)",
+                RamoAtividade.class)
+            .setParameter("descricao", descricao)
+            .getSingleResult();
         } catch (NoResultException e) {
             return null;
         } finally {

@@ -18,10 +18,9 @@ public class EmpresaDAO extends GenericDAOImpl<Empresa> {
      */
     public Empresa buscarPorCnpj(String cnpj) {
         EntityManager em = JPAUtil.createEntityManager();
-        
         try {
             return em.createQuery(
-                            "SELECT e FROM Empresa e WHERE e.cnpj = :cnpj", Empresa.class)
+                        "SELECT e FROM Empresa e WHERE e.cnpj = :cnpj", Empresa.class)
                     .setParameter("cnpj", cnpj)
                     .getSingleResult();
         } catch (NoResultException e) {
@@ -38,11 +37,10 @@ public class EmpresaDAO extends GenericDAOImpl<Empresa> {
     @Override
     public List<Empresa> listarTodos() {
         EntityManager em = JPAUtil.createEntityManager();
-
         try {
             return em.createQuery(
-                            "SELECT e FROM Empresa e JOIN FETCH e.ramoAtividade ORDER BY e.nomeFantasia",
-                            Empresa.class)
+                        "SELECT e FROM Empresa e JOIN FETCH e.ramoAtividade ORDER BY e.nomeFantasia",
+                        Empresa.class)
                     .getResultList();
         } finally {
             em.close();
