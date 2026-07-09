@@ -4,6 +4,7 @@ import br.com.rsdata.dao.RamoAtividadeDAO;
 import br.com.rsdata.exception.DuplicateEntityException;
 import br.com.rsdata.exception.EntityNotFoundException;
 import br.com.rsdata.model.RamoAtividade;
+import br.com.rsdata.util.EntityValidator;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +17,10 @@ public class RamoAtividadeService {
     private final RamoAtividadeDAO dao = new RamoAtividadeDAO();
 
     public RamoAtividade salvar(RamoAtividade ramoAtividade) {
+        EntityValidator.validar(ramoAtividade);
+
         RamoAtividade existente = dao.buscarPorDescricao(ramoAtividade.getDescricao());
+
         if (existente != null) {
             throw new DuplicateEntityException(
                     "Já existe um ramo de atividade cadastrado com a descrição '"
@@ -26,7 +30,10 @@ public class RamoAtividadeService {
     }
 
     public RamoAtividade atualizar(RamoAtividade ramoAtividade) {
+        EntityValidator.validar(ramoAtividade);
+
         RamoAtividade existente = dao.buscarPorDescricao(ramoAtividade.getDescricao());
+
         if (existente != null && !existente.getId().equals(ramoAtividade.getId())) {
             throw new DuplicateEntityException(
                     "Já existe um ramo de atividade cadastrado com a descrição '"
@@ -35,21 +42,12 @@ public class RamoAtividadeService {
         return dao.atualizar(ramoAtividade);
     }
 
-    public void remover(String id) {
-        if (id == null || id.length() != 36) {
-            return;
+    public void remover(UUID id) {
+        if (dao.buscarPorId(id) == null) {
+            throw new EntityNotFoundException("Ramo de atividade não encontrado: " + id);
         }
         
-        try {
-            UUID parsedId = UUID.fromString(id);
-            
-            if (dao.buscarPorId(parsedId) == null) {
-                throw new EntityNotFoundException("Ramo de atividade não encontrado: " + id);
-            }
-            dao.remover(parsedId);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("O identificador do ramo de atividade deve ser um UUID.");
-        }        
+        dao.remover(id);
     }
 
     public RamoAtividade buscarPorId(UUID id) {
