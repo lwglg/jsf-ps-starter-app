@@ -1,6 +1,6 @@
 # RSData | CompanyMAN (WiP)
 
-![CI | Automated Tests](https://github.com/lwglg/jsf-ps-starter-app/actions/workflows/tests.yml/badge.svg)
+![CI | Automated Tests](https://github.com/lwglg/jsf-ps-starter-app/actions/workflows/static-analysis.yml/badge.svg)
 
 ![CI | Docker Images](https://github.com/lwglg/jsf-ps-starter-app/actions/workflows/image-analysis.yml/badge.svg)
 
