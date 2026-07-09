@@ -9,13 +9,27 @@
     <h:outputStylesheet library="css" name="app.css"/>
 </h:head>
 <h:body>
-    <!-- <header>
-		<h:graphicImage library="img" name="rsdata_logo.png"/>
-	</header> -->
+    <!-- <p:tieredMenu style="width:200px">
+        <p:submenu label="Navegação">
+            <p:menuitem value="Home" url="/index.xhtml" icon="custom-logo-icon" />
+        </p:submenu>    
+        
+        <p:submenu label="Módulos">
+            <p:menuitem value="Empresas" outcome="/empresa/list.xhtml" icon="pi pi-building"/>
+            <p:menuitem value="Ramos de Atividade" outcome="/ramoAtividade/list.xhtml" icon="pi pi-sitemap"/>
+        </p:submenu>
+    </p:tieredMenu> -->
 
-    <p:menubar>
+    <p:menubar styleClass="custom-menubar">
+        <p:menuitem value="Inicial" icon="pi pi-home" url="/html" />
         <p:menuitem value="Empresas" outcome="/empresa/list.xhtml" icon="pi pi-building"/>
         <p:menuitem value="Ramos de Atividade" outcome="/ramoAtividade/list.xhtml" icon="pi pi-sitemap"/>
+
+        <f:facet name="options">
+            <h:link outcome="index.xhtml">
+                <p:graphicImage name="img/rsdata_logo.png" alt="RSData Logo" styleClass="menubar-logo"/>
+            </h:link>
+        </f:facet>
     </p:menubar>
 
     <div class="content-wrapper">
