@@ -68,10 +68,13 @@ public final class JPAUtil {
      */
     private static String env(String key, String defaultValue) {
         String fromProperty = System.getProperty(key);
+        
         if (fromProperty != null && !fromProperty.isBlank()) {
             return fromProperty;
         }
+        
         String value = System.getenv(key);
+        
         return (value == null || value.isBlank()) ? defaultValue : value;
     }
 

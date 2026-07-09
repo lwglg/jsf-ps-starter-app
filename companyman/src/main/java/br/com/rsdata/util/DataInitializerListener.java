@@ -10,7 +10,11 @@ import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +31,75 @@ public class DataInitializerListener implements ServletContextListener {
 
     private static final Logger LOGGER = Logger.getLogger(DataInitializerListener.class.getName());
 
+    /**
+     * Tipo auxiliar apenas para convergir os dados das empresas a serem criadas em outro método
+    */
+    private record EmpresaRecord(
+        String nomeFantasia,
+        String razaoSocial,
+        String cnpj,
+        Date dataFundacao,
+        RamoAtividade ramoAtividade,
+        TipoEmpresa tipoEmpresa,
+        BigDecimal faturamento
+    ) {};
+
+    private List<EmpresaRecord> geraListaEmpresas(SimpleDateFormat sdf, Map<String, RamoAtividade> ramos) {        
+        try {
+            List<EmpresaRecord> empresas =  new ArrayList<>(List.of(
+                new EmpresaRecord(
+                    "Padaria Pão Quente",
+                    "Pão Quente Panificadora LTDA",
+                    "12.345.678/0001-95",
+                    sdf.parse("2015-03-10"),
+                    ramos.get("Indústria Alimentícia"),
+                    TipoEmpresa.MEI,
+                    new BigDecimal("81000.00")
+                ),
+                new EmpresaRecord(
+                    "TechNova Soluções",
+                    "TechNova Soluções em TI EIRELI",
+                    "23.456.789/0001-95",
+                    sdf.parse("2018-07-22"),
+                    ramos.get("Tecnologia da Informação"),
+                    TipoEmpresa.EIRELI,
+                    new BigDecimal("36000.50")
+                ),
+                new EmpresaRecord(
+                    "Construtora Horizonte", 
+                    "Horizonte Construções e Incorporações LTDA",
+                    "34.567.890/0001-30",
+                    sdf.parse("2010-01-15"),
+                    ramos.get("Construção Civil"),
+                    TipoEmpresa.LTDA,
+                    new BigDecimal("450000.00")
+                ),
+                new EmpresaRecord(
+                    "Mega Varejo", 
+                    "Mega Varejo Comércio de Produtos S.A.",
+                    "45.678.901/0001-75",
+                    sdf.parse("2005-11-30"),
+                    ramos.get("Comércio Varejista"),
+                    TipoEmpresa.SA,
+                    new BigDecimal("95000.00")
+                ),
+                new EmpresaRecord(
+                    "Prisma Consultoria",
+                    "Prisma Consultoria Empresarial LTDA",
+                    "56.789.012/0001-00",
+                    sdf.parse("2020-05-04"),
+                    ramos.get("Serviços de Consultoria"),
+                    TipoEmpresa.LTDA,
+                    new BigDecimal("21000.75")
+                )
+            ));
+
+            return empresas;     
+        } catch (ParseException exc) {
+            return Collections.emptyList();
+        }        
+    }
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         // Força a inicialização do EntityManagerFactory, o que cria/atualiza o schema.
@@ -41,6 +114,7 @@ public class DataInitializerListener implements ServletContextListener {
                     .getSingleResult();
 
             Map<String, RamoAtividade> ramos = new HashMap<>();
+            
             if (totalRamos == 0) {
                 LOGGER.info("Populando dados iniciais de RamoAtividade...");
                 List<String> descricoes = List.of(
@@ -50,15 +124,18 @@ public class DataInitializerListener implements ServletContextListener {
                         "Construção Civil",
                         "Serviços de Consultoria"
                 );
+                
                 for (String descricao : descricoes) {
                     RamoAtividade ramo = new RamoAtividade(descricao);
                     em.persist(ramo);
                     ramos.put(descricao, ramo);
                 }
+                
                 em.flush();
             } else {
                 List<RamoAtividade> existentes = em.createQuery(
                         "SELECT r FROM RamoAtividade r", RamoAtividade.class).getResultList();
+                
                 for (RamoAtividade r : existentes) {
                     ramos.put(r.getDescricao(), r);
                 }
@@ -71,28 +148,17 @@ public class DataInitializerListener implements ServletContextListener {
                 LOGGER.info("Populando dados iniciais de Empresa...");
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-                em.persist(criarEmpresa("Padaria Pão Quente", "Pão Quente Panificadora LTDA",
-                        "12.345.678/0001-90", sdf.parse("2015-03-10"),
-                        ramos.get("Indústria Alimentícia"), TipoEmpresa.MEI, new BigDecimal("8100.00")));
-
-                em.persist(criarEmpresa("TechNova Soluções", "TechNova Soluções em TI EIRELI",
-                        "23.456.789/0001-01", sdf.parse("2018-07-22"),
-                        ramos.get("Tecnologia da Informação"), TipoEmpresa.EIRELI, new BigDecimal("3600.50")));
-
-                em.persist(criarEmpresa("Construtora Horizonte", "Horizonte Construções e Incorporações LTDA",
-                        "34.567.890/0001-12", sdf.parse("2010-01-15"),
-                        ramos.get("Construção Civil"), TipoEmpresa.LTDA, new BigDecimal("4500.00")));
-
-                em.persist(criarEmpresa("Mega Varejo", "Mega Varejo Comércio de Produtos S.A.",
-                        "45.678.901/0001-23", sdf.parse("2005-11-30"),
-                        ramos.get("Comércio Varejista"), TipoEmpresa.SA, new BigDecimal("12500.00")));
-
-                em.persist(criarEmpresa("Prisma Consultoria", "Prisma Consultoria Empresarial LTDA",
-                        "56.789.012/0001-34", sdf.parse("2020-05-04"),
-                        ramos.get("Serviços de Consultoria"), TipoEmpresa.LTDA, new BigDecimal("21000.75")));
+                List<EmpresaRecord> empresas = geraListaEmpresas(sdf, ramos);
+                
+                if (!empresas.isEmpty()) {
+                    for (EmpresaRecord empresa : empresas) {
+                        em.persist(criarEmpresa(empresa));    
+                    } 
+                }
             }
 
             tx.commit();
+            
             LOGGER.info("Inicialização de dados concluída com sucesso.");
         } catch (Exception e) {
             if (tx.isActive()) {
@@ -105,17 +171,17 @@ public class DataInitializerListener implements ServletContextListener {
         }
     }
 
-    private Empresa criarEmpresa(String nomeFantasia, String razaoSocial, String cnpj,
-                                  java.util.Date dataFundacao, RamoAtividade ramoAtividade,
-                                  TipoEmpresa tipoEmpresa, BigDecimal faturamento) {
+    private Empresa criarEmpresa(EmpresaRecord empresaRecord) {
         Empresa empresa = new Empresa();
-        empresa.setNomeFantasia(nomeFantasia);
-        empresa.setRazaoSocial(razaoSocial);
-        empresa.setCnpj(cnpj);
-        empresa.setDataFundacao(dataFundacao);
-        empresa.setRamoAtividade(ramoAtividade);
-        empresa.setTipoEmpresa(tipoEmpresa);
-        empresa.setFaturamento(faturamento);
+        
+        empresa.setNomeFantasia(empresaRecord.nomeFantasia);
+        empresa.setRazaoSocial(empresaRecord.razaoSocial);
+        empresa.setCnpj(empresaRecord.cnpj);
+        empresa.setDataFundacao(empresaRecord.dataFundacao);
+        empresa.setRamoAtividade(empresaRecord.ramoAtividade);
+        empresa.setTipoEmpresa(empresaRecord.tipoEmpresa);
+        empresa.setFaturamento(empresaRecord.faturamento);
+        
         return empresa;
     }
 
