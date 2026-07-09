@@ -1,6 +1,7 @@
 package br.com.rsdata.integration;
 
 import br.com.rsdata.exception.DuplicateEntityException;
+import br.com.rsdata.exception.ValidationException;
 import br.com.rsdata.model.Empresa;
 import br.com.rsdata.model.RamoAtividade;
 import br.com.rsdata.model.TipoEmpresa;
@@ -33,13 +34,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @Testcontainers
 class EmpresaIntegrationTest {
-    
+
     @Container
     @SuppressWarnings("resource")
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-            .withDatabaseName("companyman_db_test")
-            .withUsername("test_user")
-            .withPassword("test_pass");
+            .withDatabaseName("empresa_db_test")
+            .withUsername("empresa_user")
+            .withPassword("empresa_pass");
 
     private RamoAtividadeService ramoAtividadeService;
     private EmpresaService empresaService;
@@ -51,14 +52,18 @@ class EmpresaIntegrationTest {
         System.setProperty("DB_NAME", postgres.getDatabaseName());
         System.setProperty("DB_USER", postgres.getUsername());
         System.setProperty("DB_PASSWORD", postgres.getPassword());
+        
         JPAUtil.reset();
+        
         postgres.start();
     }
 
     @AfterAll
     static void encerrarConexao() {
         JPAUtil.close();
+        
         postgres.stop();
+        postgres.close();
     }
 
     @BeforeEach
@@ -96,7 +101,7 @@ class EmpresaIntegrationTest {
         
         empresa.setNomeFantasia("Rota Certa Transportes");
         empresa.setRazaoSocial("Rota Certa Transportes e Logística LTDA");
-        empresa.setCnpj("11.111.111/0001-11");
+        empresa.setCnpj("11.111.111/0001-91");
         empresa.setDataFundacao(new Date());
         empresa.setRamoAtividade(ramo);
         empresa.setTipoEmpresa(TipoEmpresa.LTDA);
@@ -116,9 +121,10 @@ class EmpresaIntegrationTest {
         RamoAtividade ramo = ramoAtividadeService.salvar(new RamoAtividade("Turismo"));
 
         Empresa empresa1 = new Empresa();
+
         empresa1.setNomeFantasia("Viaje Mais");
         empresa1.setRazaoSocial("Viaje Mais Agência de Turismo LTDA");
-        empresa1.setCnpj("22.222.222/0001-22");
+        empresa1.setCnpj("22.222.222/0001-91");
         empresa1.setDataFundacao(new Date());
         empresa1.setRamoAtividade(ramo);
         empresa1.setTipoEmpresa(TipoEmpresa.MEI);
@@ -126,9 +132,10 @@ class EmpresaIntegrationTest {
         empresaService.salvar(empresa1);
 
         Empresa empresa2 = new Empresa();
+        
         empresa2.setNomeFantasia("Viaje Mais Filial");
         empresa2.setRazaoSocial("Viaje Mais Agência de Turismo LTDA");
-        empresa2.setCnpj("22.222.222/0001-22");
+        empresa2.setCnpj("22.222.222/0001-91");
         empresa2.setDataFundacao(new Date());
         empresa2.setRamoAtividade(ramo);
         empresa2.setTipoEmpresa(TipoEmpresa.MEI);
@@ -143,9 +150,10 @@ class EmpresaIntegrationTest {
         RamoAtividade ramo = ramoAtividadeService.salvar(new RamoAtividade("Eventos"));
 
         Empresa empresa = new Empresa();
+        
         empresa.setNomeFantasia("Festa Boa Eventos");
         empresa.setRazaoSocial("Festa Boa Eventos LTDA");
-        empresa.setCnpj("33.333.333/0001-33");
+        empresa.setCnpj("33.333.333/0001-91");
         empresa.setDataFundacao(new Date());
         empresa.setRamoAtividade(ramo);
         empresa.setTipoEmpresa(TipoEmpresa.EIRELI);
@@ -153,9 +161,8 @@ class EmpresaIntegrationTest {
 
         Empresa salva = empresaService.salvar(empresa);
         UUID id = salva.getId();
-        String idString = id.toString();
 
-        empresaService.remover(idString);
+        empresaService.remover(id);
 
         assertEquals(null, empresaService.buscarPorId(id));
     }
@@ -166,9 +173,10 @@ class EmpresaIntegrationTest {
         RamoAtividade ramo = ramoAtividadeService.salvar(new RamoAtividade("Energia Renovável"));
 
         Empresa empresa = new Empresa();
+        
         empresa.setNomeFantasia("Sol Nascente Energia");
         empresa.setRazaoSocial("Sol Nascente Energia Solar S.A.");
-        empresa.setCnpj("44.444.444/0001-44");
+        empresa.setCnpj("44.444.444/0001-91");
         empresa.setDataFundacao(new Date());
         empresa.setRamoAtividade(ramo);
         empresa.setTipoEmpresa(TipoEmpresa.SA);
@@ -176,6 +184,109 @@ class EmpresaIntegrationTest {
         empresaService.salvar(empresa);
 
         List<Empresa> todas = empresaService.listarTodos();
-        assertTrue(todas.stream().anyMatch(e -> e.getCnpj().equals("44.444.444/0001-44")));
+        assertTrue(todas.stream().anyMatch(e -> e.getCnpj().equals("44.444.444/0001-91")));
+    }
+
+    @Test
+    @DisplayName("Não deve permitir cadastrar RamoAtividade com descrição em branco")
+    void naoDevePermitirRamoAtividadeComDescricaoEmBranco() {
+        assertThrows(ValidationException.class,
+                () -> ramoAtividadeService.salvar(new RamoAtividade("  ")));
+    }
+
+    @Test
+    @DisplayName("Não deve permitir cadastrar RamoAtividade com descrição muito curta")
+    void naoDevePermitirRamoAtividadeComDescricaoMuitoCurta() {
+        assertThrows(ValidationException.class,
+                () -> ramoAtividadeService.salvar(new RamoAtividade("TI")));
+    }
+
+    @Test
+    @DisplayName("Não deve permitir cadastrar Empresa com CNPJ com dígito verificador inválido")
+    void naoDevePermitirEmpresaComCnpjInvalido() {
+        RamoAtividade ramo = ramoAtividadeService.salvar(new RamoAtividade("Agricultura"));
+
+        Empresa empresa = new Empresa();
+        
+        empresa.setNomeFantasia("Fazenda Boa Vista");
+        empresa.setRazaoSocial("Fazenda Boa Vista Agropecuária LTDA");
+        empresa.setCnpj("11.111.111/0001-99"); // dígitos verificadores incorretos (correto seria -91)
+        empresa.setDataFundacao(new Date());
+        empresa.setRamoAtividade(ramo);
+        empresa.setTipoEmpresa(TipoEmpresa.LTDA);
+        empresa.setFaturamento(new BigDecimal("60000.00"));
+
+        assertThrows(ValidationException.class, () -> empresaService.salvar(empresa));
+    }
+
+    @Test
+    @DisplayName("Não deve permitir cadastrar Empresa com campos obrigatórios ausentes")
+    void naoDevePermitirEmpresaComCamposObrigatoriosAusentes() {
+        Empresa empresa = new Empresa(); // nenhum campo preenchido
+
+        ValidationException ex = org.junit.jupiter.api.Assertions.assertThrows(
+                ValidationException.class, () -> empresaService.salvar(empresa));
+
+        assertTrue(ex.getViolacoes().size() >= 6); // nomeFantasia, razaoSocial, cnpj, dataFundacao, ramoAtividade, tipoEmpresa, faturamento
+    }
+
+    @Test
+    @DisplayName("Não deve permitir cadastrar Empresa com faturamento negativo")
+    void naoDevePermitirEmpresaComFaturamentoNegativo() {
+        RamoAtividade ramo = ramoAtividadeService.salvar(new RamoAtividade("Mineração"));
+
+        Empresa empresa = new Empresa();
+        
+        empresa.setNomeFantasia("Extrai Bem");
+        empresa.setRazaoSocial("Extrai Bem Mineração LTDA");
+        empresa.setCnpj("66.666.666/0001-91");
+        empresa.setDataFundacao(new Date());
+        empresa.setRamoAtividade(ramo);
+        empresa.setTipoEmpresa(TipoEmpresa.LTDA);
+        empresa.setFaturamento(new BigDecimal("-100.00"));
+
+        assertThrows(ValidationException.class, () -> empresaService.salvar(empresa));
+    }
+
+    @Test
+    @DisplayName("Não deve permitir cadastrar Empresa com faturamento acima da precisão suportada (10,2)")
+    void naoDevePermitirEmpresaComFaturamentoAcimaDaPrecisao() {
+        RamoAtividade ramo = ramoAtividadeService.salvar(new RamoAtividade("Petróleo e Gás"));
+
+        Empresa empresa = new Empresa();
+        
+        empresa.setNomeFantasia("Poço Fundo");
+        empresa.setRazaoSocial("Poço Fundo Exploração de Petróleo S.A.");
+        empresa.setCnpj("77.777.777/0001-91");
+        empresa.setDataFundacao(new Date());
+        empresa.setRamoAtividade(ramo);
+        empresa.setTipoEmpresa(TipoEmpresa.SA);
+        
+        // 9 dígitos inteiros - excede o limite de 8 dígitos (precision=10, scale=2)
+        empresa.setFaturamento(new BigDecimal("125000000.00"));
+
+        assertThrows(ValidationException.class, () -> empresaService.salvar(empresa));
+    }
+
+    @Test
+    @DisplayName("Não deve permitir cadastrar Empresa com data de fundação futura")
+    void naoDevePermitirEmpresaComDataDeFundacaoFutura() {
+        RamoAtividade ramo = ramoAtividadeService.salvar(new RamoAtividade("Aviação"));
+
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        
+        calendar.add(java.util.Calendar.YEAR, 1);
+
+        Empresa empresa = new Empresa();
+        
+        empresa.setNomeFantasia("Voa Alto");
+        empresa.setRazaoSocial("Voa Alto Aviação LTDA");
+        empresa.setCnpj("88.888.888/0001-91");
+        empresa.setDataFundacao(calendar.getTime());
+        empresa.setRamoAtividade(ramo);
+        empresa.setTipoEmpresa(TipoEmpresa.LTDA);
+        empresa.setFaturamento(new BigDecimal("30000.00"));
+
+        assertThrows(ValidationException.class, () -> empresaService.salvar(empresa));
     }
 }
