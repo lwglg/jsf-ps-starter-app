@@ -1,39 +1,76 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
-      xmlns:ui="jakarta.faces.facelets"
-      xmlns:p="primefaces">
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:ui="jakarta.faces.facelets"
+    xmlns:p="primefaces">
 <h:head>
-    <title>Gerenciamento de Empresas</title>
+    <title>RSData | CompanyMAN</title>
     <h:outputStylesheet library="css" name="app.css"/>
 </h:head>
-<h:body>
-    <!-- <p:tieredMenu style="width:200px">
-        <p:submenu label="Navegação">
-            <p:menuitem value="Home" url="/index.xhtml" icon="custom-logo-icon" />
-        </p:submenu>    
-        
-        <p:submenu label="Módulos">
-            <p:menuitem value="Empresas" outcome="/empresa/list.xhtml" icon="pi pi-building"/>
-            <p:menuitem value="Ramos de Atividade" outcome="/ramoAtividade/list.xhtml" icon="pi pi-sitemap"/>
-        </p:submenu>
-    </p:tieredMenu> -->
+<h:body>    
+    <h:form id="formMenu">
+        <p:tieredMenu style="width:200px">
+            <p:submenu label="Navegação">
+                <p:menuitem value="Inicial" icon="pi pi-home" url="/index.xhtml" />
+                <p:menuitem
+                    value="Sobre o sistema"
+                    icon="pi pi-info-circle"
+                    actionListener="#{sobreSistemaBean.carregaConteudo()}"
+                    oncomplete="PF('dlgSobreSistemaWidget').show();"
+                    update=":formSobreSistema:dlgSobreSistemaContent"/>
+            </p:submenu>
 
-    <p:menubar styleClass="custom-menubar">
-        <p:menuitem value="Inicial" icon="pi pi-home" url="/html" />
-        <p:menuitem value="Empresas" outcome="/empresa/list.xhtml" icon="pi pi-building"/>
-        <p:menuitem value="Ramos de Atividade" outcome="/ramoAtividade/list.xhtml" icon="pi pi-sitemap"/>
+            <p:submenu label="Módulos">
+                <p:menuitem value="Empresas" outcome="/empresa/list.xhtml" icon="pi pi-building"/>
+                <p:menuitem value="Ramos de Atividade" outcome="/ramoAtividade/list.xhtml" icon="pi pi-sitemap"/>
+            </p:submenu>
+        </p:tieredMenu>
+    </h:form>
 
-        <f:facet name="options">
-            <h:link outcome="index.xhtml">
-                <p:graphicImage name="img/rsdata_logo.png" alt="RSData Logo" styleClass="menubar-logo"/>
-            </h:link>
-        </f:facet>
-    </p:menubar>
+    <p:dialog
+        widgetVar="dlgSobreSistemaWidget"
+        header="Sobre o Sistema"
+        modal="true"
+        resizable="false"
+        responsive="true"
+        showEffect="fade">
+
+        <h:form id="formSobreSistema">
+            <h:panelGroup id="dlgSobreSistemaContent" layout="block" style="display: flex; gap: 20px; padding: 15px;">
+                <h:link outcome="external" href="${sobreSistemaBean.getUrlPaginaEmpresa()}">
+                    <div class="image-container">
+                        <p:graphicImage
+                            name="img/rsdata_logo.png"
+                            alt="RSData Logo"
+                            styleClass="rounded-image" />    
+                    </div>
+                </h:link>                
+
+                <h:panelGrid columns="2" cellpadding="5" styleClass="ui-noborder">
+                    <h:outputText value="#{sobreSistemaBean.getNomeSistema()}" styleClass="h3" />
+                    <br/>
+                    <h:outputText value="#{sobreSistemaBean.getDescricaoSistema()}" />
+                    <br/>
+                    <h:outputText value="Versão: #{sobreSistemaBean.getVersaoSistema()}" />
+                    <br/>
+                    <h:outputText value="Desenvolvido por: #{sobreSistemaBean.getNomeResponsavelTecnico()}" />
+                    <br/>
+                    <h:outputText value="#{sobreSistemaBean.getEmailResponsavelTecnico()}" />
+                </h:panelGrid>
+            </h:panelGroup>
+            <p:commandButton
+                value="Fechar"
+                icon="pi pi-times"
+                type="button"
+                styleClass="ui-confirmdialog-no"
+                onclick="PF('dlgSobreSistemaWidget').hide()" />
+        </h:form>
+    </p:dialog>
 
     <div class="content-wrapper">
-        <ui:insert name="content">Conteúdo</ui:insert>
+        <ui:insert name="content" />
     </div>
 </h:body>
 </html>

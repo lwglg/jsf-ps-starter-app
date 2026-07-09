@@ -66,7 +66,7 @@ public final class JPAUtil {
      * ex.: System.setProperty("DB_HOST", ...) com Testcontainers) e, na ausência
      * destas, a variáveis de ambiente (usadas em produção via Docker Compose).
      */
-    private static String env(String key, String defaultValue) {
+    public static String env(String key, String defaultValue) {
         String fromProperty = System.getProperty(key);
         
         if (fromProperty != null && !fromProperty.isBlank()) {
