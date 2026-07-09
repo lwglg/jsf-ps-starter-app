@@ -1,0 +1,60 @@
+name: Imagens Docker
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - "feature/*"
+      - "bugfix/*"
+      - "docs/*"
+      - "refactor/*"
+      - "develop"
+      - "master"
+  push:
+    branches:
+      - "feature/*"
+      - "bugfix/*"
+      - "docs/*"
+      - "refactor/*"
+      - "develop"
+      - "master"
+  workflow_dispatch: {}
+
+jobs:
+  dive-analysis-dev:
+    name: Análise das imagens Docker dos serviços para ambiente de desenvolvimento.
+    runs-on: ubuntu-latest
+    env:
+      DIVE_VERSION: "0.13.1"
+      COMPOSE_YML: "${{ github.workspace }}/infra/docker/develop/docker-compose.yml"
+
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      # Healthcheck da imagem do banco de dados PostgreSQL
+      - name: Build da imagem para o serviço "database"
+        timeout-minutes: 10
+        run: |
+          docker compose -f $COMPOSE_YML build database
+
+      - name: Executa análise da imagem para o serviço "database"
+        timeout-minutes: 2
+        env:
+          CI: "true"
+        run: |
+          wget -qO- "https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.tar.gz" | sudo tar xvz -C /usr/local/bin
+          dive --ci-config "${{ github.workspace }}/.dive-ci.yaml" rsdata/companyman-db-dev:latest
+
+      # Healthcheck da imagem do Apache Tomcat
+      - name: Build da imagem para o serviço "tomcat"
+        timeout-minutes: 10
+        run: |
+          docker compose -f $COMPOSE_YML build tomcat
+
+      - name: Executa análise da imagem para o serviço "tomcat"
+        timeout-minutes: 2
+        env:
+          CI: "true"
+        run: |
+          wget -qO- "https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.tar.gz" | sudo tar xvz -C /usr/local/bin
+          dive --ci-config "${{ github.workspace }}/.dive-ci.yaml" rsdata/companyman-tomcat-dev:latest
