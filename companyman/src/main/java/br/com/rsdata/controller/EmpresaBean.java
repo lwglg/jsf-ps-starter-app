@@ -1,6 +1,7 @@
 package br.com.rsdata.controller;
 
 import br.com.rsdata.exception.DuplicateEntityException;
+import br.com.rsdata.exception.ValidationException;
 import br.com.rsdata.model.Empresa;
 import br.com.rsdata.model.RamoAtividade;
 import br.com.rsdata.model.TipoEmpresa;
@@ -13,11 +14,12 @@ import jakarta.inject.Named;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Managed bean (Controller) responsável pela tela de gerenciamento de Empresas.
  */
-@Named("empresaBean")
+@Named
 @SessionScoped
 public class EmpresaBean implements Serializable {
 
@@ -27,6 +29,7 @@ public class EmpresaBean implements Serializable {
     private final RamoAtividadeService ramoAtividadeService = new RamoAtividadeService();
 
     private List<Empresa> lista;
+    
     private Empresa selecionado = new Empresa();
     private Empresa novoRegistro = new Empresa();
 
@@ -71,38 +74,41 @@ public class EmpresaBean implements Serializable {
 
     public void salvar() {
         try {
-            // TODO: remove this check after proper bean validation layer is integrated
-            if (novoRegistro.getCnpj() == null) return;
-
             empresaService.salvar(novoRegistro);
             lista = null;
             novoRegistro = new Empresa();
+            
             addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Empresa cadastrada com sucesso.");
         } catch (DuplicateEntityException e) {
             addMensagem(FacesMessage.SEVERITY_WARN, "Registro duplicado", e.getMessage());
+        } catch (ValidationException e) {
+            addMensagem(FacesMessage.SEVERITY_WARN, "Dados inválidos", String.join(" | ", e.getViolacoes()));
         }
     }
 
     public void atualizar() {
         try {
-            // Failsafe checking when rendering page for the first time
-            if (selecionado == null) return;
-
             empresaService.atualizar(selecionado);
             lista = null;
+            
             addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Empresa atualizada com sucesso.");
         } catch (DuplicateEntityException e) {
             addMensagem(FacesMessage.SEVERITY_WARN, "Registro duplicado", e.getMessage());
+        } catch (ValidationException e) {
+            addMensagem(FacesMessage.SEVERITY_WARN, "Dados inválidos", String.join(" | ", e.getViolacoes()));
         }
     }
 
-    public void remover(String id) {
+    public void remover(UUID id) {
         empresaService.remover(id);
         lista = null;
+        
         addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Empresa removida com sucesso.");
     }
 
     private void addMensagem(FacesMessage.Severity severidade, String titulo, String detalhe) {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severidade, titulo, detalhe));
+        FacesContext
+            .getCurrentInstance()
+            .addMessage(null, new FacesMessage(severidade, titulo, detalhe));
     }
 }

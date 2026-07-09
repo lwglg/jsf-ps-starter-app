@@ -23,6 +23,7 @@ public class RamoAtividadeConverter implements Converter<RamoAtividade> {
         if (value == null || value.isBlank()) {
             return null;
         }
+
         return service.buscarPorId(UUID.fromString(value));
     }
 
@@ -31,6 +32,7 @@ public class RamoAtividadeConverter implements Converter<RamoAtividade> {
         if (value == null || value.getId() == null) {
             return "";
         }
+
         return value.getId().toString();
     }
 }
