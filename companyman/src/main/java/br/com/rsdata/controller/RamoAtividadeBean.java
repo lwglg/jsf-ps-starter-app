@@ -1,8 +1,12 @@
 package br.com.rsdata.controller;
 
 import br.com.rsdata.exception.DuplicateEntityException;
+import br.com.rsdata.exception.ExportException;
 import br.com.rsdata.exception.ValidationException;
+import br.com.rsdata.export.ExportFormat;
+import br.com.rsdata.export.ExportResponseWriter;
 import br.com.rsdata.model.RamoAtividade;
+import br.com.rsdata.service.RamoAtividadeExportService;
 import br.com.rsdata.service.RamoAtividadeService;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -24,9 +28,9 @@ public class RamoAtividadeBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final RamoAtividadeService service = new RamoAtividadeService();
+    private final RamoAtividadeExportService exportService = new RamoAtividadeExportService();
 
     private List<RamoAtividade> lista;
-    
     private RamoAtividade selecionado = new RamoAtividade();
     private RamoAtividade novoRegistro = new RamoAtividade();
 
@@ -68,7 +72,6 @@ public class RamoAtividadeBean implements Serializable {
             service.salvar(novoRegistro);
             lista = null;
             novoRegistro = new RamoAtividade();
-            
             addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Ramo de atividade cadastrado com sucesso.");
         } catch (DuplicateEntityException e) {
             addMensagem(FacesMessage.SEVERITY_WARN, "Registro duplicado", e.getMessage());
@@ -81,7 +84,6 @@ public class RamoAtividadeBean implements Serializable {
         try {
             service.atualizar(selecionado);
             lista = null;
-            
             addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Ramo de atividade atualizado com sucesso.");
         } catch (DuplicateEntityException e) {
             addMensagem(FacesMessage.SEVERITY_WARN, "Registro duplicado", e.getMessage());
@@ -93,13 +95,30 @@ public class RamoAtividadeBean implements Serializable {
     public void remover(UUID id) {
         service.remover(id);
         lista = null;
-        
         addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Ramo de atividade removido com sucesso.");
     }
 
+    /**
+     * Exporta a listagem completa de ramos de atividade (não apenas a
+     * página atual da tabela) no formato solicitado, iniciando o download
+     * do arquivo. Deve ser chamado a partir de um componente com
+     * {@code ajax="false"}.
+     */
+    public void exportar(ExportFormat formato) {
+        try {
+            byte[] conteudo = exportService.exportar(getLista(), formato);
+            String nomeArquivo = "ramos-de-atividade." + formato.getExtensao();
+            ExportResponseWriter.escreverDownload(conteudo, nomeArquivo, formato.getContentType());
+        } catch (ExportException e) {
+            addMensagem(FacesMessage.SEVERITY_ERROR, "Erro ao exportar", e.getMessage());
+        }
+    }
+
+    public ExportFormat[] getFormatosExportacao() {
+        return ExportFormat.values();
+    }
+
     private void addMensagem(FacesMessage.Severity severidade, String titulo, String detalhe) {
-        FacesContext
-            .getCurrentInstance()
-            .addMessage(null, new FacesMessage(severidade, titulo, detalhe));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severidade, titulo, detalhe));
     }
 }

@@ -41,7 +41,7 @@ public class SobreSistemaBean implements Serializable {
         responsavelEmail = env("APP_SYSADMIN_EMAIL", "guilherme.goncalves@rsdata.inf.br");
         empresaNome = env("APP_COMPANY_NAME", "Empresa");
         empresaUrl = env("APP_COMPANY_URL", "https://www.rsdata.com.br");
-        logoPath = env("APP_LOGO_PATH", "rsdata_logo.png");
+        logoPath = env("APP_LOGO_PATH", "rsdata_logo.svg");
     }
 
     /**

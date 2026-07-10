@@ -1,10 +1,14 @@
 package br.com.rsdata.controller;
 
 import br.com.rsdata.exception.DuplicateEntityException;
+import br.com.rsdata.exception.ExportException;
 import br.com.rsdata.exception.ValidationException;
+import br.com.rsdata.export.ExportFormat;
+import br.com.rsdata.export.ExportResponseWriter;
 import br.com.rsdata.model.Empresa;
 import br.com.rsdata.model.RamoAtividade;
 import br.com.rsdata.model.TipoEmpresa;
+import br.com.rsdata.service.EmpresaExportService;
 import br.com.rsdata.service.EmpresaService;
 import br.com.rsdata.service.RamoAtividadeService;
 import jakarta.enterprise.context.SessionScoped;
@@ -27,9 +31,9 @@ public class EmpresaBean implements Serializable {
 
     private final EmpresaService empresaService = new EmpresaService();
     private final RamoAtividadeService ramoAtividadeService = new RamoAtividadeService();
+    private final EmpresaExportService empresaExportService = new EmpresaExportService();
 
     private List<Empresa> lista;
-    
     private Empresa selecionado = new Empresa();
     private Empresa novoRegistro = new Empresa();
 
@@ -77,7 +81,6 @@ public class EmpresaBean implements Serializable {
             empresaService.salvar(novoRegistro);
             lista = null;
             novoRegistro = new Empresa();
-            
             addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Empresa cadastrada com sucesso.");
         } catch (DuplicateEntityException e) {
             addMensagem(FacesMessage.SEVERITY_WARN, "Registro duplicado", e.getMessage());
@@ -90,7 +93,6 @@ public class EmpresaBean implements Serializable {
         try {
             empresaService.atualizar(selecionado);
             lista = null;
-            
             addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Empresa atualizada com sucesso.");
         } catch (DuplicateEntityException e) {
             addMensagem(FacesMessage.SEVERITY_WARN, "Registro duplicado", e.getMessage());
@@ -102,13 +104,29 @@ public class EmpresaBean implements Serializable {
     public void remover(UUID id) {
         empresaService.remover(id);
         lista = null;
-        
         addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Empresa removida com sucesso.");
     }
 
+    /**
+     * Exporta a listagem completa de empresas (não apenas a página atual da
+     * tabela) no formato solicitado, iniciando o download do arquivo.
+     * Deve ser chamado a partir de um componente com {@code ajax="false"}.
+     */
+    public void exportar(ExportFormat formato) {
+        try {
+            byte[] conteudo = empresaExportService.exportar(getLista(), formato);
+            String nomeArquivo = "empresas." + formato.getExtensao();
+            ExportResponseWriter.escreverDownload(conteudo, nomeArquivo, formato.getContentType());
+        } catch (ExportException e) {
+            addMensagem(FacesMessage.SEVERITY_ERROR, "Erro ao exportar", e.getMessage());
+        }
+    }
+
+    public ExportFormat[] getFormatosExportacao() {
+        return ExportFormat.values();
+    }
+
     private void addMensagem(FacesMessage.Severity severidade, String titulo, String detalhe) {
-        FacesContext
-            .getCurrentInstance()
-            .addMessage(null, new FacesMessage(severidade, titulo, detalhe));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severidade, titulo, detalhe));
     }
 }
