@@ -15,8 +15,8 @@ import java.util.List;
 public class RamoAtividadeExportService {
 
     private static final String[] CABECALHOS = {"Descrição"};
-
     private static final String TITULO_RELATORIO = "Relatório de Ramos de Atividade";
+    public static final String NOME_RELATORIO_FALLBACK = "relatorio-ramos-atividade";
 
     public byte[] exportar(List<RamoAtividade> ramosAtividade, ExportFormat formato) {
         List<String[]> linhas = converterParaLinhas(ramosAtividade);
@@ -37,11 +37,11 @@ public class RamoAtividadeExportService {
 
     private List<String[]> converterParaLinhas(List<RamoAtividade> ramosAtividade) {
         List<String[]> linhas = new ArrayList<>();
-        
+
         for (RamoAtividade ramo : ramosAtividade) {
             linhas.add(new String[]{ramo.getDescricao()});
         }
-        
+
         return linhas;
     }
 }

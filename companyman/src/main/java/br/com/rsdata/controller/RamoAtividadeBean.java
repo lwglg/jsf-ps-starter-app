@@ -8,6 +8,7 @@ import br.com.rsdata.export.ExportResponseWriter;
 import br.com.rsdata.model.RamoAtividade;
 import br.com.rsdata.service.RamoAtividadeExportService;
 import br.com.rsdata.service.RamoAtividadeService;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -29,16 +30,39 @@ public class RamoAtividadeBean implements Serializable {
 
     private final RamoAtividadeService service = new RamoAtividadeService();
     private final RamoAtividadeExportService exportService = new RamoAtividadeExportService();
+    private String nomeArquivo;
+    private ExportFormat formatoSelecionado;
 
     private List<RamoAtividade> lista;
     private RamoAtividade selecionado = new RamoAtividade();
     private RamoAtividade novoRegistro = new RamoAtividade();
+
+    @PostConstruct
+    public void init() {
+        this.nomeArquivo = RamoAtividadeExportService.NOME_RELATORIO_FALLBACK; 
+    }
 
     public List<RamoAtividade> getLista() {
         if (lista == null) {
             lista = service.listarTodos();
         }
         return lista;
+    }
+
+    public String getNomeArquivo() {
+        return nomeArquivo;
+    }
+    
+    public void setNomeArquivo(String nomeArquivo) {
+        this.nomeArquivo = nomeArquivo;
+    }
+
+    public ExportFormat getFormatoSelecionado() {
+        return formatoSelecionado;
+    }
+    
+    public void setFormatoSelecionado(ExportFormat formato) {
+        this.formatoSelecionado = formato;
     }
 
     public RamoAtividade getSelecionado() {
@@ -104,11 +128,13 @@ public class RamoAtividadeBean implements Serializable {
      * do arquivo. Deve ser chamado a partir de um componente com
      * {@code ajax="false"}.
      */
-    public void exportar(ExportFormat formato) {
+    public void exportar() {
         try {
-            byte[] conteudo = exportService.exportar(getLista(), formato);
-            String nomeArquivo = "ramos-de-atividade." + formato.getExtensao();
-            ExportResponseWriter.escreverDownload(conteudo, nomeArquivo, formato.getContentType());
+            byte[] conteudo = exportService.exportar(getLista(), formatoSelecionado);
+                        
+            ExportResponseWriter.escreverDownload(conteudo, nomeArquivo, RamoAtividadeExportService.NOME_RELATORIO_FALLBACK, formatoSelecionado);
+
+            addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Ramos de atividades exportados com sucesso!");
         } catch (ExportException e) {
             addMensagem(FacesMessage.SEVERITY_ERROR, "Erro ao exportar", e.getMessage());
         }

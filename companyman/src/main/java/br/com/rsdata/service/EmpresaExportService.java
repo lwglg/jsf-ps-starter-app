@@ -27,6 +27,7 @@ public class EmpresaExportService {
     };
 
     private static final String TITULO_RELATORIO = "Relatório de Empresas";
+    public static final String NORE_RELATORIO_FALLBACK = "relatorio-empresas";
 
     public byte[] exportar(List<Empresa> empresas, ExportFormat formato) {
         List<String[]> linhas = converterParaLinhas(empresas);

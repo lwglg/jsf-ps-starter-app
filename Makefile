@@ -51,6 +51,7 @@ HELP_FUN = \
 		ps \
 		imganalysisci \
 		imganalysisui \
+		volinspect \
 		topology \
 		maven \
 		psql
@@ -143,6 +144,9 @@ imganalysisui: ## Executa a análise de uma imagem Docker, em modo UI, dado uma 
 
 imganalysisci: ## Executa a análise de uma imagem Docker, em modo CI, dado uma img=<imagem Docker>
 	@./scripts/docker-analysis.sh ci $(img)
+
+volinspect: ## Realiza a insoeção dos volumes Docker associados a cada container, independente do ambiente de infra
+	@./scripts/docker-analysis.sh volumes
 
 topology: ## Gera um diagrama dos serviços listados no arquivo YML do Docker Compose
 	@./scripts/generate-topology.sh topology $(env)

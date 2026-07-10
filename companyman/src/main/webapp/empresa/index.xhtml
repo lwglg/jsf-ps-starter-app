@@ -216,7 +216,7 @@
             showEffect="fade">
             <h:form id="formEditar">
                 <h:panelGroup id="dlgEditarContent" layout="block">
-                    <p:outputLabel for="nomeFantasiaEdit" value="Nome Fantasia *"/>
+                    <p:outputLabel for="nomeFantasiaEdit" value="Nome Fantasia: "/>
                     <p:inputText
                         id="nomeFantasiaEdit"
                         value="#{empresaBean.selecionado.nomeFantasia}"
@@ -226,7 +226,7 @@
                         style="width:100%"/>
                     <p:message id="nomeFantasiaEditMsg" for="nomeFantasiaEdit" display="text"/>
 
-                    <p:outputLabel for="razaoSocialEdit" value="Razão Social *"/>
+                    <p:outputLabel for="razaoSocialEdit" value="Razão Social: "/>
                     <p:inputText
                         id="razaoSocialEdit"
                         value="#{empresaBean.selecionado.razaoSocial}"
@@ -236,7 +236,7 @@
                         style="width:100%"/>
                     <p:message id="razaoSocialEditMsg" for="razaoSocialEdit" display="text"/>
 
-                    <p:outputLabel for="cnpjEdit" value="CNPJ *"/>
+                    <p:outputLabel for="cnpjEdit" value="CNPJ: "/>
                     <p:inputMask
                         id="cnpjEdit"
                         value="#{empresaBean.selecionado.cnpj}"
@@ -244,7 +244,7 @@
                         requiredMessage="O CNPJ é obrigatório." style="width:100%"/>
                     <p:message id="cnpjEditMsg" for="cnpjEdit" display="text"/>
 
-                    <p:outputLabel for="dataFundacaoEdit" value="Data de Fundação *"/>
+                    <p:outputLabel for="dataFundacaoEdit" value="Data de Fundação: "/>
                     <p:calendar
                         id="dataFundacaoEdit"
                         value="#{empresaBean.selecionado.dataFundacao}"
@@ -256,7 +256,7 @@
                         style="width:100%"/>
                     <p:message id="dataFundacaoEditMsg" for="dataFundacaoEdit" display="text"/>
 
-                    <p:outputLabel for="ramoAtividadeEdit" value="Ramo de Atividade *"/>
+                    <p:outputLabel for="ramoAtividadeEdit" value="Ramo de Atividade: "/>
                     <p:selectOneMenu
                         id="ramoAtividadeEdit"
                         value="#{empresaBean.selecionado.ramoAtividade}"
@@ -272,7 +272,7 @@
                     </p:selectOneMenu>
                     <p:message id="ramoAtividadeEditMsg" for="ramoAtividadeEdit" display="text"/>
 
-                    <p:outputLabel for="tipoEmpresaEdit" value="Tipo de Empresa *"/>
+                    <p:outputLabel for="tipoEmpresaEdit" value="Tipo de Empresa: "/>
                     <p:selectOneMenu
                         id="tipoEmpresaEdit"
                         value="#{empresaBean.selecionado.tipoEmpresa}"
@@ -287,7 +287,7 @@
                     </p:selectOneMenu>
                     <p:message id="tipoEmpresaEditMsg" for="tipoEmpresaEdit" display="text"/>
 
-                    <p:outputLabel for="faturamentoEdit" value="Faturamento *"/>
+                    <p:outputLabel for="faturamentoEdit" value="Faturamento: "/>
                     <p:inputNumber
                         id="faturamentoEdit"
                         value="#{empresaBean.selecionado.faturamento}"
@@ -299,7 +299,8 @@
 
                     <p:commandButton
                         value="Atualizar"
-                        icon="pi pi-check" style="margin-top:15px"
+                        icon="pi pi-check"
+                        style="margin-top:15px"
                         actionListener="#{empresaBean.atualizar()}"
                         oncomplete="if (args &amp;&amp; !args.validationFailed) { PF('dlgEditar').hide(); }"
                         update=":form:tabela :form:growl nomeFantasiaEdit nomeFantasiaEditMsg

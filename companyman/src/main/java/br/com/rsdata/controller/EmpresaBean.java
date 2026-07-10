@@ -115,8 +115,8 @@ public class EmpresaBean implements Serializable {
     public void exportar(ExportFormat formato) {
         try {
             byte[] conteudo = empresaExportService.exportar(getLista(), formato);
-            String nomeArquivo = "empresas." + formato.getExtensao();
-            ExportResponseWriter.escreverDownload(conteudo, nomeArquivo, formato.getContentType());
+            String nomeArquivo = EmpresaExportService.NORE_RELATORIO_FALLBACK;
+            ExportResponseWriter.escreverDownload(conteudo, nomeArquivo, EmpresaExportService.NORE_RELATORIO_FALLBACK, formato);
         } catch (ExportException e) {
             addMensagem(FacesMessage.SEVERITY_ERROR, "Erro ao exportar", e.getMessage());
         }
