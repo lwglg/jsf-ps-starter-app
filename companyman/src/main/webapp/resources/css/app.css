@@ -2,69 +2,25 @@ body {
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: #f4f6f9;
 }
-
 .content-wrapper {
     padding: 20px 30px;
     max-width: 1200px;
     margin: 0 auto;
 }
-
 .ui-datatable td, .ui-datatable th {
     font-size: 0.95rem;
 }
-
-.custom-menubar .ui-menuitem-link {
-    height: 50px;
-    line-height: 50px;
-}
-
-.custom-menubar .menubar-logo {
-    width: 100px;
-    height: 40px;
-    object-fit: contain;
-}
-
-.h1 {
-  font-size: 2.5rem;
-  color: #1abc9c; /* Unique accent color for the main title */
-  border-bottom: 2px solid #ecf0f1;
-  padding-bottom: 0.3rem;
-}
-
-.h2 {
-  font-size: 2rem;
-  color: #2980b9;
-}
-
-.h3 {
-  font-size: 1.75rem;
-}
-
-.h4 {
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.h5 {
-  font-size: 1.25rem;
-  font-style: italic;
-}
-
-.h6 {
-  font-size: 1rem;
-  color: #7f8c8d;
-  text-transform: uppercase;
-}
-
-.image-container {
-    width: 200px;  /* Set the exact size you need */
-    height: 200px;
-}
-
-.rounded-image {
+.tabela-sobre {
     width: 100%;
-    height: 100%;
-    border: 2px solid #007bff; /* Add your border color and thickness */
-    border-radius: 50%;          /* Makes the image a perfect circle */
-    object-fit: cover;           /* Ensures the image fills the area without distorting */
+    border-collapse: collapse;
+}
+.tabela-sobre td {
+    padding: 6px 8px;
+    vertical-align: top;
+    font-size: 0.95rem;
+}
+.tabela-sobre td.rotulo {
+    font-weight: 600;
+    width: 40%;
+    color: #374151;
 }

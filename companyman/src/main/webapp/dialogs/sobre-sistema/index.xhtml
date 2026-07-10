@@ -1,0 +1,63 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:ui="jakarta.faces.facelets"
+    xmlns:p="primefaces">
+    <!-- Fragmento incluído via <ui:include> a partir do ponto de composição
+         <ui:insert name="dialog"> em /WEB-INF/template/layout.xhtml.
+         Não usa "template" (não é uma página própria) para evitar recursão
+         com o próprio layout.xhtml e para que o conteúdo da página atual
+         (Empresas, Ramos de Atividade, etc.) permaneça visível por trás do
+         modal. Todas as informações vêm de
+         com.empresa.controller.SobreSistemaBean (@ApplicationScoped), que as
+         lê de variáveis de ambiente. -->
+    <p:dialog
+        header="Sobre o Sistema"
+        widgetVar="dlgSobreSistema"
+        modal="true"
+        width="440"
+        showEffect="fade"
+        closable="true"
+        styleClass="dialogo-sobre">
+        <div style="text-align:center; margin-bottom:18px;">
+            <h:outputLink
+                value="#{sobreSistemaBean.empresaUrl}"
+                target="_blank"
+                title="Visitar site: #{sobreSistemaBean.empresaNome}">
+                <h:graphicImage
+                    library="img"
+                    name="#{sobreSistemaBean.logoPath}"
+                    style="max-width:200px; height:auto; cursor:pointer;"
+                    alt="Logo #{sobreSistemaBean.empresaNome}"/>
+            </h:outputLink>
+        </div>
+
+        <table class="tabela-sobre">
+            <tr>
+                <td class="rotulo">Sistema</td>
+                <td>#{sobreSistemaBean.nomeSistema}</td>
+            </tr>
+            <tr>
+                <td class="rotulo">Descrição</td>
+                <td>#{sobreSistemaBean.descricao}</td>
+            </tr>
+            <tr>
+                <td class="rotulo">Versão</td>
+                <td>#{sobreSistemaBean.versao}</td>
+            </tr>
+            <tr>
+                <td class="rotulo">Responsável técnico</td>
+                <td>#{sobreSistemaBean.responsavelNome}</td>
+            </tr>
+            <tr>
+                <td class="rotulo">E-mail</td>
+                <td>
+                    <h:outputLink value="mailto:#{sobreSistemaBean.responsavelEmail}">
+                        #{sobreSistemaBean.responsavelEmail}
+                    </h:outputLink>
+                </td>
+            </tr>
+        </table>
+    </p:dialog>
+</ui:composition>
