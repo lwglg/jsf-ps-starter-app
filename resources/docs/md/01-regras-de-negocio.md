@@ -53,7 +53,7 @@ stateDiagram-v2
 
 ## Estado da interação na interface (diálogos PrimeFaces)
 
-Representa o comportamento do formulário de cadastro/edição e da confirmação de remoção, comuns às telas `empresa/list.xhtml` e `ramoAtividade/list.xhtml`.
+Representa o comportamento do formulário de cadastro/edição e da confirmação de remoção, comuns às telas `empresa/index.xhtml` e `ramoAtividade/index.xhtml`.
 
 ```mermaid
 stateDiagram-v2

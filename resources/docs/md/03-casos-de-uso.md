@@ -178,8 +178,8 @@ De modo também que o desenvolvedor entenda como os casos de uso supracitados fo
 
 | Caso de uso                                       | Managed Bean        | Serviço                | Tela (View)                |
 |---------------------------------------------------|---------------------|------------------------|----------------------------|
-| Cadastrar/Editar/Remover/Listar Ramo de Atividade | `RamoAtividadeBean` | `RamoAtividadeService` | `ramoAtividade/list.xhtml` |
-| Cadastrar/Editar/Remover/Listar Empresa           | `EmpresaBean`       | `EmpresaService`       | `empresa/list.xhtml`       |
+| Cadastrar/Editar/Remover/Listar Ramo de Atividade | `RamoAtividadeBean` | `RamoAtividadeService` | `ramoAtividade/index.xhtml` |
+| Cadastrar/Editar/Remover/Listar Empresa           | `EmpresaBean`       | `EmpresaService`       | `empresa/index.xhtml`       |
 
 ---
 

@@ -23,7 +23,7 @@
 
 No que tange aos casos de uso já explorados seguem aqui os respectivos diagramas de sequência. As convenções adotadas em todos os diagramas são as seguintes:
 
-- **View**: página Facelets/PrimeFaces (`empresa/list.xhtml` ou `ramoAtividade/list.xhtml`).
+- **View**: página Facelets/PrimeFaces (`empresa/index.xhtml` ou `ramoAtividade/index.xhtml`).
 - **Bean**: managed bean CDI (`EmpresaBean` / `RamoAtividadeBean`).
 - **Service**: camada de regras de negócio (`EmpresaService` / `RamoAtividadeService`).
 - **DAO**: camada de acesso a dados (`EmpresaDAO` / `RamoAtividadeDAO`).
@@ -38,7 +38,7 @@ Fluxo análogo ao de cadastro de Empresa, porém com verificação de duplicidad
 ```mermaid
 sequenceDiagram
     actor Usuario as Usuário
-    participant View as ramoAtividade/list.xhtml
+    participant View as ramoAtividade/index.xhtml
     participant Bean as RamoAtividadeBean
     participant Service as RamoAtividadeService
     participant DAO as RamoAtividadeDAO
@@ -80,7 +80,7 @@ Este caso de uso evidencia uma regra de negócio implícita, garantida pelo banc
 ```mermaid
 sequenceDiagram
     actor Usuario as Usuário
-    participant View as ramoAtividade/list.xhtml
+    participant View as ramoAtividade/index.xhtml
     participant Bean as RamoAtividadeBean
     participant Service as RamoAtividadeService
     participant DAO as RamoAtividadeDAO
@@ -122,7 +122,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     actor Usuario as Usuário
-    participant View as empresa/list.xhtml
+    participant View as empresa/index.xhtml
     participant Bean as EmpresaBean
     participant Service as EmpresaService
     participant DAO as EmpresaDAO
@@ -164,7 +164,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     actor Usuario as Usuário
-    participant View as empresa/list.xhtml
+    participant View as empresa/index.xhtml
     participant Bean as EmpresaBean
     participant Service as EmpresaService
     participant DAO as EmpresaDAO
@@ -204,7 +204,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     actor Usuario as Usuário
-    participant View as empresa/list.xhtml
+    participant View as empresa/index.xhtml
     participant Bean as EmpresaBean
     participant Service as EmpresaService
     participant DAO as EmpresaDAO
@@ -236,12 +236,12 @@ sequenceDiagram
 
 ### UC8 - Listar empresas
 
-Fluxo executado ao carregar a tela `empresa/list.xhtml` (idêntico, com os nomes trocados, para `ramoAtividade/list.xhtml`).
+Fluxo executado ao carregar a tela `empresa/index.xhtml` (idêntico, com os nomes trocados, para `ramoAtividade/index.xhtml`).
 
 ```mermaid
 sequenceDiagram
     actor Usuario as Usuário
-    participant View as empresa/list.xhtml
+    participant View as empresa/index.xhtml
     participant Bean as EmpresaBean
     participant Service as EmpresaService
     participant DAO as EmpresaDAO
