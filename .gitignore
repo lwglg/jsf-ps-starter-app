@@ -1,3 +1,6 @@
+# VSCode related
+.vscode/
+
 # Cache related
 .cache/
 
