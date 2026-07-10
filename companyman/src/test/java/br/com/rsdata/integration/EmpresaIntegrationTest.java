@@ -47,10 +47,10 @@ class EmpresaIntegrationTest {
 
     @BeforeAll
     static void configurarConexao() {
-        System.setProperty("DB_HOST", postgres.getHost());
+        System.setProperty("DB_HOSTNAME", postgres.getHost());
         System.setProperty("DB_PORT", String.valueOf(postgres.getFirstMappedPort()));
         System.setProperty("DB_NAME", postgres.getDatabaseName());
-        System.setProperty("DB_USER", postgres.getUsername());
+        System.setProperty("DB_USERNAME", postgres.getUsername());
         System.setProperty("DB_PASSWORD", postgres.getPassword());
         
         JPAUtil.reset();

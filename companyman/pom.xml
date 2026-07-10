@@ -60,6 +60,15 @@
             <version>${hibernate.version}</version>
         </dependency>
 
+        <!-- Pool de conexões (substitui o DriverManagerConnectionProviderImpl padrão
+             do Hibernate, que não possui timeout/retry configuráveis e mascara
+             erros de conexão transitórios com mensagens genéricas) -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-hikaricp</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
         <!-- Bean Validation (used by JPA/Hibernate Validator, optional but recommended) -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
@@ -96,6 +105,17 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Sem um binding do SLF4J, todos os logs do Testcontainers/docker-java
+             ficam silenciados (NOPLogger), inclusive as mensagens de diagnóstico
+             que explicam POR QUE nenhuma estratégia de conexão com o Docker
+             funcionou. Este binding é apenas para os testes. -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.13</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

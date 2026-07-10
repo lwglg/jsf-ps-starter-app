@@ -54,9 +54,18 @@ public final class JPAUtil {
 
         String url = "jdbc:postgresql://" + host + ":" + port + "/" + name;
 
+        // Propriedades padrão JPA (usadas pelo provider DriverManager padrão do Hibernate).
         overrides.put("jakarta.persistence.jdbc.url", url);
         overrides.put("jakarta.persistence.jdbc.user", user);
         overrides.put("jakarta.persistence.jdbc.password", password);
+
+        // Propriedades nativas do Hibernate (exigidas pelo HikariCPConnectionProvider,
+        // que NÃO lê as propriedades padrão JPA acima). Sem isto, o Hikari tenta
+        // conectar sem usuário/senha, causando:
+        // "FATAL: no PostgreSQL user name specified in startup packet".
+        overrides.put("hibernate.connection.url", url);
+        overrides.put("hibernate.connection.username", user);
+        overrides.put("hibernate.connection.password", password);
 
         return overrides;
     }
@@ -66,15 +75,15 @@ public final class JPAUtil {
      * ex.: System.setProperty("DB_HOST", ...) com Testcontainers) e, na ausência
      * destas, a variáveis de ambiente (usadas em produção via Docker Compose).
      */
-    public static String env(String key, String defaultValue) {
+    private static String env(String key, String defaultValue) {
         String fromProperty = System.getProperty(key);
-        
+
         if (fromProperty != null && !fromProperty.isBlank()) {
             return fromProperty;
         }
-        
+
         String value = System.getenv(key);
-        
+
         return (value == null || value.isBlank()) ? defaultValue : value;
     }
 
