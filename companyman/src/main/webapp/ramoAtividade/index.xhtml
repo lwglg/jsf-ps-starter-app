@@ -19,6 +19,30 @@
                         update=":formNovo:dlgNovoContent"/>
                 </p:toolbarGroup>
             </p:toolbar>
+            
+            <p:toolbarGroup align="right">
+                <span style="margin-right:8px; color:#6b7280;">Exportar:</span>
+                <p:commandButton
+                    value="CSV"
+                    icon="pi pi-file"
+                    ajax="false"
+                    actionListener="#{ramoAtividadeBean.exportar('CSV')}"/>
+                <p:commandButton
+                    value="XLS"
+                    icon="pi pi-file-excel"
+                    ajax="false"
+                    actionListener="#{ramoAtividadeBean.exportar('XLS')}"/>
+                <p:commandButton
+                    value="ODT"
+                    icon="pi pi-file-word"
+                    ajax="false"
+                    actionListener="#{ramoAtividadeBean.exportar('ODT')}"/>
+                <p:commandButton
+                    value="PDF"
+                    icon="pi pi-file-pdf"
+                    ajax="false"
+                    actionListener="#{ramoAtividadeBean.exportar('PDF')}"/>
+            </p:toolbarGroup>
 
             <p:dataTable
                 id="tabela"

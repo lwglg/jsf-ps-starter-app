@@ -18,6 +18,29 @@
                         oncomplete="PF('dlgNovo').show()"
                         update=":formNovo:dlgNovoContent"/>
                 </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <span style="margin-right:8px; color:#6b7280;">Exportar:</span>
+                    <p:commandButton
+                        value="CSV"
+                        icon="pi pi-file"
+                        ajax="false"
+                        actionListener="#{empresaBean.exportar('CSV')}"/>
+                    <p:commandButton
+                        value="XLS"
+                        icon="pi pi-file-excel"
+                        ajax="false"
+                        actionListener="#{empresaBean.exportar('XLS')}"/>
+                    <p:commandButton
+                        value="ODT"
+                        icon="pi pi-file-word"
+                        ajax="false"
+                        actionListener="#{empresaBean.exportar('ODT')}"/>
+                    <p:commandButton
+                        value="PDF"
+                        icon="pi pi-file-pdf"
+                        ajax="false"
+                        actionListener="#{empresaBean.exportar('PDF')}"/>
+                </p:toolbarGroup>
             </p:toolbar>
 
             <p:dataTable
