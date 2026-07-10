@@ -8,6 +8,9 @@ YELLOW  := $(shell tput -Txterm setaf 3)
 RED     := $(shell tput -Txterm setaf 1)
 RESET   := $(shell tput -Txterm sgr0)
 
+# Aplicação JSF/PrimeFaces
+POM_XML_LOCATION=./companyman/pom.xml
+
 # Constrói a documentação de cada script, visualizável via 'make' ou 'make help'
 # A documentação dee cada script é feita através de uma string começando por '\#\#'
 # Uma categoria de comandos pode ser adicionada em uma string iniciando a mesma com @category
@@ -44,11 +47,13 @@ HELP_FUN = \
 		stop \
 		up \
 		run \
-		exec \
+		enter \
 		ps \
 		imganalysisci \
 		imganalysisui \
-		topology
+		topology \
+		maven \
+		psql
 
 .DEFAULT_GOAL := help
 
@@ -64,13 +69,15 @@ define compose_cmd
 endef
 
 define HEADER
-+---------------------------------------------------------------------------------------------------------------+
-     _ ___ ___   ___ ___   ___ _            _               _               _   __  __      _        __ _ _     
-  _ | / __| __| | _ \ __| / __| |_ __ _ _ _| |_ ___ _ _    /_\  _ __ _ __  | | |  \/  |__ _| |_____ / _(_) |___ 
- | || \__ \ _|  |  _/ _|  \__ \  _/ _` | '_|  _/ -_) '_|  / _ \| '_ \ '_ \ | | | |\/| / _` | / / -_)  _| | / -_)
-  \__/|___/_|   |_| |_|   |___/\__\__,_|_|  \__\___|_|   /_/ \_\ .__/ .__/ | | |_|  |_\__,_|_\_\___|_| |_|_\___|
-                                                               |_|  |_|    |_|
-+---------------------------------------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------+
+   ___                               __  __   _   _  _   _   __  __      _        __ _ _     
+  / __|___ _ __  _ __  __ _ _ _ _  _|  \/  | /_\ | \| | | | |  \/  |__ _| |_____ / _(_) |___ 
+ | (__/ _ \ '  \| '_ \/ _` | ' \ || | |\/| |/ _ \| .` | | | | |\/| / _` | / / -_)  _| | / -_)
+  \___\___/_|_|_| .__/\__,_|_||_\_, |_|  |_/_/ \_\_|\_| | | |_|  |_\__,_|_\_\___|_| |_|_\___|
+                |_|             |__/                    |_|
++---------------------------------------------------------------------------------------------+
+				SCRIPTS DE AUTOMAÇÃO DO PROJETO
++---------------------------------------------------------------------------------------------+
 endef
 export HEADER
 
@@ -92,42 +99,42 @@ build: ## Realiza a build de todas as imagens Docker, ou para um c=<node de serv
 confirm:
 	@( read -p "$(RED)Tem certeza? [y/N]$(RESET): " sure && case "$$sure" in [sSyY]) true;; *) false;; esac )
 
-clean: confirm ## Realiza a limpeza de todos os dados associados aos conteineres, dado um env=<dev | prod> ambiente de infra
+clean: confirm ## Realiza a limpeza de todos os dados associados aos contêineres, dado um env=<dev | prod> ambiente de infra
 	$(call compose_cmd, $(env), down)
 
-destroy: confirm ## Remove todas as imagens, volumes, networks e conteineres não utilizados. Use com cautela!
+destroy: confirm ## Remove todas as imagens, volumes, networks e contêineres não utilizados. Use com cautela!
 	@docker system prune --all --volumes --force
 	@docker volume prune --all --force
 	@docker network prune --force
 	@docker image prune --all --force
 
-logs: ## Adiciona captura de logs para todos os conteineres ou para um c=<nome de serviço>, dado um env=<dev | prod> ambiente de infra
+logs: ## Adiciona captura de logs para todos os contêineres ou para um c=<nome de serviço>, dado um env=<dev | prod> ambiente de infra
 	$(call compose_cmd, $(env), logs --follow $(c))
 
-restart: ## Reinicia todos os conteineres ou apenas um c=<nome de serviço>, dado um env=<dev | prod> ambiente de infra
+restart: ## Reinicia todos os contêineres ou apenas um c=<nome de serviço>, dado um env=<dev | prod> ambiente de infra
 	$(call compose_cmd, $(env), stop $(c))
 	@make init c=$(c)
 
-start: ## Inicia todos os conteineres em background (detached mode) ou apenas um c=<nome de serviço>, dado um env=<dev | prod> ambiente de infra
+start: ## Inicia todos os contêineres em background (detached mode) ou apenas um c=<nome de serviço>, dado um env=<dev | prod> ambiente de infra
 	$(call compose_cmd, $(env), up -d $(c))
 
 init: ## Inicia um conteiner em detached mode, com captura de logs, dado um env=<dev | prod> ambiente de infra
 	@make start env=$(env) c=$(c) && make logs env=$(env) c=$(c)
 
-status: ## Lista os status dos conteineres em execução, dado um env=<dev | prod> ambiente de infra
+status: ## Lista os status dos contêineres em execução, dado um env=<dev | prod> ambiente de infra
 	$(call compose_cmd, $(env), ps)
 
-stop: ## Encerra a execução de todos os conteineres ou de apenas um c=<nome de serviço>, dado um env=<dev | prod> ambiente de infra
+stop: ## Encerra a execução de todos os contêineres ou de apenas um c=<nome de serviço>, dado um env=<dev | prod> ambiente de infra
 	$(call compose_cmd, $(env), stop $(c))
 
-up: ## Inicia todos os conteineres em modo "attached" ou apenas um c=<nome de serviço>, dado um env=<dev | prod> ambiente de infra
+up: ## Inicia todos os contêineres em modo "attached" ou apenas um c=<nome de serviço>, dado um env=<dev | prod> ambiente de infra
 	$(call compose_cmd, $(env), up $(c))
 
 run: ## Roda um comando (o que seria especificado em 'CMD' na imagem), dado um c=<nome de serviço> e um env=<dev | prod> ambiente de infra
 	$(call compose_cmd, $(env), run --rm $(c) $(cmd))
 
-exec: ## Executa um comando em um container já iniciado, dado um c=<nome de serviço> e um s=<script> e um env=<dev | prod> ambiente de infra
-	$(call compose_cmd, $(env), exec -it $(c) $(s))
+enter: ## Iniciar uma sessão do terminal dentro de um container em execução, dado um c=<nome de serviço>, um sh=</bin/sh | /bin/bash>, e um env=<dev | prod> ambiente de infra
+	$(call compose_cmd, $(env), exec -it $(c) $(sh))
 
 ps: status ## Alias do comando 'status'
 
@@ -139,3 +146,9 @@ imganalysisci: ## Executa a análise de uma imagem Docker, em modo CI, dado uma 
 
 topology: ## Gera um diagrama dos serviços listados no arquivo YML do Docker Compose
 	@./scripts/generate-topology.sh topology $(env)
+
+maven: ## Executa o Maven associado ao pom.xml do projeto CompanyMAN, dado um cmd=<comando válido>
+	@mvn -f $(POM_XML_LOCATION) $(cmd)
+
+psql: ## Executa uma sessão postgresql-client dentro do container do serviço 'database', dado em env=<dev | prod> ambiente de infra
+	@$(call compose_cmd, $(env), exec -it database ./run-psql.sh)

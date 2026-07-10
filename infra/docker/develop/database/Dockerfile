@@ -8,10 +8,13 @@ RUN apk add --no-cache tzdata \
 
 # Healthcheck script to verify if database is up.
 COPY ./infra/docker/develop/database/scripts/is-database-up.sh ./
+COPY ./infra/docker/develop/database/scripts/run-psql.sh ./
 COPY ./infra/docker/develop/database/init /docker-entrypoint-initdb.d/
-RUN chmod +x is-database-up.sh
 
-EXPOSE 5000
+RUN chmod +x is-database-up.sh
+RUN chmod +x run-psql.sh
+
+EXPOSE 5001
 
 # two minutes should be enough to initialize the database
 # 2min = 120s => 120s/5s = 24 retries...
