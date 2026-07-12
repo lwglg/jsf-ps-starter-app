@@ -1,0 +1,91 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:ui="jakarta.faces.facelets"
+    xmlns:p="primefaces">
+    <!-- Fragmento incluído via <ui:include> a partir do ponto de composição
+         <ui:insert name="dialog"> em /WEB-INF/template/layout.xhtml.
+         Modal único de exportação, compartilhado pelas telas de Empresas e
+         de Ramos de Atividade.
+
+         A geração do arquivo e o disparo do "Salvar Como" nativo do
+         navegador acontecem em resources/js/exportar-dados.js (função
+         exportarDadosSelecionados), consumindo
+         com.empresa.export.ExportDownloadServlet:
+           * Chrome / Brave / Edge (Chromium): usa a File System Access API
+             (window.showSaveFilePicker) para abrir o diálogo nativo real de
+             "Salvar Como" do sistema operacional.
+           * Firefox e demais navegadores sem suporte a essa API: cai para
+             o fluxo padrão de download via <a download>, que só abre
+             "Salvar Como" se o usuário tiver essa opção habilitada nas
+             configurações de download do próprio navegador (limitação da
+             plataforma web, não controlável pelo servidor).
+
+         Por isso os campos abaixo são <select>/<input> HTML simples (não
+         componentes PrimeFaces), já que não há mais nenhum postback/ação de
+         managed bean envolvido neste modal, i.e. apenas leitura de valores via
+         DOM no momento do clique. -->
+    <p:dialog
+        header="Exportar Dados"
+        widgetVar="dlgExportarDados"
+        modal="true"
+        width="440"
+        showEffect="fade"
+        closable="true">
+
+        <div
+            id="statusExportacao"
+            class="status-exportacao"
+            style="display:none; margin-bottom:12px;">
+        </div>
+
+        <div class="campo-exportar">
+            <label for="expOrigem">Dados a exportar</label>
+            <select id="expOrigem" class="input-exportar">
+                <ui:repeat value="#{exportBean.origens}" var="o">
+                    <option value="#{o}">#{o.descricao}</option>
+                </ui:repeat>
+            </select>
+        </div>
+
+        <div class="campo-exportar">
+            <label for="expFormato">Formato</label>
+            <select id="expFormato" class="input-exportar">
+                <ui:repeat value="#{exportBean.formatos}" var="f">
+                    <option value="#{f}">#{f}</option>
+                </ui:repeat>
+            </select>
+        </div>
+
+        <div class="campo-exportar">
+            <label for="expNomeArquivo">Nome do arquivo</label>
+            <input type="text" id="expNomeArquivo" class="input-exportar"
+                   placeholder="opcional — gerado automaticamente se vazio"/>
+        </div>
+
+        <div style="margin-top:6px; font-size:0.85rem; color:#6b7280;">
+            Ao exportar, o navegador abrirá a caixa de diálogo nativa "Salvar
+            Como" (Chrome, Brave e Edge) para você escolher a pasta e o nome
+            do arquivo. No Firefox, isso depende da opção "Perguntar onde
+            salvar cada arquivo" estar habilitada nas configurações de
+            download do navegador.
+        </div>
+
+        <p:commandButton
+            value="Exportar"
+            icon="pi pi-download"
+            type="button"
+            style="margin-top:15px"
+            onclick="exportarDadosSelecionados()"/>
+    </p:dialog>
+
+    <!-- Único trecho que precisa de EL do Facelets (o contextPath da aplicação);
+         por isso fica inline, enquanto toda a lógica em si vive no .js dedicado
+         abaixo (resources/js/exportar-dados.js), que é um recurso estático e
+         não passa pelo processamento do Facelets. -->
+    <script>
+        window.COMPANYMAN_EXPORT_CONTEXT_PATH = '#{request.contextPath}';
+    </script>
+    <h:outputScript library="js" name="exportar-dados.js"/>
+</ui:composition>

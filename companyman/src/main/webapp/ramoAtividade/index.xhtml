@@ -19,88 +19,13 @@
                         update=":formNovo:dlgNovoContent"/>
                 </p:toolbarGroup>
                 <p:toolbarGroup align="right">
-                    <!-- <span style="margin-right:8px; color:#6b7280;">Exportar:</span>
                     <p:commandButton
-                        value="CSV"
-                        icon="pi pi-file"
-                        ajax="false"
-                        actionListener="#{ramoAtividadeBean.exportar('CSV')}"/>
-                    <p:commandButton
-                        value="XLS"
-                        icon="pi pi-file-excel"
-                        ajax="false"
-                        actionListener="#{ramoAtividadeBean.exportar('XLS')}"/>
-                    <p:commandButton
-                        value="ODT"
-                        icon="pi pi-file-word"
-                        ajax="false"
-                        actionListener="#{ramoAtividadeBean.exportar('ODT')}"/>
-                    <p:commandButton
-                        value="PDF"
-                        icon="pi pi-file-pdf"
-                        ajax="false"
-                        actionListener="#{ramoAtividadeBean.exportar('PDF')}"/> -->
-                    
-                    <!-- Main Button to open the dialog -->
-                    <p:commandButton
-                        value="Exportar" 
-                        icon="pi pi-file-export" 
-                        oncomplete="PF('dlgExportarRelatorio').show();" />
+                        value="Exportar Dados"
+                        icon="pi pi-download"
+                        onclick="PF('dlgExportarDados').show(); return false;"
+                        type="button"/>
                 </p:toolbarGroup>
             </p:toolbar>
-
-            <p:dialog
-                header="Exportar Relatório" 
-                widgetVar="dlgExportarRelatorio" 
-                modal="true"
-                width="520"
-                showEffect="fade"
-                responsive="true">
-                <h:panelGroup id="dlgExportarRelatorioContent" layout="block">                    
-                    <p:outputLabel for="nomeArquivo" value="Nome do arquivo:" />
-                    <p:inputText
-                        id="nomeArquivo"
-                        value="#{ramoAtividadeBean.nomeArquivo}"
-                        required="true"
-                        requiredMessage="O nome do arquivo é obrigatório."
-                        maxlength="80"
-                        style="width:100%"/>
-                    <p:message id="nomeArquivoMsg" for="nomeArquivo" display="text"/>
-
-                    <p:outputLabel for="formatoExportacaoEdit" value="Formato:"/>
-                    <p:selectOneMenu
-                        id="formatoExportacaoEdit"
-                        value="#{ramoAtividadeBean.formatoSelecionado}"
-                        required="true"
-                        requiredMessage="O formato de exportação é obrigatório."
-                        style="width:100%">                        
-                        <f:selectItem
-                            itemLabel="Selecione..."
-                            itemValue="#{null}"
-                            noSelectionOption="true"/>
-                        <f:selectItems
-                            value="#{ramoAtividadeBean.getFormatosExportacao()}"
-                            var="formato"
-                            itemLabel="#{formato.getExtensao().toUpperCase()} (#{formato.getContentType()})"
-                            itemValue="#{formato}"/>
-                    </p:selectOneMenu>
-                    <p:message id="formatoExportacaoEditMsg" for="formatoExportacaoEdit" display="text"/>
-                
-                    <p:commandButton
-                        value="Cancelar" 
-                        styleClass="ui-button-flat" 
-                        onclick="PF('dlgExportarRelatorio').hide();" 
-                        type="button" />
-                    
-                    <p:commandButton
-                        value="Exportar"
-                        icon="pi pi-check"
-                        style="margin-top:15px"
-                        actionListener="#{ramoAtividadeBean.exportar()}"
-                        oncomplete="if (args &amp;&amp; !args.validationFailed) { PF('dlgExportarRelatorio').hide(); }"
-                        update=":form:growl nomeArquivoMsg formatoExportacaoEditMsg"/>
-                </h:panelGroup>
-            </p:dialog>
 
             <p:dataTable
                 id="tabela"
