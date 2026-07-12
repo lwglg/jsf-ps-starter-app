@@ -95,7 +95,7 @@ listsrvs: ## Lista todos os nomes de serviços declarados no YAML do Docker Comp
 	$(call compose_cmd, $(env), config --services)
 
 build: ## Realiza a build de todas as imagens Docker, ou para um c=<node de serviço> específico, dado um env=<dev | prod> ambiente de infra
-	$(call compose_cmd, $(env), build $(c))
+	$(call compose_cmd, $(env), build --no-cache $(c))
 
 confirm:
 	@( read -p "$(RED)Tem certeza? [y/N]$(RESET): " sure && case "$$sure" in [sSyY]) true;; *) false;; esac )
