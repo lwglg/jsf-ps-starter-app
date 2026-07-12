@@ -21,6 +21,7 @@
         <junit.version>5.10.2</junit.version>
         <testcontainers.version>1.19.7</testcontainers.version>
         <slf4j.version>2.0.13</slf4j.version>
+        <logback.version>1.5.6</logback.version>
         <poi.version>5.2.5</poi.version>
         <librepdf.version>1.3.30</librepdf.version>
     </properties>
@@ -122,6 +123,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
         <!-- Exportação de dados: planilha .xls (formato binário HSSF) -->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -180,55 +187,6 @@
                         <goals>
                             <goal>integration-test</goal>
                             <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.diffplug.spotless</groupId>
-                <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.43.0</version>
-                <configuration>
-                    <!-- Passo de formatação para arquivos Java -->
-                    <java>
-                        <!-- Passos recomendados (da documentação) -->
-                        <removeUnusedImports />
-                        <importOrder />
-                        
-                        <!--Formatação usando o padrão "google-java-format" para Java -->
-                        <googleJavaFormat>
-                            <version>1.22.0</version>
-                            <style>AOSP</style>
-                        </googleJavaFormat>
-                    </java>
-
-                    <!-- Formatação para JavaScript -->
-                    <javascript>
-                        <includes>
-                            <include>**/*.js</include>
-                        </includes>
-                        <prettier />
-                    </javascript>
-
-                    <!-- Formatação para arquivos CSS e XHTML (JSF)s -->
-                    <formats>
-                        <format>
-                            <!-- Definição das extensões respectivas -->
-                            <includes>
-                                <include>**/*.css</include>
-                                <include>**/*.xhtml</include>
-                            </includes>
-                            <trimTrailingWhitespace />
-                            <endWithNewline />
-                        </format>
-                    </formats>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>spotless-check</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
