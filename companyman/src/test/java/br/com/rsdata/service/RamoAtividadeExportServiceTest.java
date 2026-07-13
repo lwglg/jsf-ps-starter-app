@@ -2,7 +2,6 @@ package br.com.rsdata.service;
 
 import br.com.rsdata.export.ExportFormat;
 import br.com.rsdata.model.RamoAtividade;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,8 +29,8 @@ class RamoAtividadeExportServiceTest {
     }
 
     @Test
-    @DisplayName("CSV exportado deve conter a descrição do ramo de atividade")
-    void csvDeveConterDescricaoDoRamo() {
+    @DisplayName("CSV exportado deve conter a descrição do ramo, o total de registros e a data/hora de geração")
+    void csvDeveConterDescricaoDoRamoEMetadados() {
         List<RamoAtividade> ramos = List.of(new RamoAtividade("Construção Civil"));
 
         byte[] csv = service.exportar(ramos, ExportFormat.CSV);
@@ -39,5 +38,7 @@ class RamoAtividadeExportServiceTest {
 
         assertTrue(conteudo.contains("Descrição"));
         assertTrue(conteudo.contains("Construção Civil"));
+        assertTrue(conteudo.contains("Total de registros: 1"));
+        assertTrue(conteudo.contains("Gerado em"));
     }
 }

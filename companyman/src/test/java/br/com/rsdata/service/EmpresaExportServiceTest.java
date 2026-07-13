@@ -4,7 +4,6 @@ import br.com.rsdata.export.ExportFormat;
 import br.com.rsdata.model.Empresa;
 import br.com.rsdata.model.RamoAtividade;
 import br.com.rsdata.model.TipoEmpresa;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -48,8 +47,8 @@ class EmpresaExportServiceTest {
     }
 
     @Test
-    @DisplayName("CSV exportado deve conter os dados da empresa")
-    void csvDeveConterDadosDaEmpresa() {
+    @DisplayName("CSV exportado deve conter os dados da empresa, o total de registros e a data/hora de geração")
+    void csvDeveConterDadosDaEmpresaEMetadados() {
         byte[] csv = service.exportar(List.of(criarEmpresaExemplo()), ExportFormat.CSV);
         String conteudo = new String(csv, StandardCharsets.UTF_8);
 
@@ -57,15 +56,18 @@ class EmpresaExportServiceTest {
         assertTrue(conteudo.contains("23.456.789/0001-95"));
         assertTrue(conteudo.contains("Tecnologia da Informação"));
         assertTrue(conteudo.contains("Empresa Individual de Responsabilidade Limitada"));
+        assertTrue(conteudo.contains("Total de registros: 1"));
+        assertTrue(conteudo.contains("Gerado em"));
     }
 
     @Test
-    @DisplayName("Deve gerar arquivo vazio (apenas cabeçalho) quando não há empresas cadastradas")
-    void deveGerarArquivoComApenasCabecalhoQuandoListaVazia() {
+    @DisplayName("Deve gerar arquivo com 'Total de registros: 0' quando não há empresas cadastradas")
+    void deveGerarArquivoComTotalZeroQuandoListaVazia() {
         byte[] csv = service.exportar(List.of(), ExportFormat.CSV);
         String conteudo = new String(csv, StandardCharsets.UTF_8);
 
         assertTrue(conteudo.contains("Nome Fantasia"));
         assertTrue(conteudo.contains("Faturamento"));
+        assertTrue(conteudo.contains("Total de registros: 0"));
     }
 }
