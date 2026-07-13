@@ -14,6 +14,7 @@
         - [Encadeamento lógico](#encadeamento-l%C3%B3gico)
     - [UC5-UC8 e UCX-UCZ - Gerenciar Empresas](#uc5-uc8-e-ucx-ucz---gerenciar-empresas)
         - [Encadeamento lógico](#encadeamento-l%C3%B3gico)
+    - [UC11 e UCV-UCU: Exportar Dados modal unificado](#uc11-e-ucv-ucu-exportar-dados-modal-unificado)
     - [Rastreabilidade](#rastreabilidade)
     - [O que deseja fazer?](#o-que-deseja-fazer)
 
@@ -48,19 +49,27 @@ Aqui todos os casos de uso associados ao que um usuário é permitido fazer no s
         - UC6: Editar empresa
         - UC7: Remover empresa
         - UC8: Listar empresas
-- Requisitos não-funcionais:
-    - UCX: Validar duplicidade (CNPJ | descrição)
+    - Exportação de dados:
+        - UC11: Exportar dados (modal unificado)
+        - UCV: Selecionar origem dos dados (empresas | ramos de atividade)
+        - UCW: Selecionar formato de exportação (CSV | XLS | ODT | PDF)
+        - UCT: Selecionar escopo dos registros (Todos | Selecionados | Página atual)
+        - UCU: Informar nome do arquivo
+- Requisitos transversais:
+    - UCX: Validar duplicidade pela chave de entidade correspondente, i.e. empresa (CNPJ) e ramo de atividade (descrição)
     - UCY: Selecionar ramo de atividade
-    - UCZ: Selecionar tipo de empresa
-    - UCW: Inicialização da aplicação (criação de schema e seed de dados)
+    - UCZ: Selecionar tipo de empresa    
+- Requisitos não-funcionais:
+    - UC00: Inicialização da aplicação criação de schema e seed de dados
 
 De modo geral, esse é o encadeamento lógico da interação de um usuário com o sistema:
 
 ```mermaid
-flowchart LR
+flowchart
+    direction TB
     Usuario(["Usuário"])
 
-    subgraph SIS["CompanyMAN | Sistema de Gerenciamento de empresas"]
+    subgraph SIS["RSData CompanyMAN"]
         direction TB
 
         subgraph PKG1["Gerenciar ramos de atividade"]
@@ -73,14 +82,21 @@ flowchart LR
 
         subgraph PKG2["Gerenciar empresas"]
             direction TB
-            UC5(["Cadastrar empresa"])
-            UC6(["Editar empresa"])
-            UC7(["Remover empresa"])
-            UC8(["Listar empresas"])
+            UC5(["Cadastrar Empresa"])
+            UC6(["Editar Empresa"])
+            UC7(["Remover Empresa"])
+            UC8(["Listar Empresas"])
         end
 
-        UCX(["Validar duplicidade <br/>(CNPJ | descrição)"])
+        UC11(["Exportar dados <br/>(modal unificado)"])
+
+        UCX(["Validar duplicidade <br/>(chave de entidade)"])
         UCY(["Selecionar ramo de atividade"])
+        UCZ(["Selecionar Tipo de Empresa"])
+        UCV(["Selecionar origem dos dados <br/>(empresas | ramos de atividade)"])
+        UCW(["Selecionar formato de exportação <br/>(CSV | XLS | ODT | PDF)"])
+        UCT(["Selecionar escopo dos registros <br/>(Todos | Selecionados | Página atual)"])
+        UCU(["Informar nome do arquivo <br/>(nome padrão como fallback; <br/>pasta escolhida no 'Salvar Como' do navegador)"])
     end
 
     Usuario --- UC1
@@ -91,6 +107,7 @@ flowchart LR
     Usuario --- UC6
     Usuario --- UC7
     Usuario --- UC8
+    Usuario --- UC11
 
     UC1 -.->|"<< include >>"| UCX
     UC2 -.->|"<< include >>"| UCX
@@ -99,6 +116,11 @@ flowchart LR
 
     UC5 -.->|"<< include >>"| UCY
     UC6 -.->|"<< include >>"| UCY
+
+    UC11 -.->|"<< include >>"| UCV
+    UC11 -.->|"<< include >>"| UCW
+    UC11 -.->|"<< include >>"| UCT
+    UC11 -.->|"<< include >>"| UCU
 ```
 
 ## UC1-UC4 e UCX - Gerenciar ramos de atividade
@@ -172,14 +194,43 @@ flowchart LR
 | Remover Empresa   | Usuário | Empresa selecionada existente; confirmação do usuário                                                            | Empresa removida do sistema                                                               |
 | Listar Empresas   | Usuário | —                                                                                                                | Tabela paginada exibida, com o nome do ramo de atividade e a descrição do tipo de empresa |
 
+
+## UC11 e UCV-UCU: Exportar Dados (modal unificado)
+
+Acessível pelo menu superior em **qualquer** tela — não pertence exclusivamente ao pacote de Empresas nem ao de Ramos de Atividade.
+
+```mermaid
+flowchart LR
+    Usuario(["Usuário"])
+
+    UC11(["Exportar Dados"])
+    UCV(["Selecionar Origem dos Dados <br/>(Empresas | Ramos de Atividade)"])
+    UCW(["Selecionar Formato <br/>(CSV | XLS | ODT | PDF)"])
+    UCT(["Selecionar Escopo dos Registros <br/>(Todos | Selecionados | Página atual)"])
+    UCU(["Informar Nome do Arquivo"])
+
+    Usuario --- UC11
+    UC11 -.->|"<< include >>"| UCV
+    UC11 -.->|"<< include >>"| UCW
+    UC11 -.->|"<< include >>"| UCT
+    UC11 -.->|"<< include >>"| UCU
+```
+
+**Descrição textual do caso de uso:**
+
+| Caso de uso    | Ator    | Pré-condição                                                                                                                                        | Pós-condição                                                                                                                                                                                                                                                                               |
+|----------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Exportar Dados | Usuário | Origem (Empresas/Ramos de Atividade), formato (CSV/XLS/ODT/PDF) e escopo (Todos/Selecionados/Página atual) selecionados; nome do arquivo é opcional | Arquivo gerado com os registros do escopo escolhido (total geral, seleção da tabela, ou página atual); o navegador abre o diálogo nativo "Salvar Como" (Chrome, Brave, Edge) ou inicia o download padrão (Firefox), com o nome informado ou um nome padrão com data/hora, se não informado |
+
 ## Rastreabilidade
 
 De modo também que o desenvolvedor entenda como os casos de uso supracitados foram componentizados, segue abaixo um breve encadeamento, à luz do padrão de projeto MVC, de como os mesmos foram implementados no contexto de JavaServer Faces e PrimeFaces:
 
-| Caso de uso                                       | Managed Bean        | Serviço                | Tela (View)                |
-|---------------------------------------------------|---------------------|------------------------|----------------------------|
-| Cadastrar/Editar/Remover/Listar Ramo de Atividade | `RamoAtividadeBean` | `RamoAtividadeService` | `ramoAtividade/index.xhtml` |
-| Cadastrar/Editar/Remover/Listar Empresa           | `EmpresaBean`       | `EmpresaService`       | `empresa/index.xhtml`       |
+| Caso de uso                                       | Managed Bean                                      | Serviço                                                                                                                                                                                                      | Tela (View)                                                                    |
+|---------------------------------------------------|---------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| Cadastrar/Editar/Remover/Listar Ramo de Atividade | `RamoAtividadeBean`                               | `RamoAtividadeService`                                                                                                                                                                                       | `ramoAtividade/index.xhtml`                                                     |
+| Cadastrar/Editar/Remover/Listar Empresa           | `EmpresaBean`                                     | `EmpresaService`                                                                                                                                                                                             | `empresa/index.xhtml`                                                           |
+| Exportar Dados (Empresas ou Ramos de Atividade)   | `ExportBean` (opções) + JavaScript (orquestração) | `ExportDownloadServlet` + `EmpresaBean`/`RamoAtividadeBean` (seleção/paginação, via CDI) + `EmpresaService`/`RamoAtividadeService` + `EmpresaExportService`/`RamoAtividadeExportService` + `TabularExporter` | `dialogs/exportar-dados/index.xhtml` (incluído globalmente via `layout.xhtml`) |
 
 ---
 
@@ -190,4 +241,6 @@ De modo também que o desenvolvedor entenda como os casos de uso supracitados fo
 - [Regras de negócio](./01-regras-de-negocio.md)
 - [Entidades de domínio](./02-entidades-dominio.md)
 - [Sequências principais](./04-sequencias-principais.md)
-- [Release notes](./05-release-notes.md)
+- [Validação e exportação](./05-validacao-exportacao.md)
+- [Release notes](./06-release-notes.md)
+- [Referência rápida](./07-referencia-rapida.md)

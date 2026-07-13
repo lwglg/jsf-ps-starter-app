@@ -13,6 +13,7 @@
         - [Dia 08/07/2026:](#dia-08072026)
         - [Dia 09/07/2026:](#dia-09072026)
         - [Dia 10/07/2026:](#dia-10072026)
+        - [Dia 13/07/2026:](#dia-13072026)
     - [O que deseja fazer?](#o-que-deseja-fazer)
 
 <!-- /TOC -->
@@ -68,13 +69,31 @@
     - **13:40 - 18:00**:
         - Depuração mais profunda da execução do encadeamento lógico dos testes em `EmpresaIntegrationTest.java`, no tocante à falha causada pela não-detecção do _daemon_ Docker durante a instância do `PostgreSQLContainer`;
         - Implementação de uma tela (modal) informativa acerca das informações do sistema, (_"About" dialog_);
-        - Testes da aplicação em outros navegadores (Edge, Brave, Firefox), com ênfase na 
+        - Testes da aplicação nos navegadores Chrome, Edge, Brave e Firefox;
 
 ### Dia 10/07/2026:
 
 - Intervalos de tempo dedicados:
     - **08:31 - 12:17**:
+        - Correção do problema existente na execução do teste de integração `EmpresaIntegrationTest.java`;
+        - Reconstrução da renderização do menu principal da aplicação, de modo a torná-lo vertical, colapsável e responsivo, com os seus submenus sendo criados programaticamente via controller/bean dedicado;
+        - Definição da estratégia de exportação de dados (empresas e ramos de atividades), assim como os metadados associados ao processo de exportação como paginação, número de registros, data e hora e identidade visual da empresa no cabeçalho e rodapé dos formatos pertinentes;
     - **13:20 - 16:00**:
+        - Início da implementação da camada de exportação de dados nos formatos PDF, ODT, XLS e CSV;
+        - Expansão da cobertura de testes de unidade;
+        - Condução de testes exploratórios da plataforma, em diferentes navegadores.
+
+### Dia 13/07/2026:
+
+- Intervalos de tempo dedicados:
+    - **08:26 - 12:31**:
+        - Incorporação da camada de metadados de exportação aos diferentes formatos de saída suportados;
+        - Ajuste no layout principal (`layout.xhtml`), em particular na formação dinâmica do título da página através das informações extraídas de `sobreSistemaBean`;
+        - Ajuste em `TabularExporter.java`, em particular na maneira como o monograma da empresa no cabeçalho do PDF de exportação estava sendo gerado;
+        - Ajustes nos componentes de frotend e na sua folha de estilos (`app.css`);
+        - Expansão da cobertura de testes de unidade;
+        - Expansão da documentação do sistema;
+    - **13:31- 18:00**:
 
 ---
 
@@ -86,3 +105,5 @@
 - [Entidades de domínio](./02-entidades-dominio.md)
 - [Casos de uso](./03-casos-de-uso.md)
 - [Sequências principais](./04-sequencias-principais.md)
+- [Validação e exportação](./05-validacao-exportacao.md)
+- [Referência rápida](./07-referencia-rapida.md)

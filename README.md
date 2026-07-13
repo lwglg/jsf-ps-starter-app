@@ -1,6 +1,6 @@
 # RSData | CompanyMAN (WiP)
 
-![CI | Automated Tests](https://github.com/lwglg/jsf-ps-starter-app/actions/workflows/static-analysis.yml/badge.svg) ![CI | Docker Images](https://github.com/lwglg/jsf-ps-starter-app/actions/workflows/image-analysis.yml/badge.svg)
+![CI | Automated Tests](https://github.com/lwglg/rsdata-contactman/actions/workflows/static-analysis.yml/badge.svg) ![CI | Docker Images](https://github.com/lwglg/rsdata-contactman/actions/workflows/image-analysis.yml/badge.svg)
 
 
 Ferramenta web para gerenciamento de registros de empresas e de seus possíveis ramos de atividades. Projeto inicial na RSData para familiarização com JavaServer Faces e PrimeFaces. O escopo básico está sendo Baseado neste [curso](https://www.youtube.com/watch?v=ezwgBvsd6Ps) da AlgaWorks.
@@ -99,10 +99,6 @@ $ make start env=dev c=database     # Inicia o banco de dados PostgreSQL, em mod
 $ make start env=dev c=tomcat       # Inicia o Apache Tomcat, em modo detached (sem logs)
 ```
 
-> [!IMPORTANT]
-> Para se certificar de que os conteineres foram de fato devidamente iniciados e na escuta das portas corretas, basta executar o comando `make ps env=[dev | prod]`.
-> Para ver os logs de um conteiner específico, execute `make logs env=[dev | prod] c=[nome-do-serviço]`.
-
 ### Shutdown
 
 Similarmente, para ambos os ambientes, de modo a encerrar a execução de todos os contêineres, basta rodar:
@@ -111,6 +107,11 @@ Similarmente, para ambos os ambientes, de modo a encerrar a execução de todos 
 make stop env=[dev | prod]          # Interrompe todos os contêineres para um ambiente
 make clean env=[dev | prod]         # Opcional. Remove os contêineres e a network associadas aos serviços do ambiente
 ```
+
+> [!IMPORTANT]
+> Para se certificar de que os conteineres foram de fato devidamente iniciados e na escuta das portas corretas, basta executar o comando `make ps env=[dev | prod]`.
+> Para ver os logs de um conteiner específico, execute `make logs env=[dev | prod] c=[nome-do-serviço]`.
+> Caso o argumento de ambiente `env` não seja especificado, o ambiente de fallback será sempre o de desenvolvimento, i.e. `env=dev`.
 
 ---
 
@@ -121,4 +122,6 @@ make clean env=[dev | prod]         # Opcional. Remove os contêineres e a netwo
 - [Entidades de domínio](./resources/docs/md/02-entidades-dominio.md)
 - [Casos de uso](./resources/docs/md/03-casos-de-uso.md)
 - [Sequências](./resources/docs/md/04-sequencias-principais.md)
-- [Release notes](./resources/docs/md/05-release-notes.md)
+- [Validação e exportação](./resources/docs/md/05-validacao-exportacao.md)
+- [Release notes](./resources/docs/md/06-release-notes.md)
+- [Referência rápida](./resources/docs/md/07-referencia-rapida.md)
