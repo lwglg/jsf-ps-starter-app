@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:ui="jakarta.faces.facelets"
+    xmlns:p="primefaces">
+<h:head>
+    <title>#{sobreSistemaBean.nomeSistema} | Página não encontrada</title>
+</h:head>
+<h:body>
+    <div style="text-align: center; margin-top: 100px;">
+        <p:panel
+            header="Página não encontrada"
+            style="width: 500px; margin: 0 auto;">
+            <div style="font-size: 48px; color: #e74c3c;">
+                <i class="pi pi-exclamation-circle"></i>
+            </div>
+            <h2>"SUMIU! Cadê a Teté?" :)</h2>
+            <p>A página que você está tentando acessar pode ter sido removida ou está temporariamente indisponível. Para maiores informações, entre em contato com o time de suporte.</p>
+            
+            <p:separator />
+            
+            <p:button
+                value="Voltar para o início"
+                icon="pi pi-home"
+                outcome="/index.xhtml"
+                styleClass="ui-button-primary" />
+        </p:panel>
+    </div>
+</h:body>
+</html>
