@@ -1,14 +1,18 @@
 package br.com.rsdata.servlet;
 
+import br.com.rsdata.controller.EmpresaBean;
 import br.com.rsdata.exception.ExportException;
+import br.com.rsdata.controller.RamoAtividadeBean;
+import br.com.rsdata.export.EscopoExportacao;
 import br.com.rsdata.export.ExportFormat;
-import br.com.rsdata.model.Empresa;
 import br.com.rsdata.export.OrigemExportacao;
+import br.com.rsdata.model.Empresa;
 import br.com.rsdata.model.RamoAtividade;
 import br.com.rsdata.service.EmpresaExportService;
 import br.com.rsdata.service.EmpresaService;
 import br.com.rsdata.service.RamoAtividadeExportService;
 import br.com.rsdata.service.RamoAtividadeService;
+import jakarta.inject.Inject;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +23,8 @@ import java.util.List;
 
 /**
  * Servlet dedicado (fora do ciclo de vida do JSF) que gera e serve os bytes
- * do arquivo exportado, dados os parâmetros {@code origem} e {@code formato}.
+ * do arquivo exportado, dados os parâmetros {@code origem}, {@code formato}
+ * e {@code escopo}.
  *
  * Não é implementado como uma ação de managed bean porque o
  * JavaScript da tela precisa consumir a resposta via
@@ -29,6 +34,13 @@ import java.util.List;
  * do sistema operacional. Em navegadores sem suporte a essa API (ex.:
  * Firefox), a mesma URL é usada diretamente em um {@code <a download>},
  * caindo no fluxo padrão de download do navegador.
+ *
+ * O escopo de exportação ("todos os registros" / "somente selecionados" /
+ * "somente a página atual") depende do estado atual da tabela na tela de
+ * origem — por isso {@link EmpresaBean} e {@link RamoAtividadeBean} (que
+ * expõem a seleção e a posição de paginação do {@code p:dataTable}) são
+ * injetados via CDI: o Weld (configurado em {@code web.xml}) permite
+ * {@code @Inject} em servlets comuns, não apenas em managed beans JSF.
  */
 @WebServlet("/export/download")
 public class ExportDownloadServlet extends HttpServlet {
@@ -40,33 +52,40 @@ public class ExportDownloadServlet extends HttpServlet {
     private final EmpresaExportService empresaExportService = new EmpresaExportService();
     private final RamoAtividadeExportService ramoAtividadeExportService = new RamoAtividadeExportService();
 
+    @Inject
+    private EmpresaBean empresaBean;
+
+    @Inject
+    private RamoAtividadeBean ramoAtividadeBean;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         OrigemExportacao origem;
         ExportFormat formato;
+        EscopoExportacao escopo;
+        
         try {
             origem = OrigemExportacao.valueOf(request.getParameter("origem"));
             formato = ExportFormat.valueOf(request.getParameter("formato"));
+            escopo = parseEscopo(request.getParameter("escopo"));
         } catch (RuntimeException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST,
-                    "Parâmetros 'origem' e/ou 'formato' ausentes ou inválidos.");
+                    "Parâmetros 'origem', 'formato' e/ou 'escopo' ausentes ou inválidos.");
             return;
         }
 
         byte[] conteudo;
         String prefixoPadrao;
-
+        
         try {
             if (origem == OrigemExportacao.RAMO_ATIVIDADE) {
-                List<RamoAtividade> ramosAtividade = ramoAtividadeService.listarTodos();
-            
+                List<RamoAtividade> ramosAtividade = resolverRamosAtividade(escopo);
                 conteudo = ramoAtividadeExportService.exportar(ramosAtividade, formato);
-                prefixoPadrao = RamoAtividadeExportService.NOME_RELATORIO_FALLBACK;
+                prefixoPadrao = "ramos-de-atividade";
             } else {
-                List<Empresa> empresas = empresaService.listarTodos();
-            
+                List<Empresa> empresas = resolverEmpresas(escopo);
                 conteudo = empresaExportService.exportar(empresas, formato);
-                prefixoPadrao = EmpresaExportService.NORE_RELATORIO_FALLBACK;
+                prefixoPadrao = "empresas";
             }
         } catch (ExportException e) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
@@ -84,5 +103,38 @@ public class ExportDownloadServlet extends HttpServlet {
         response.setHeader("Content-Disposition", "attachment; filename=\"" + nomeArquivoPadrao + "\"");
         response.getOutputStream().write(conteudo);
         response.getOutputStream().flush();
+    }
+
+    /**
+     * O parâmetro "escopo" é opcional na URL (ausência = TODOS), diferente
+     * de "origem"/"formato", que são sempre obrigatórios.
+     */
+    private EscopoExportacao parseEscopo(String valor) {
+        if (valor == null || valor.isBlank()) {
+            return EscopoExportacao.TODOS;
+        }
+        return EscopoExportacao.valueOf(valor);
+    }
+
+    private List<Empresa> resolverEmpresas(EscopoExportacao escopo) {
+        switch (escopo) {
+            case SELECIONADOS:
+                return empresaBean.getSelecionados();
+            case PAGINA_ATUAL:
+                return empresaBean.getRegistrosDaPaginaAtual();
+            default:
+                return empresaService.listarTodos();
+        }
+    }
+
+    private List<RamoAtividade> resolverRamosAtividade(EscopoExportacao escopo) {
+        switch (escopo) {
+            case SELECIONADOS:
+                return ramoAtividadeBean.getSelecionados();
+            case PAGINA_ATUAL:
+                return ramoAtividadeBean.getRegistrosDaPaginaAtual();
+            default:
+                return ramoAtividadeService.listarTodos();
+        }
     }
 }
