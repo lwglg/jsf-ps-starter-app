@@ -13,10 +13,10 @@
          navegador acontecem em resources/js/exportar-dados.js (função
          exportarDadosSelecionados), consumindo
          com.empresa.export.ExportDownloadServlet:
-           * Chrome / Brave / Edge (Chromium): usa a File System Access API
+           - Chrome / Brave / Edge (Chromium): usa a File System Access API
              (window.showSaveFilePicker) para abrir o diálogo nativo real de
              "Salvar Como" do sistema operacional.
-           * Firefox e demais navegadores sem suporte a essa API: cai para
+           - Firefox e demais navegadores sem suporte a essa API: cai para
              o fluxo padrão de download via <a download>, que só abre
              "Salvar Como" se o usuário tiver essa opção habilitada nas
              configurações de download do próprio navegador (limitação da
@@ -27,7 +27,7 @@
          managed bean envolvido neste modal, i.e. apenas leitura de valores via
          DOM no momento do clique. -->
     <p:dialog
-        header="Exportar Dados"
+        header="Exportar dados"
         widgetVar="dlgExportarDados"
         modal="true"
         width="440"
@@ -37,7 +37,8 @@
         <div
             id="statusExportacao"
             class="status-exportacao"
-            style="display:none; margin-bottom:12px;">
+            style="display:none;
+            margin-bottom:12px;">
         </div>
 
         <div class="campo-exportar">
@@ -59,17 +60,32 @@
         </div>
 
         <div class="campo-exportar">
+            <label for="expEscopo">Registros a exportar</label>
+            <select id="expEscopo" class="input-exportar">
+                <ui:repeat value="#{exportBean.escopos}" var="e">
+                    <option value="#{e}">#{e.descricao}</option>
+                </ui:repeat>
+            </select>
+        </div>
+
+        <div class="campo-exportar">
             <label for="expNomeArquivo">Nome do arquivo</label>
-            <input type="text" id="expNomeArquivo" class="input-exportar"
-                   placeholder="opcional — gerado automaticamente se vazio"/>
+            <input
+                type="text"
+                id="expNomeArquivo"
+                class="input-exportar"
+                placeholder="opcional — gerado automaticamente se vazio"/>
         </div>
 
         <div style="margin-top:6px; font-size:0.85rem; color:#6b7280;">
-            Ao exportar, o navegador abrirá a caixa de diálogo nativa "Salvar
-            Como" (Chrome, Brave e Edge) para você escolher a pasta e o nome
-            do arquivo. No Firefox, isso depende da opção "Perguntar onde
-            salvar cada arquivo" estar habilitada nas configurações de
-            download do navegador.
+            "Somente os selecionados" considera as linhas marcadas na
+            tabela da tela de origem (checkboxes); "Somente a página atual"
+            considera apenas os registros exibidos na página corrente da
+            tabela paginada. Ao exportar, o navegador abrirá a caixa de
+            diálogo nativa "Salvar Como" (Chrome, Brave e Edge) para você
+            escolher a pasta e o nome do arquivo. No Firefox, isso depende
+            da opção "Perguntar onde salvar cada arquivo" estar habilitada
+            nas configurações de download do navegador.
         </div>
 
         <p:commandButton

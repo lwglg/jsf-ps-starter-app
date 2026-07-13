@@ -1,13 +1,13 @@
 /**
- * Lógica do modal "Exportar Dados" (dialogs/exportar-dados/index.xhtml).
+ * Lógica do modal "Exportar dados" (dialogs/exportar-dados/index.xhtml).
  *
  * Gera o arquivo (via com.empresa.export.ExportDownloadServlet) e dispara
- * o "Sallet Como" nativo do navegador:
+ * o "Salvar Como" nativo do navegador:
  *   - Chrome / Brave / Edge (Chromium): usa a File System Access API
  *     (window.showSaveFilePicker) para abrir o diálogo nativo real de
- *     "Sallet Como" do sistema operacional.
+ *     "Salvar Como" do sistema operacional.
  *   - Firefox e demais navegadores sem suporte a essa API: cai para o
- *     fluxo padrão de download via <a download>, que só abre "Sallet Como"
+ *     fluxo padrão de download via <a download>, que só abre "Salvar Como"
  *     se o usuário tiver essa opção habilitada nas configurações de
  *     download do próprio navegador (limitação da plataforma web, não
  *     controlável pelo servidor).
@@ -16,21 +16,32 @@
  * inline em dialogs/exportar-dados/index.xhtml (único trecho que precisa
  * de EL do Facelets, já que este arquivo é um recurso estático e não passa
  * pelo processamento do Facelets).
+ *
+ * O parâmetro "escopo" (TODOS / SELECIONADOS / PAGINA_ATUAL) é lido do
+ * <select id="expEscopo"> e repassado ao servlet, que resolve os
+ * registros a exportar consultando o estado atual (seleção/paginação) do
+ * p:dataTable da tela de origem, via EmpresaBean/RamoAtividadeBean.
  */
 
 function exportarDadosSelecionados() {
-    let origem = document.getElementById('expOrigem').value;
-    let formato = document.getElementById('expFormato').value;
-    let nomeInformado = document.getElementById('expNomeArquivo').value.trim();
+    var origem = document.getElementById('expOrigem').value;
+    var formato = document.getElementById('expFormato').value;
+    var escopo = document.getElementById('expEscopo').value;
+    var nomeInformado = document.getElementById('expNomeArquivo').value.trim();
 
-    let extensoesPorFormato = { CSV: 'csv', XLS: 'xls', ODT: 'odt', PDF: 'pdf' };
-    let extensao = extensoesPorFormato[formato] || 'dat';
+    var extensoesPorFormato = {
+        CSV: 'csv',
+        XLS: 'xls',
+        ODT: 'odt',
+        PDF: 'pdf'
+    };
 
-    let nomeArquivo = nomeInformado;
+    var extensao = extensoesPorFormato[formato] || 'dat';
+
+    var nomeArquivo = nomeInformado;
 
     if (!nomeArquivo) {
-        let prefixoPadrao = (origem === 'RAMO_ATIVIDADE') ? 'ramos-de-atividade' : 'empresas';
-        
+        var prefixoPadrao = (origem === 'RAMO_ATIVIDADE') ? 'ramos-de-atividade' : 'empresas';
         nomeArquivo = prefixoPadrao + '_' + gerarTimestamp();
     }
 
@@ -38,28 +49,23 @@ function exportarDadosSelecionados() {
         nomeArquivo += '.' + extensao;
     }
 
-    let contextPath = window.COMPANYMAN_EXPORT_CONTEXT_PATH || '';
-    let url = window.location.protocol
-        + '//'
-        + window.location.host
-        + contextPath
-        + '/export/download'
-        + '?origem='
-        + encodeURIComponent(origem)
-        + '&formato='
-        + encodeURIComponent(formato);
+    var contextPath = window.COMPANYMAN_EXPORT_CONTEXT_PATH || '';
+    var url = window.location.protocol + '//' + window.location.host
+        + contextPath + '/export/download'
+        + '?origem=' + encodeURIComponent(origem)
+        + '&formato=' + encodeURIComponent(formato)
+        + '&escopo=' + encodeURIComponent(escopo);
 
     exibirStatus('Gerando arquivo...', false);
 
     if (window.showSaveFilePicker) {
         // Chrome, Brave, Edge (Chromium): File System Access API —
-        // abre o diálogo nativo "Sallet Como" do sistema operacional.
+        // abre o diálogo nativo "Salvar Como" do sistema operacional.
         fetch(url)
             .then(function (resposta) {
                 if (!resposta.ok) {
                     throw new Error('Falha ao gerar o arquivo (HTTP ' + resposta.status + ').');
                 }
-                
                 return resposta.blob();
             })
             .then(function (blob) {
@@ -77,48 +83,42 @@ function exportarDadosSelecionados() {
             })
             .catch(function (erro) {
                 if (erro && erro.name === 'AbortError') {
-                    // Usuário cancelou o diálogo "Sallet Como" — não é um erro real.
+                    // Usuário cancelou o diálogo "Salvar Como" — não é um erro real.
                     exibirStatus('', true);
-                    
                     return;
                 }
-                
                 exibirStatus('Erro ao exportar: ' + erro.message, false, true);
             });
     } else {
         // Firefox e demais navegadores sem suporte à File System Access API:
         // download padrão do navegador.
-        let link = document.createElement('a');
-        
+        var link = document.createElement('a');
+
         link.href = url;
         link.download = nomeArquivo;
+
         document.body.appendChild(link);
-        
+
         link.click();
-        
+
         document.body.removeChild(link);
-        
+
         exibirStatus('Download iniciado.', false);
-        
         PF('dlgExportarDados').hide();
     }
 }
 
 function gerarTimestamp() {
-    let agora = new Date();
-    let pad = function (numero) { return (numero < 10 ? '0' : '') + numero; };
-    
+    var agora = new Date();
+    var pad = function (numero) { return (numero < 10 ? '0' : '') + numero; };
+
     return agora.getFullYear().toString()
-        + pad(agora.getMonth() + 1)
-        + pad(agora.getDate())
-        + '_'
-        + pad(agora.getHours())
-        + pad(agora.getMinutes())
-        + pad(agora.getSeconds());
+        + pad(agora.getMonth() + 1) + pad(agora.getDate())
+        + '_' + pad(agora.getHours()) + pad(agora.getMinutes()) + pad(agora.getSeconds());
 }
 
 function exibirStatus(mensagem, ocultar, erro) {
-    let elemento = document.getElementById('statusExportacao');
+    var elemento = document.getElementById('statusExportacao');
 
     if (!elemento) { return; }
 

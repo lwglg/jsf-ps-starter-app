@@ -12,16 +12,15 @@
             <p:toolbar>
                 <p:toolbarGroup>
                     <p:commandButton
-                        value="Nova Empresa"
+                        value="Nova empresa"
                         icon="pi pi-plus"
                         actionListener="#{empresaBean.prepararNovo()}"
                         oncomplete="PF('dlgNovo').show()"
                         update=":formNovo:dlgNovoContent"/>
                 </p:toolbarGroup>
-
                 <p:toolbarGroup align="right">
                     <p:commandButton
-                        value="Exportar Dados"
+                        value="Exportar dados"
                         icon="pi pi-download"
                         onclick="PF('dlgExportarDados').show(); return false;"
                         type="button"/>
@@ -33,9 +32,13 @@
                 var="empresa"
                 value="#{empresaBean.lista}"
                 paginator="true"
-                rows="10"
+                rows="#{empresaBean.tamanhoPagina}"
+                first="#{empresaBean.primeiroRegistro}"
+                selection="#{empresaBean.selecionados}"
+                rowKey="#{empresa.id}"
                 emptyMessage="Nenhuma empresa cadastrada."
                 style="margin-top:15px">
+                <p:column selectionMode="multiple" style="width:3rem; text-align:center"/>
                 <p:column headerText="Nome Fantasia">
                     <h:outputText value="#{empresa.nomeFantasia}"/>
                 </p:column>
@@ -83,14 +86,15 @@
         </h:form>
 
         <p:dialog
-            header="Nova Empresa"
+            header="Nova empresa"
             widgetVar="dlgNovo"
             modal="true"
             width="520"
             showEffect="fade">
             <h:form id="formNovo">
                 <h:panelGroup id="dlgNovoContent" layout="block">
-                    <p:outputLabel for="nomeFantasia" value="Nome Fantasia *"/>
+                    <p:outputLabel
+                        for="nomeFantasia" value="Nome Fantasia *"/>
                     <p:inputText
                         id="nomeFantasia"
                         value="#{empresaBean.novoRegistro.nomeFantasia}"
@@ -98,7 +102,10 @@
                         requiredMessage="O nome fantasia é obrigatório."
                         maxlength="80"
                         style="width:100%"/>
-                    <p:message id="nomeFantasiaMsg" for="nomeFantasia" display="text"/>
+                    <p:message
+                        id="nomeFantasiaMsg"
+                        for="nomeFantasia"
+                        display="text"/>
 
                     <p:outputLabel for="razaoSocial" value="Razão Social *"/>
                     <p:inputText
@@ -159,7 +166,10 @@
                         required="true"
                         requiredMessage="O tipo de empresa é obrigatório."
                         style="width:100%">
-                        <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItem
+                            itemLabel="Selecione..."
+                            itemValue="#{null}"
+                            noSelectionOption="true"/>
                         <f:selectItems
                             value="#{empresaBean.tiposEmpresa}"
                             var="tipo"
@@ -175,8 +185,7 @@
                         symbol="R$ "
                         decimalPlaces="2"
                         required="true"
-                        requiredMessage="O faturamento é obrigatório."
-                        style="width:100%"/>
+                        requiredMessage="O faturamento é obrigatório." style="width:100%"/>
                     <p:message id="faturamentoMsg" for="faturamento" display="text"/>
 
                     <p:commandButton
@@ -194,14 +203,14 @@
         </p:dialog>
 
         <p:dialog
-            header="Editar Empresa"
+            header="Editar empresa"
             widgetVar="dlgEditar"
             modal="true"
             width="520"
             showEffect="fade">
             <h:form id="formEditar">
                 <h:panelGroup id="dlgEditarContent" layout="block">
-                    <p:outputLabel for="nomeFantasiaEdit" value="Nome Fantasia: "/>
+                    <p:outputLabel for="nomeFantasiaEdit" value="Nome Fantasia *"/>
                     <p:inputText
                         id="nomeFantasiaEdit"
                         value="#{empresaBean.selecionado.nomeFantasia}"
@@ -211,7 +220,7 @@
                         style="width:100%"/>
                     <p:message id="nomeFantasiaEditMsg" for="nomeFantasiaEdit" display="text"/>
 
-                    <p:outputLabel for="razaoSocialEdit" value="Razão Social: "/>
+                    <p:outputLabel for="razaoSocialEdit" value="Razão Social *"/>
                     <p:inputText
                         id="razaoSocialEdit"
                         value="#{empresaBean.selecionado.razaoSocial}"
@@ -221,15 +230,17 @@
                         style="width:100%"/>
                     <p:message id="razaoSocialEditMsg" for="razaoSocialEdit" display="text"/>
 
-                    <p:outputLabel for="cnpjEdit" value="CNPJ: "/>
+                    <p:outputLabel for="cnpjEdit" value="CNPJ *"/>
                     <p:inputMask
                         id="cnpjEdit"
                         value="#{empresaBean.selecionado.cnpj}"
-                        mask="99.999.999/9999-99" required="true"
-                        requiredMessage="O CNPJ é obrigatório." style="width:100%"/>
+                        mask="99.999.999/9999-99"
+                        required="true"
+                        requiredMessage="O CNPJ é obrigatório."
+                        style="width:100%"/>
                     <p:message id="cnpjEditMsg" for="cnpjEdit" display="text"/>
 
-                    <p:outputLabel for="dataFundacaoEdit" value="Data de Fundação: "/>
+                    <p:outputLabel for="dataFundacaoEdit" value="Data de Fundação *"/>
                     <p:calendar
                         id="dataFundacaoEdit"
                         value="#{empresaBean.selecionado.dataFundacao}"
@@ -241,7 +252,7 @@
                         style="width:100%"/>
                     <p:message id="dataFundacaoEditMsg" for="dataFundacaoEdit" display="text"/>
 
-                    <p:outputLabel for="ramoAtividadeEdit" value="Ramo de Atividade: "/>
+                    <p:outputLabel for="ramoAtividadeEdit" value="Ramo de Atividade *"/>
                     <p:selectOneMenu
                         id="ramoAtividadeEdit"
                         value="#{empresaBean.selecionado.ramoAtividade}"
@@ -257,7 +268,7 @@
                     </p:selectOneMenu>
                     <p:message id="ramoAtividadeEditMsg" for="ramoAtividadeEdit" display="text"/>
 
-                    <p:outputLabel for="tipoEmpresaEdit" value="Tipo de Empresa: "/>
+                    <p:outputLabel for="tipoEmpresaEdit" value="Tipo de Empresa *"/>
                     <p:selectOneMenu
                         id="tipoEmpresaEdit"
                         value="#{empresaBean.selecionado.tipoEmpresa}"
@@ -272,11 +283,12 @@
                     </p:selectOneMenu>
                     <p:message id="tipoEmpresaEditMsg" for="tipoEmpresaEdit" display="text"/>
 
-                    <p:outputLabel for="faturamentoEdit" value="Faturamento: "/>
+                    <p:outputLabel for="faturamentoEdit" value="Faturamento *"/>
                     <p:inputNumber
                         id="faturamentoEdit"
                         value="#{empresaBean.selecionado.faturamento}"
-                        symbol="R$ " decimalPlaces="2"
+                        symbol="R$ "
+                        decimalPlaces="2"
                         required="true"
                         requiredMessage="O faturamento é obrigatório."
                         style="width:100%"/>

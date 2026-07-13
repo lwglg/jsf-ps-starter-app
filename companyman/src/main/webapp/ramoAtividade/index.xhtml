@@ -12,7 +12,7 @@
             <p:toolbar>
                 <p:toolbarGroup>
                     <p:commandButton
-                        value="Novo Ramo de Atividade"
+                        value="Novo ramo de atividade"
                         icon="pi pi-plus"
                         actionListener="#{ramoAtividadeBean.prepararNovo()}"
                         oncomplete="PF('dlgNovo').show()"
@@ -20,7 +20,7 @@
                 </p:toolbarGroup>
                 <p:toolbarGroup align="right">
                     <p:commandButton
-                        value="Exportar Dados"
+                        value="Exportar dados"
                         icon="pi pi-download"
                         onclick="PF('dlgExportarDados').show(); return false;"
                         type="button"/>
@@ -28,13 +28,16 @@
             </p:toolbar>
 
             <p:dataTable
-                id="tabela"
-                var="ramo"
+                id="tabela" var="ramo"
                 value="#{ramoAtividadeBean.lista}"
                 paginator="true"
-                rows="10"
+                rows="#{ramoAtividadeBean.tamanhoPagina}"
+                first="#{ramoAtividadeBean.primeiroRegistro}"
+                selection="#{ramoAtividadeBean.selecionados}"
+                rowKey="#{ramo.id}"
                 emptyMessage="Nenhum ramo de atividade cadastrado."
                 style="margin-top:15px">
+                <p:column selectionMode="multiple" style="width:3rem; text-align:center"/>
                 <p:column headerText="Descrição">
                     <h:outputText value="#{ramo.descricao}"/>
                 </p:column>
@@ -60,23 +63,21 @@
         </h:form>
 
         <p:dialog
-            header="Novo Ramo de Atividade"
+            header="Novo ramo de atividade"
             widgetVar="dlgNovo"
             modal="true"
             width="420"
             showEffect="fade">
             <h:form id="formNovo">
-                <h:panelGroup
-                    id="dlgNovoContent"
-                    layout="block">
-                    <p:outputLabel for="descricao" value="Descrição: "/>
-                    <p:inputText
-                        id="descricao"
-                        value="#{ramoAtividadeBean.novoRegistro.descricao}"
-                        required="true"
-                        requiredMessage="A descrição é obrigatória."
-                        maxlength="150"
-                        style="width:100%"/>
+                <h:panelGroup id="dlgNovoContent" layout="block">
+                <p:outputLabel for="descricao" value="Descrição *"/>
+                <p:inputText
+                    id="descricao"
+                    value="#{ramoAtividadeBean.novoRegistro.descricao}"
+                    required="true"
+                    requiredMessage="A descrição é obrigatória."
+                    maxlength="150"
+                    style="width:100%"/>
                     <p:message id="descricaoMsg" for="descricao" display="text"/>
 
                     <p:commandButton
@@ -91,7 +92,7 @@
         </p:dialog>
 
         <p:dialog
-            header="Editar Ramo de Atividade"
+            header="Editar ramo de atividade"
             widgetVar="dlgEditar"
             modal="true"
             width="420"
