@@ -96,5 +96,5 @@ Nenhuma biblioteca de terceiros conhece diretamente as entidades de domínio —
 - [Entidades de domínio](./02-entidades-dominio.md)
 - [Casos de uso](./03-casos-de-uso.md)
 - [Sequências principais](./04-sequencias-principais.md)
-- [Sequências principais](./06-release-notes.md)
+- [Release notes](./06-release-notes.md)
 - [Referência rápida](./07-referencia-rapida.md)
