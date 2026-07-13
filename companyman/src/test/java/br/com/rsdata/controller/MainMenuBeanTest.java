@@ -54,7 +54,7 @@ class MenuBeanTest {
     }
 
     @Test
-    @DisplayName("Submenu Operações deve conter apenas 'Exportar Dados', abrindo o modal via onclick")
+    @DisplayName("Submenu Operações deve conter apenas 'Exportar dados', abrindo o modal via onclick")
     void submenuOperacoesDeveConterExportarDados() {
         Submenu operacoes = (Submenu) menuBean.getModel().getElements().get(1);
         List<MenuElement> itens = operacoes.getElements();
@@ -66,7 +66,7 @@ class MenuBeanTest {
     }
 
     @Test
-    @DisplayName("Submenu Sistema deve conter apenas 'Sobre o Sistema', abrindo o modal via onclick")
+    @DisplayName("Submenu Sistema deve conter apenas 'Sobre o sistema', abrindo o modal via onclick")
     void submenuSistemaDeveConterSobreOSistema() {
         Submenu sistema = (Submenu) menuBean.getModel().getElements().get(2);
         List<MenuElement> itens = sistema.getElements();

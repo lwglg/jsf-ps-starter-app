@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 /**
  * Managed bean responsável por expor as informações exibidas no modal
- * "Sobre o Sistema" (nome, descrição, versão, responsável técnico e logo
+ * "Sobre o sistema" (nome, descrição, versão, responsável técnico e logo
  * da empresa). Todos os valores são lidos de variáveis de ambiente,
  * permitindo configurá-los via Docker Compose sem recompilar a aplicação.
  *
