@@ -17,6 +17,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -47,6 +49,8 @@ public class ExportDownloadServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    private static final Logger logger = LoggerFactory.getLogger(ExportDownloadServlet.class);
+
     private final EmpresaService empresaService = new EmpresaService();
     private final RamoAtividadeService ramoAtividadeService = new RamoAtividadeService();
     private final EmpresaExportService empresaExportService = new EmpresaExportService();
@@ -70,7 +74,8 @@ public class ExportDownloadServlet extends HttpServlet {
             escopo = parseEscopo(request.getParameter("escopo"));
         } catch (RuntimeException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST,
-                    "Parâmetros 'origem', 'formato' e/ou 'escopo' ausentes ou inválidos.");
+                "Parâmetros 'origem', 'formato' e/ou 'escopo' ausentes ou inválidos.");
+            
             return;
         }
 
@@ -78,14 +83,22 @@ public class ExportDownloadServlet extends HttpServlet {
         String prefixoPadrao;
         
         try {
+            logger.info("Origem {} \t Escopo: {} \tFormato {} ", origem.toString(), escopo.toString(), formato.toString());
+
             if (origem == OrigemExportacao.RAMO_ATIVIDADE) {
                 List<RamoAtividade> ramosAtividade = resolverRamosAtividade(escopo);
+                
+                logger.info("{} ramos de atividade resolvidos: {}", ramosAtividade.size(), ramosAtividade.toString());
+
                 conteudo = ramoAtividadeExportService.exportar(ramosAtividade, formato);
-                prefixoPadrao = "ramos-de-atividade";
+                prefixoPadrao = EmpresaExportService.NOME_RELATORIO_FALLBACK;
             } else {
                 List<Empresa> empresas = resolverEmpresas(escopo);
+
+                logger.info("{} empresas resolvidas: {}", empresas.size(), empresas.toString());
+
                 conteudo = empresaExportService.exportar(empresas, formato);
-                prefixoPadrao = "empresas";
+                prefixoPadrao = RamoAtividadeExportService.NOME_RELATORIO_FALLBACK;
             }
         } catch (ExportException e) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
@@ -113,6 +126,7 @@ public class ExportDownloadServlet extends HttpServlet {
         if (valor == null || valor.isBlank()) {
             return EscopoExportacao.TODOS;
         }
+        
         return EscopoExportacao.valueOf(valor);
     }
 

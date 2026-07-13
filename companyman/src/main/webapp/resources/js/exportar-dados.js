@@ -66,6 +66,7 @@ function exportarDadosSelecionados() {
                 if (!resposta.ok) {
                     throw new Error('Falha ao gerar o arquivo (HTTP ' + resposta.status + ').');
                 }
+                
                 return resposta.blob();
             })
             .then(function (blob) {

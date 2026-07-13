@@ -28,7 +28,8 @@
             </p:toolbar>
 
             <p:dataTable
-                id="tabela" var="ramo"
+                id="tabela"
+                var="ramo"
                 value="#{ramoAtividadeBean.lista}"
                 paginator="true"
                 rows="#{ramoAtividadeBean.tamanhoPagina}"
@@ -37,6 +38,14 @@
                 rowKey="#{ramo.id}"
                 emptyMessage="Nenhum ramo de atividade cadastrado."
                 style="margin-top:15px">
+                <!-- Sem estes p:ajax, os checkboxes de seleção mudam apenas no
+                     widget do lado cliente e NUNCA são sincronizados com
+                     ramoAtividadeBean.selecionados no servidor, já que a
+                     exportação não faz postback deste formulário (é acionada
+                     via JavaScript/servlet, fora do ciclo do JSF). -->
+                <p:ajax event="rowSelectCheckbox" update="@none"/>
+                <p:ajax event="rowUnselectCheckbox" update="@none"/>
+                <p:ajax event="toggleSelect" update="@none"/>
                 <p:column selectionMode="multiple" style="width:3rem; text-align:center"/>
                 <p:column headerText="Descrição">
                     <h:outputText value="#{ramo.descricao}"/>

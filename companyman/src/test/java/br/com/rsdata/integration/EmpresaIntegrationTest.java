@@ -52,21 +52,23 @@ class EmpresaIntegrationTest {
         System.setProperty("DB_NAME", postgres.getDatabaseName());
         System.setProperty("DB_USERNAME", postgres.getUsername());
         System.setProperty("DB_PASSWORD", postgres.getPassword());
-
         JPAUtil.reset();
-
-        postgres.start();
     }
 
+    /**
+     * Apenas fecha os recursos que são de nossa responsabilidade (o
+     * EntityManagerFactory/pool do Hikari). O container Postgres NÃO deve
+     * ser parado manualmente aqui: a extensão @Testcontainers já cuida do
+     * ciclo de vida de campos anotados com @Container (incluindo pará-lo
+     * ao final da classe). Parar o container manualmente além disso causa
+     * uma "parada dupla" que corrompe o encerramento do stream de log
+     * interno do docker-java, produzindo um ClosedChannelException
+     * inofensivo (mas ruidoso) nos logs — daí este método ter sido
+     * simplificado para não fazer isso.
+     */
     @AfterAll
     static void encerrarConexao() {
-        try {
-            JPAUtil.close();
-            postgres.stop();
-            postgres.close();
-        } catch(Exception exc) {
-            // TODO: Check the behavior of PostgreSQL container closing better later.
-        }
+        JPAUtil.close();
     }
 
     @BeforeEach
@@ -210,7 +212,6 @@ class EmpresaIntegrationTest {
         RamoAtividade ramo = ramoAtividadeService.salvar(new RamoAtividade("Agricultura"));
 
         Empresa empresa = new Empresa();
-
         empresa.setNomeFantasia("Fazenda Boa Vista");
         empresa.setRazaoSocial("Fazenda Boa Vista Agropecuária LTDA");
         empresa.setCnpj("11.111.111/0001-99"); // dígitos verificadores incorretos (correto seria -91)
@@ -228,7 +229,7 @@ class EmpresaIntegrationTest {
         Empresa empresa = new Empresa(); // nenhum campo preenchido
 
         ValidationException ex = org.junit.jupiter.api.Assertions.assertThrows(
-                ValidationException.class, () -> empresaService.salvar(empresa));
+            ValidationException.class, () -> empresaService.salvar(empresa));
 
         assertTrue(ex.getViolacoes().size() >= 6); // nomeFantasia, razaoSocial, cnpj, dataFundacao, ramoAtividade, tipoEmpresa, faturamento
     }
@@ -239,7 +240,6 @@ class EmpresaIntegrationTest {
         RamoAtividade ramo = ramoAtividadeService.salvar(new RamoAtividade("Mineração"));
 
         Empresa empresa = new Empresa();
-
         empresa.setNomeFantasia("Extrai Bem");
         empresa.setRazaoSocial("Extrai Bem Mineração LTDA");
         empresa.setCnpj("66.666.666/0001-91");
@@ -257,14 +257,12 @@ class EmpresaIntegrationTest {
         RamoAtividade ramo = ramoAtividadeService.salvar(new RamoAtividade("Petróleo e Gás"));
 
         Empresa empresa = new Empresa();
-
         empresa.setNomeFantasia("Poço Fundo");
         empresa.setRazaoSocial("Poço Fundo Exploração de Petróleo S.A.");
         empresa.setCnpj("77.777.777/0001-91");
         empresa.setDataFundacao(new Date());
         empresa.setRamoAtividade(ramo);
         empresa.setTipoEmpresa(TipoEmpresa.SA);
-
         // 9 dígitos inteiros - excede o limite de 8 dígitos (precision=10, scale=2)
         empresa.setFaturamento(new BigDecimal("125000000.00"));
 
@@ -277,7 +275,6 @@ class EmpresaIntegrationTest {
         RamoAtividade ramo = ramoAtividadeService.salvar(new RamoAtividade("Aviação"));
 
         java.util.Calendar calendar = java.util.Calendar.getInstance();
-
         calendar.add(java.util.Calendar.YEAR, 1);
 
         Empresa empresa = new Empresa();
