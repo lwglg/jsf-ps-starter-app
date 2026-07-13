@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Managed bean (Controller) responsável pela tela de gerenciamento de Empresas.
@@ -42,6 +44,8 @@ public class EmpresaBean implements Serializable {
 
     private final EmpresaService empresaService = new EmpresaService();
     private final RamoAtividadeService ramoAtividadeService = new RamoAtividadeService();
+
+    private static final Logger logger = LoggerFactory.getLogger(EmpresaBean.class);
 
     private List<Empresa> lista;
     private Empresa selecionado = new Empresa();
@@ -120,10 +124,14 @@ public class EmpresaBean implements Serializable {
     }
 
     public List<Empresa> getSelecionados() {
+        logger.info("{} empresas sendo lidas: {}", selecionados.size(), selecionados.toString());
+
         return selecionados;
     }
 
     public void setSelecionados(List<Empresa> selecionados) {
+        logger.info("{} empresas sendo setadas: {}", selecionados.size(), selecionados.toString());
+        
         this.selecionados = selecionados;
     }
 
@@ -151,11 +159,14 @@ public class EmpresaBean implements Serializable {
      */
     public List<Empresa> getRegistrosDaPaginaAtual() {
         List<Empresa> todos = getLista();
+        
         if (todos.isEmpty()) {
             return Collections.emptyList();
         }
+        
         int inicio = Math.min(primeiroRegistro, todos.size());
         int fim = Math.min(inicio + TAMANHO_PAGINA, todos.size());
+        
         return todos.subList(inicio, fim);
     }
 

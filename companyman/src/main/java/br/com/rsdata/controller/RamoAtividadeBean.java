@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Managed bean (Controller) responsável pela tela de gerenciamento de
@@ -32,13 +34,14 @@ import java.util.UUID;
 @Named
 @SessionScoped
 public class RamoAtividadeBean implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     /** Deve ser mantido igual ao atributo {@code rows} do p:dataTable em ramoAtividade/index.xhtml. */
     public static final int TAMANHO_PAGINA = 10;
 
     private final RamoAtividadeService service = new RamoAtividadeService();
+
+    private static final Logger logger = LoggerFactory.getLogger(RamoAtividadeBean.class);
 
     private List<RamoAtividade> lista;
     private RamoAtividade selecionado;
@@ -111,10 +114,14 @@ public class RamoAtividadeBean implements Serializable {
     }
 
     public List<RamoAtividade> getSelecionados() {
+        logger.info("{} ramos de atividade sendo lidos: {}", selecionados.size(), selecionados.toString());
+
         return selecionados;
     }
 
     public void setSelecionados(List<RamoAtividade> selecionados) {
+        logger.info("{} ramos de atividade sendo setados: {}", selecionados.size(), selecionados.toString());
+        
         this.selecionados = selecionados;
     }
 
@@ -145,8 +152,10 @@ public class RamoAtividadeBean implements Serializable {
         if (todos.isEmpty()) {
             return Collections.emptyList();
         }
+        
         int inicio = Math.min(primeiroRegistro, todos.size());
         int fim = Math.min(inicio + TAMANHO_PAGINA, todos.size());
+        
         return todos.subList(inicio, fim);
     }
 
