@@ -33,7 +33,7 @@ function exportarDadosSelecionados() {
         CSV: 'csv',
         XLS: 'xls',
         ODT: 'odt',
-        PDF: 'pdf'
+        PDF: 'pdf',
     };
 
     var extensao = extensoesPorFormato[formato] || 'dat';
@@ -41,20 +41,31 @@ function exportarDadosSelecionados() {
     var nomeArquivo = nomeInformado;
 
     if (!nomeArquivo) {
-        var prefixoPadrao = (origem === 'RAMO_ATIVIDADE') ? 'ramos-de-atividade' : 'empresas';
+        var prefixoPadrao =
+            origem === 'RAMO_ATIVIDADE' ? 'ramos-de-atividade' : 'empresas';
         nomeArquivo = prefixoPadrao + '_' + gerarTimestamp();
     }
 
-    if (nomeArquivo.toLowerCase().indexOf('.' + extensao) !== nomeArquivo.length - extensao.length - 1) {
+    if (
+        nomeArquivo.toLowerCase().indexOf('.' + extensao) !==
+        nomeArquivo.length - extensao.length - 1
+    ) {
         nomeArquivo += '.' + extensao;
     }
 
     var contextPath = window.COMPANYMAN_EXPORT_CONTEXT_PATH || '';
-    var url = window.location.protocol + '//' + window.location.host
-        + contextPath + '/export/download'
-        + '?origem=' + encodeURIComponent(origem)
-        + '&formato=' + encodeURIComponent(formato)
-        + '&escopo=' + encodeURIComponent(escopo);
+    var url =
+        window.location.protocol +
+        '//' +
+        window.location.host +
+        contextPath +
+        '/export/download' +
+        '?origem=' +
+        encodeURIComponent(origem) +
+        '&formato=' +
+        encodeURIComponent(formato) +
+        '&escopo=' +
+        encodeURIComponent(escopo);
 
     exibirStatus('Gerando arquivo...', false);
 
@@ -64,18 +75,26 @@ function exportarDadosSelecionados() {
         fetch(url)
             .then(function (resposta) {
                 if (!resposta.ok) {
-                    throw new Error('Falha ao gerar o arquivo (HTTP ' + resposta.status + ').');
+                    throw new Error(
+                        'Falha ao gerar o arquivo (HTTP ' +
+                            resposta.status +
+                            ').',
+                    );
                 }
                 return resposta.blob();
             })
             .then(function (blob) {
-                return window.showSaveFilePicker({ suggestedName: nomeArquivo }).then(function (handle) {
-                    return handle.createWritable().then(function (writable) {
-                        return writable.write(blob).then(function () {
-                            return writable.close();
-                        });
+                return window
+                    .showSaveFilePicker({ suggestedName: nomeArquivo })
+                    .then(function (handle) {
+                        return handle
+                            .createWritable()
+                            .then(function (writable) {
+                                return writable.write(blob).then(function () {
+                                    return writable.close();
+                                });
+                            });
                     });
-                });
             })
             .then(function () {
                 exibirStatus('Arquivo exportado com sucesso.', false);
@@ -110,17 +129,27 @@ function exportarDadosSelecionados() {
 
 function gerarTimestamp() {
     var agora = new Date();
-    var pad = function (numero) { return (numero < 10 ? '0' : '') + numero; };
+    var pad = function (numero) {
+        return (numero < 10 ? '0' : '') + numero;
+    };
 
-    return agora.getFullYear().toString()
-        + pad(agora.getMonth() + 1) + pad(agora.getDate())
-        + '_' + pad(agora.getHours()) + pad(agora.getMinutes()) + pad(agora.getSeconds());
+    return (
+        agora.getFullYear().toString() +
+        pad(agora.getMonth() + 1) +
+        pad(agora.getDate()) +
+        '_' +
+        pad(agora.getHours()) +
+        pad(agora.getMinutes()) +
+        pad(agora.getSeconds())
+    );
 }
 
 function exibirStatus(mensagem, ocultar, erro) {
     var elemento = document.getElementById('statusExportacao');
 
-    if (!elemento) { return; }
+    if (!elemento) {
+        return;
+    }
 
     if (ocultar || !mensagem) {
         elemento.style.display = 'none';
@@ -129,5 +158,6 @@ function exibirStatus(mensagem, ocultar, erro) {
 
     elemento.textContent = mensagem;
     elemento.style.display = 'block';
-    elemento.className = 'status-exportacao' + (erro ? ' status-exportacao-erro' : '');
+    elemento.className =
+        'status-exportacao' + (erro ? ' status-exportacao-erro' : '');
 }

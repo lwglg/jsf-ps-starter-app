@@ -48,7 +48,7 @@
             let sidebarOculta = larguraMobile()
                 ? !sidebar.classList.contains('mobile-open')
                 : sidebar.classList.contains('collapsed');
-            
+
             botaoAlternar.classList.toggle('collapsed', sidebarOculta);
         }
 
@@ -65,7 +65,7 @@
             } else {
                 sidebar.classList.toggle('collapsed');
             }
-            
+
             atualizarIconeBotao();
         });
 
@@ -86,7 +86,7 @@
 
     function inicializarSubmenusColapsaveis() {
         let sidebar = document.getElementById('appSidebar');
-        
+
         if (!sidebar) {
             return;
         }
@@ -95,7 +95,8 @@
         // a classe "ui-widget-header" para o <li> de cabeçalho de cada
         // grupo, em versões recentes também "ui-submenu-header").
         let cabecalhos = sidebar.querySelectorAll(
-            '.ui-menu .ui-widget-header, .ui-menu .ui-submenu-header');
+            '.ui-menu .ui-widget-header, .ui-menu .ui-submenu-header',
+        );
 
         cabecalhos.forEach(function (cabecalho) {
             agruparItensDoSubmenu(cabecalho);
@@ -114,7 +115,7 @@
 
         while (proximoIrmao && !elmCabecalhoDeSubmenu(proximoIrmao)) {
             let atual = proximoIrmao;
-            
+
             proximoIrmao = proximoIrmao.nextElementSibling;
             itens.push(atual);
         }
@@ -127,7 +128,7 @@
         wrapper.className = 'submenu-items-wrapper';
 
         let listaInterna = document.createElement('ul');
-        
+
         listaInterna.className = 'ui-menu-list ui-helper-reset';
 
         itens.forEach(function (item) {
@@ -139,7 +140,7 @@
         cabecalho.insertAdjacentElement('afterend', wrapper);
 
         let iconeToggle = document.createElement('span');
-        
+
         iconeToggle.className = 'pi pi-chevron-down submenu-toggle-icon';
 
         cabecalho.appendChild(iconeToggle);
@@ -149,7 +150,7 @@
 
         function alternarSubmenu() {
             let colapsado = cabecalho.classList.toggle('submenu-collapsed');
-            
+
             wrapper.classList.toggle('submenu-collapsed', colapsado);
             cabecalho.setAttribute('aria-expanded', String(!colapsado));
         }
@@ -164,7 +165,9 @@
     }
 
     function elmCabecalhoDeSubmenu(elemento) {
-        return elemento.classList.contains('ui-widget-header')
-            || elemento.classList.contains('ui-submenu-header');
+        return (
+            elemento.classList.contains('ui-widget-header') ||
+            elemento.classList.contains('ui-submenu-header')
+        );
     }
 })();

@@ -48,7 +48,7 @@
             var sidebarOculta = larguraMobile()
                 ? !sidebar.classList.contains('mobile-open')
                 : sidebar.classList.contains('collapsed');
-            
+
             botaoAlternar.classList.toggle('collapsed', sidebarOculta);
         }
 
@@ -85,7 +85,7 @@
 
     function inicializarSubmenusColapsaveis() {
         var sidebar = document.getElementById('appSidebar');
-        
+
         if (!sidebar) {
             return;
         }
@@ -94,7 +94,8 @@
         // a classe "ui-widget-header" para o <li> de cabeçalho de cada
         // grupo, em versões recentes também "ui-submenu-header").
         var cabecalhos = sidebar.querySelectorAll(
-            '.ui-menu .ui-widget-header, .ui-menu .ui-submenu-header');
+            '.ui-menu .ui-widget-header, .ui-menu .ui-submenu-header',
+        );
 
         cabecalhos.forEach(function (cabecalho) {
             agruparItensDoSubmenu(cabecalho);
@@ -113,7 +114,7 @@
 
         while (proximoIrmao && !ehCabecalhoDeSubmenu(proximoIrmao)) {
             var atual = proximoIrmao;
-            
+
             proximoIrmao = proximoIrmao.nextElementSibling;
             itens.push(atual);
         }
@@ -126,7 +127,7 @@
         wrapper.className = 'submenu-items-wrapper';
 
         var listaInterna = document.createElement('ul');
-        
+
         listaInterna.className = 'ui-menu-list ui-helper-reset';
 
         itens.forEach(function (item) {
@@ -138,7 +139,7 @@
         cabecalho.insertAdjacentElement('afterend', wrapper);
 
         var iconeToggle = document.createElement('span');
-        
+
         iconeToggle.className = 'pi pi-chevron-down submenu-toggle-icon';
 
         cabecalho.appendChild(iconeToggle);
@@ -162,7 +163,9 @@
     }
 
     function ehCabecalhoDeSubmenu(elemento) {
-        return elemento.classList.contains('ui-widget-header')
-            || elemento.classList.contains('ui-submenu-header');
+        return (
+            elemento.classList.contains('ui-widget-header') ||
+            elemento.classList.contains('ui-submenu-header')
+        );
     }
 })();
