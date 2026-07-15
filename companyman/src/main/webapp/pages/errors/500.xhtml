@@ -5,39 +5,36 @@
     xmlns:f="jakarta.faces.core"
     xmlns:c="jakarta.tags.core"
     xmlns:ui="jakarta.faces.facelets"
-    xmlns:p="primefaces">
-<h:head>
-    <title>#{sobreSistemaBean.nomeSistema} | Falha</title>
-</h:head>
-<h:body>
-    <div style="text-align: center; margin-top: 80px;">
-        <p:panel
-            header="Erro interno de servidor"
-            style="width: 600px; margin: 0 auto;">
-            <div style="font-size: 48px; color: #f39c12;">
-                <i class="pi pi-cog"></i>
-            </div>
-            <h2>Algo de errado ocorreu no nosso lado</h2>
-            <p>Um erro inesperado ocorreu. Por favor, tente novamente mais tarde ou entre em contato com o time de suporte caso esse problema persista.</p>
+    xmlns:p="primefaces"
+>
+    <h:head>
+        <title>#{sobreSistemaBean.nomeSistema} | Falha</title>
+    </h:head>
+    <h:body>
+        <div style="text-align: center; margin-top: 80px">
+            <p:panel header="Erro interno de servidor" style="width: 600px; margin: 0 auto">
+                <div style="font-size: 48px; color: #f39c12">
+                    <i class="pi pi-cog"></i>
+                </div>
+                <h2>Algo de errado ocorreu no nosso lado</h2>
+                <p>
+                    Um erro inesperado ocorreu. Por favor, tente novamente mais tarde ou entre em contato com o time de
+                    suporte caso esse problema persista.
+                </p>
 
-            <c:if test="#{facesContext.application.projectStage == 'Development'}">
-                <p:accordionPanel
-                    activeIndex="null"
-                    style="text-align: left; margin-top: 15px;">
-                    <p:tab title="Detalhes da exceção">
-                        <p><strong>Mensagem:</strong> #{requestScope['jakarta.servlet.error.message']}</p>
-                        <p><strong>Exceção:</strong> #{requestScope['jakarta.servlet.error.exception']}</p>
-                    </p:tab>
-                </p:accordionPanel>
-            </c:if>
+                <c:if test="#{facesContext.application.projectStage == 'Development'}">
+                    <p:accordionPanel activeIndex="null" style="text-align: left; margin-top: 15px">
+                        <p:tab title="Detalhes da exceção">
+                            <p><strong>Mensagem:</strong> #{requestScope['jakarta.servlet.error.message']}</p>
+                            <p><strong>Exceção:</strong> #{requestScope['jakarta.servlet.error.exception']}</p>
+                        </p:tab>
+                    </p:accordionPanel>
+                </c:if>
 
-            <p:separator style="margin: 20px 0;" />
+                <p:separator style="margin: 20px 0" />
 
-            <p:button
-                value="Voltar para o início"
-                icon="pi pi-home"
-                outcome="/index.xhtml" />
-        </p:panel>
-    </div>
-</h:body>
+                <p:button value="Voltar para o início" icon="pi pi-home" outcome="/index.xhtml" />
+            </p:panel>
+        </div>
+    </h:body>
 </html>
