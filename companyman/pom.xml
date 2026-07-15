@@ -14,6 +14,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <servlet.version>6.0.0</servlet.version>
         <hibernate.version>6.5.2.Final</hibernate.version>
         <faces.version>4.0.7</faces.version>
         <primefaces.version>14.0.5</primefaces.version>
@@ -31,7 +32,7 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.0.0</version>
+            <version>${servlet.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -190,6 +191,85 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- Análise/formatação de código-fonte (com.diffplug.spotless). Executado
+                 apenas explicitamente via `mvn spotless:check`/`mvn spotless:apply`
+                 (ver .github/workflows/static-analysis.yaml) - deliberadamente NÃO
+                 vinculado a uma fase do ciclo de vida do build, para não quebrar
+                 `mvn package`/`mvn verify` por problemas de formatação; isso mantém
+                 a checagem de estilo como uma etapa de CI separada e independente. -->
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.43.0</version>
+                <configuration>
+                    <java>
+                        <includes>
+                            <include>src/main/java/**/*.java</include>
+                            <include>src/test/java/**/*.java</include>
+                        </includes>
+
+                        <!-- Regras de higiene, deliberadamente conservadoras: nada de
+                             reformatação agressiva via um formatter opinativo (ex.:
+                             google-java-format, que usa indentação de 2 espaços e
+                             reorganizaria toda a base de código já escrita com 4
+                             espaços). -->
+                        <removeUnusedImports/>
+
+                        <!-- Um único grupo alfabético, sem separação em blocos por
+                             pacote - é exatamente como os imports já estão escritos
+                             em todo o projeto. -->
+                        <importOrder/>
+
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
+                        <indent>
+                            <spaces>true</spaces>
+                            <spacesPerTab>4</spacesPerTab>
+                        </indent>
+                    </java>
+
+                    <!-- Arquivos de configuração do projeto (fora do código Java). -->
+                    <pom>
+                        <includes>
+                            <include>pom.xml</include>
+                        </includes>
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
+                        <indent>
+                            <spaces>true</spaces>
+                            <spacesPerTab>4</spacesPerTab>
+                        </indent>
+                    </pom>
+
+                    <!-- Configuração para JavaScript utilizando Prettier -->
+                    <formats>
+                        <format>
+                            <includes>
+                                <include>src/main/resources/**/*.js</include>
+                                <include>src/test/resources/**/*.js</include>
+                                <!-- Adicione ou ajuste os caminhos dos seus scripts JS aqui -->
+                            </includes>
+
+                            <trimTrailingWhitespace/>
+                            <endWithNewline/>
+                            <indent>
+                                <spaces>true</spaces>
+                                <spacesPerTab>4</spacesPerTab>
+                            </indent>
+
+                            <prettier>
+                                <!-- Você pode especificar a versão do Prettier ou deixar a padrão do Spotless -->
+                                <prettierVersion>3.0.3</prettierVersion>
+                                <!-- Alinha o Prettier com as suas regras de 4 espaços -->
+                                <config>
+                                    <tabWidth>4</tabWidth>
+                                    <useTabs>false</useTabs>
+                                </config>
+                            </prettier>
+                        </format>
+                    </formats>
+                </configuration>
             </plugin>
         </plugins>
     </build>
