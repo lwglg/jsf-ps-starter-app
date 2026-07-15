@@ -4,7 +4,6 @@ import br.com.rsdata.model.Empresa;
 import br.com.rsdata.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-
 import java.util.List;
 
 public class EmpresaDAO extends GenericDAOImpl<Empresa> {
