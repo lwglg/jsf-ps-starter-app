@@ -1,5 +1,10 @@
 package br.com.rsdata.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import br.com.rsdata.exception.DuplicateEntityException;
 import br.com.rsdata.exception.ValidationException;
 import br.com.rsdata.model.Empresa;
@@ -8,6 +13,10 @@ import br.com.rsdata.model.TipoEmpresa;
 import br.com.rsdata.service.EmpresaService;
 import br.com.rsdata.service.RamoAtividadeService;
 import br.com.rsdata.util.JPAUtil;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,16 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Teste de integração de ponta a ponta: sobe um PostgreSQL real via Testcontainers,

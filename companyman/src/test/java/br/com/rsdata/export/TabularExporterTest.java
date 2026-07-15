@@ -1,10 +1,8 @@
 package br.com.rsdata.export;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -12,10 +10,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 @DisplayName("TabularExporter - geração de arquivos CSV, XLS, ODT e PDF")
 class TabularExporterTest {
@@ -42,10 +41,10 @@ class TabularExporterTest {
         assertTrue(conteudo.contains("Gerado em"), "deve conter a data/hora de geração");
         assertTrue(conteudo.contains("Total de registros: 2"), "deve conter o total de registros");
         assertTrue(conteudo.contains("Nome;Cidade"), "deve conter a linha de cabeçalho");
-        
+
         // Campo com ';' deve vir entre aspas
         assertTrue(conteudo.contains("\"Ana; Souza\";São Paulo"));
-        
+
         // Aspas internas devem ser escapadas duplicando-as
         assertTrue(conteudo.contains("\"Empresa \"\"Boa\"\"\";Rio de Janeiro"));
     }
@@ -109,9 +108,9 @@ class TabularExporterTest {
             boolean encontrouContent = false;
             boolean encontrouStyles = false;
             boolean encontrouLogo = false;
-            
+
             ZipEntry entrada;
-            
+
             while ((entrada = zip.getNextEntry()) != null) {
                 switch (entrada.getName()) {
                     case "META-INF/manifest.xml":
@@ -119,25 +118,25 @@ class TabularExporterTest {
                         break;
                     case "content.xml":
                         encontrouContent = true;
-            
+
                         String conteudo = new String(zip.readAllBytes(), StandardCharsets.UTF_8);
                         assertTrue(conteudo.contains("Relatório de Teste"));
                         assertTrue(conteudo.contains("Gerado em"), "deve conter a data/hora de geração");
                         assertTrue(conteudo.contains("Total de registros: 2"));
                         assertTrue(conteudo.contains("Ana; Souza"));
                         assertTrue(conteudo.contains("&quot;Boa&quot;"), "aspas devem ser escapadas no XML");
-            
+
                         break;
                     case "styles.xml":
                         encontrouStyles = true;
-            
+
                         String estilos = new String(zip.readAllBytes(), StandardCharsets.UTF_8);
                         assertTrue(estilos.contains("<style:header>"), "deve definir um cabeçalho de página");
                         assertTrue(estilos.contains("<style:footer>"), "deve definir um rodapé de página");
                         assertTrue(estilos.contains("<text:page-number>"), "rodapé deve conter o número da página");
                         assertTrue(estilos.contains("<text:page-count>"), "rodapé deve conter o total de páginas");
                         assertTrue(estilos.contains("Pictures/logo.png"), "cabeçalho deve referenciar o logo");
-            
+
                         break;
                     case "Pictures/logo.png":
                         encontrouLogo = true;

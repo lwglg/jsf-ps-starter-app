@@ -1,16 +1,15 @@
 package br.com.rsdata.service;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import br.com.rsdata.export.ExportFormat;
 import br.com.rsdata.model.RamoAtividade;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("RamoAtividadeExportService - exportação de ramos de atividade")
 class RamoAtividadeExportServiceTest {

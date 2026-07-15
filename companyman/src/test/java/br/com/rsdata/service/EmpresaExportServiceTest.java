@@ -1,20 +1,19 @@
 package br.com.rsdata.service;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import br.com.rsdata.export.ExportFormat;
 import br.com.rsdata.model.Empresa;
 import br.com.rsdata.model.RamoAtividade;
 import br.com.rsdata.model.TipoEmpresa;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 @DisplayName("EmpresaExportService - exportação de empresas")
 class EmpresaExportServiceTest {
@@ -25,7 +24,7 @@ class EmpresaExportServiceTest {
         RamoAtividade ramo = new RamoAtividade("Tecnologia da Informação");
 
         Empresa empresa = new Empresa();
-        
+
         empresa.setNomeFantasia("TechNova Soluções");
         empresa.setRazaoSocial("TechNova Soluções em TI EIRELI");
         empresa.setCnpj("23.456.789/0001-95");
@@ -33,7 +32,7 @@ class EmpresaExportServiceTest {
         empresa.setRamoAtividade(ramo);
         empresa.setTipoEmpresa(TipoEmpresa.EIRELI);
         empresa.setFaturamento(new BigDecimal("360000.50"));
-        
+
         return empresa;
     }
 

@@ -1,5 +1,9 @@
 package br.com.rsdata.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,19 +12,14 @@ import org.primefaces.model.menu.MenuItem;
 import org.primefaces.model.menu.MenuModel;
 import org.primefaces.model.menu.Submenu;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 @DisplayName("MainMenuBean - construção programática do menu da sidebar")
 class MenuBeanTest {
 
-    private MainMenuBean menuBean;
+    private MenuPrincipalBean menuBean;
 
     @BeforeEach
     void setUp() {
-        menuBean = new MainMenuBean();
+        menuBean = new MenuPrincipalBean();
         menuBean.init();
     }
 
