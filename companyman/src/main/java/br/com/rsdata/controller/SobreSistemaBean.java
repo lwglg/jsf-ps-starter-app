@@ -1,12 +1,10 @@
 package br.com.rsdata.controller;
 
+import br.com.rsdata.util.EnvUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
-
 import java.io.Serializable;
-
-import br.com.rsdata.util.EnvUtil;
 
 /**
  * Managed bean responsável por expor as informações exibidas no modal

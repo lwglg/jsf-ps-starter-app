@@ -1,28 +1,25 @@
 package br.com.rsdata.controller;
 
+import br.com.rsdata.model.MenuPrincipal;
+import br.com.rsdata.service.MenuPrincipalService;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
-
+import java.io.Serializable;
+import java.util.List;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.com.rsdata.service.MenuPrincipalService;
-import br.com.rsdata.model.MenuPrincipal;
 
-import java.io.Serializable;
-import java.util.List;
-
-
-@Named("mainMenuBean")
+@Named("menuPrincipalBean")
 @ApplicationScoped
-public class MainMenuBean implements Serializable {
+public class MenuPrincipalBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static final Logger logger = LoggerFactory.getLogger(MainMenuBean.class);
+    private static final Logger logger = LoggerFactory.getLogger(MenuPrincipalBean.class);
 
     private MenuPrincipalService menuPrincipalService = new MenuPrincipalService();
 
@@ -31,7 +28,7 @@ public class MainMenuBean implements Serializable {
     @PostConstruct
     public void init() {
         try {
-            logger.info("Construção do MenuModel iniciada...");
+            logger.info("Construção do " + MenuPrincipalBean.class.toString() + " iniciada...");
 
             model = new DefaultMenuModel();
 

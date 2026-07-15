@@ -8,7 +8,6 @@ import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -121,7 +120,7 @@ public class RamoAtividadeBean implements Serializable {
 
     public void setSelecionados(List<RamoAtividade> selecionados) {
         logger.info("{} ramos de atividade sendo setados: {}", selecionados.size(), selecionados.toString());
-        
+
         this.selecionados = selecionados;
     }
 
@@ -152,10 +151,10 @@ public class RamoAtividadeBean implements Serializable {
         if (todos.isEmpty()) {
             return Collections.emptyList();
         }
-        
+
         int inicio = Math.min(primeiroRegistro, todos.size());
         int fim = Math.min(inicio + TAMANHO_PAGINA, todos.size());
-        
+
         return todos.subList(inicio, fim);
     }
 

@@ -5,7 +5,6 @@ import br.com.rsdata.export.ExportFormat;
 import br.com.rsdata.export.OrigemExportacao;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
-
 import java.io.Serializable;
 
 /**
