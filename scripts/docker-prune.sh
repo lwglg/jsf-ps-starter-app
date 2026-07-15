@@ -1,14 +1,20 @@
 #!/bin/bash
 
-set -e
+set -o errexit
 
 function main() {
-    CONTAINERS_LIST=$(docker container ls -aq)
-    IMAGES_LIST=$(docker image ls -aq)
-    
+    CONTAINERS=$(docker container ls -aq)
+    IMAGES=$(docker image ls -aq)
+
+    CONTAINERS_LIST=$(echo $CONTAINERS | tr '\n' ' ')
+    IMAGES_LIST=$(echo $IMAGES | tr '\n' ' ')
+
+    echo "Containers: $CONTAINERS_LIST"
+    echo "Imagens: $IMAGES_LIST"
+
     remove $CONTAINERS_LIST $IMAGES_LIST
-    prune 
-    check
+    # prune 
+    # check
 }
 
 function remove() {

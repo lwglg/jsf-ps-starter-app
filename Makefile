@@ -104,7 +104,11 @@ clean: confirm ## Realiza a limpeza de todos os dados associados aos contêinere
 	$(call compose_cmd, $(env), down)
 
 destroy: confirm ## Remove todas as imagens, volumes, networks e contêineres não utilizados. Use com cautela!
-	@./scripts/docker-prune.sh
+	# @./scripts/docker-prune.sh
+	@docker system prune --all --volumes --force
+	@docker volume prune --all --force
+	@docker network prune --force
+	@docker image prune --all --force
 
 logs: ## Adiciona captura de logs para todos os contêineres ou para um c=<nome de serviço>, dado um env=<dev | prod> ambiente de infra
 	$(call compose_cmd, $(env), logs --follow $(c))
