@@ -8,7 +8,6 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
-
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +43,7 @@ public class DataInitializerListener implements ServletContextListener {
         BigDecimal faturamento
     ) {};
 
-    private List<EmpresaRecord> geraListaEmpresas(SimpleDateFormat sdf, Map<String, RamoAtividade> ramos) {        
+    private List<EmpresaRecord> geraListaEmpresas(SimpleDateFormat sdf, Map<String, RamoAtividade> ramos) {
         try {
             List<EmpresaRecord> empresas =  new ArrayList<>(List.of(
                 new EmpresaRecord(
@@ -66,7 +65,7 @@ public class DataInitializerListener implements ServletContextListener {
                     new BigDecimal("36000.50")
                 ),
                 new EmpresaRecord(
-                    "Construtora Horizonte", 
+                    "Construtora Horizonte",
                     "Horizonte Construções e Incorporações LTDA",
                     "34.567.890/0001-30",
                     sdf.parse("2010-01-15"),
@@ -75,7 +74,7 @@ public class DataInitializerListener implements ServletContextListener {
                     new BigDecimal("450000.00")
                 ),
                 new EmpresaRecord(
-                    "Mega Varejo", 
+                    "Mega Varejo",
                     "Mega Varejo Comércio de Produtos S.A.",
                     "45.678.901/0001-75",
                     sdf.parse("2005-11-30"),
@@ -94,10 +93,10 @@ public class DataInitializerListener implements ServletContextListener {
                 )
             ));
 
-            return empresas;     
+            return empresas;
         } catch (ParseException exc) {
             return Collections.emptyList();
-        }        
+        }
     }
 
     @Override
@@ -114,7 +113,7 @@ public class DataInitializerListener implements ServletContextListener {
                     .getSingleResult();
 
             Map<String, RamoAtividade> ramos = new HashMap<>();
-            
+
             if (totalRamos == 0) {
                 LOGGER.info("Populando dados iniciais de RamoAtividade...");
                 List<String> descricoes = List.of(
@@ -124,18 +123,18 @@ public class DataInitializerListener implements ServletContextListener {
                         "Construção Civil",
                         "Serviços de Consultoria"
                 );
-                
+
                 for (String descricao : descricoes) {
                     RamoAtividade ramo = new RamoAtividade(descricao);
                     em.persist(ramo);
                     ramos.put(descricao, ramo);
                 }
-                
+
                 em.flush();
             } else {
                 List<RamoAtividade> existentes = em.createQuery(
                         "SELECT r FROM RamoAtividade r", RamoAtividade.class).getResultList();
-                
+
                 for (RamoAtividade r : existentes) {
                     ramos.put(r.getDescricao(), r);
                 }
@@ -149,16 +148,16 @@ public class DataInitializerListener implements ServletContextListener {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
                 List<EmpresaRecord> empresas = geraListaEmpresas(sdf, ramos);
-                
+
                 if (!empresas.isEmpty()) {
                     for (EmpresaRecord empresa : empresas) {
-                        em.persist(criarEmpresa(empresa));    
-                    } 
+                        em.persist(criarEmpresa(empresa));
+                    }
                 }
             }
 
             tx.commit();
-            
+
             LOGGER.info("Inicialização de dados concluída com sucesso.");
         } catch (Exception e) {
             if (tx.isActive()) {
@@ -173,7 +172,7 @@ public class DataInitializerListener implements ServletContextListener {
 
     private Empresa criarEmpresa(EmpresaRecord empresaRecord) {
         Empresa empresa = new Empresa();
-        
+
         empresa.setNomeFantasia(empresaRecord.nomeFantasia);
         empresa.setRazaoSocial(empresaRecord.razaoSocial);
         empresa.setCnpj(empresaRecord.cnpj);
@@ -181,7 +180,7 @@ public class DataInitializerListener implements ServletContextListener {
         empresa.setRamoAtividade(empresaRecord.ramoAtividade);
         empresa.setTipoEmpresa(empresaRecord.tipoEmpresa);
         empresa.setFaturamento(empresaRecord.faturamento);
-        
+
         return empresa;
     }
 

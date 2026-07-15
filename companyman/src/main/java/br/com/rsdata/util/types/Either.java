@@ -3,7 +3,7 @@ package br.com.rsdata.util.types;
 import java.util.Optional;
 
 /**
- * 
+ *
  * Tentativa de implementar união entre dois tipos genéricos L left e R right.
  * @param left: Optional<L>
  * @param right: Optional<R>

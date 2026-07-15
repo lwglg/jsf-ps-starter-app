@@ -16,5 +16,5 @@ public class EnvUtil {
         String value = System.getenv(key);
 
         return (value == null || value.isBlank()) ? defaultValue : value;
-    }    
+    }
 }
