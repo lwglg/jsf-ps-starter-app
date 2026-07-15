@@ -1,8 +1,8 @@
 package br.com.rsdata.servlet;
 
 import br.com.rsdata.controller.EmpresaBean;
-import br.com.rsdata.exception.ExportException;
 import br.com.rsdata.controller.RamoAtividadeBean;
+import br.com.rsdata.exception.ExportException;
 import br.com.rsdata.export.EscopoExportacao;
 import br.com.rsdata.export.ExportFormat;
 import br.com.rsdata.export.OrigemExportacao;
@@ -17,11 +17,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Servlet dedicado (fora do ciclo de vida do JSF) que gera e serve os bytes
@@ -67,7 +66,7 @@ public class ExportDownloadServlet extends HttpServlet {
         OrigemExportacao origem;
         ExportFormat formato;
         EscopoExportacao escopo;
-        
+
         try {
             origem = OrigemExportacao.valueOf(request.getParameter("origem"));
             formato = ExportFormat.valueOf(request.getParameter("formato"));
@@ -75,19 +74,19 @@ public class ExportDownloadServlet extends HttpServlet {
         } catch (RuntimeException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST,
                 "Parâmetros 'origem', 'formato' e/ou 'escopo' ausentes ou inválidos.");
-            
+
             return;
         }
 
         byte[] conteudo;
         String prefixoPadrao;
-        
+
         try {
             logger.info("Origem {} \t Escopo: {} \tFormato {} ", origem.toString(), escopo.toString(), formato.toString());
 
             if (origem == OrigemExportacao.RAMO_ATIVIDADE) {
                 List<RamoAtividade> ramosAtividade = resolverRamosAtividade(escopo);
-                
+
                 logger.info("{} ramos de atividade resolvidos: {}", ramosAtividade.size(), ramosAtividade.toString());
 
                 conteudo = ramoAtividadeExportService.exportar(ramosAtividade, formato);
@@ -126,7 +125,7 @@ public class ExportDownloadServlet extends HttpServlet {
         if (valor == null || valor.isBlank()) {
             return EscopoExportacao.TODOS;
         }
-        
+
         return EscopoExportacao.valueOf(valor);
     }
 
