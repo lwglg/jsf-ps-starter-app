@@ -7,8 +7,11 @@
 - [RSData | CompanyMAN | Referência rápida](#rsdata--companyman--refer%C3%AAncia-r%C3%A1pida)
     - [TOC](#toc)
     - [Introdução](#introdu%C3%A7%C3%A3o)
-    - [Incialização](#incializa%C3%A7%C3%A3o)
+    - [Preliminares](#preliminares)
         - [WSL](#wsl)
+        - [Ferramentas](#ferramentas)
+    - [Incialização](#incializa%C3%A7%C3%A3o)
+        - [Java/Maven](#javamaven)
         - [Plataforma](#plataforma)
             - [Banco de dados](#banco-de-dados)
             - [Servidor de aplicação](#servidor-de-aplica%C3%A7%C3%A3o)
@@ -25,16 +28,52 @@ Aqui é apresentação uma sequência útil de interação com a plataforma de s
 >
 > A estrutura do `Makefile` foi implementada tendo em vista que os comandos e scripts associados serão executados em um ambiente com suporte ao `bash`. Em um ambiente Windows, isso pode ser obtido, via Powershell, através da instalação do **Subsistema de Windows para Linux (WSL - _Windows Subsystem for Linux_)**. Para maiores informações, acesse a [documentação](https://learn.microsoft.com/pt-br/windows/wsl/install). Para este ambiente, foi usada a distribuição `Ubuntu` na instalação.
 
-## Incialização
+## Preliminares
 
 ### WSL
 
 Com o Powershell aberto, execute os seguintes comandos:
 
 ```powershell
-wsl --install -d Ubuntu     # Instala o WSL para a distro específicda
+wsl --install -d Ubuntu     # Instala o WSL para a distro específicada
 wsl -d Ubuntu               # Inicia uma sessão do WSL no terminal para a distro especificada
 ```
+
+### Ferramentas
+
+No que tange às ferramentas utilizadas na construção dessa plataforma, abaixo segue uma listagem das mesmas e suas versões, tendo em mente que as mesmas estão sendo usada no contexto do WSL:
+
+- [SDKMAN](https://sdkman.io/) (v5.23.9 (script), v.0.7.34 (native) ou superior): Gerenciador de versões do Java Development Kit (JDK) e das ferramentas que gravitam em torno do mesmo. Já utilizo há algum tempo e considero muito versátil. A mesma foi utilizada para instalar o seguinte:
+    - [Java (java/javac)](https://www.java.com/pt-BR/download/): v21.0.2 ou superior;
+    - [Apache Maven](https://maven.apache.org/install.html): v3.9.6 ou superior;
+- [Docker](https://docs.docker.com/engine/install/): v29.6.1 ou superior;
+    - [Docker Compose](https://docs.docker.com/compose/): v5.3.1 ou superior;
+- [GNU Make](https://web.mit.edu/gnu/doc/html/make_15.html): v4.4.1 ou superior.
+
+> [!NOTE]
+>
+> Concernindo a instalação do Docker, muito provavelmente você vai operar este sistema de um ambiente Windows como Docker Desktop já instalado, i.e. com o Daemon Docker já sendo iniciado em Windows. Com efeito, para assegurar que a execução do Daemon será replicada ao ambiente do WSL, siga essas [instruções](https://docs.docker.com/desktop/features/wsl/#turn-on-docker-desktop-wsl-2).
+
+## Incialização
+
+### Java/Maven
+
+Como mencionado anteriormente, o sistema propriamente dito com construído usando Java (JDK v21) e o gerenciador de pacotes Maven (v3.9.6). A mesma está concentrada na pasta [`companyman`](../../../companyman/) e, associado ao [pom.xml](../../../companyman/pom.xml) do projeto, estão configurados os plugins de compilação de análise estática do código-fonte. De modo a testar a configuração destes plugins, execute esses comandos na raíz do projeto:
+
+```bash
+cd companyman           # Pasta da aplicação, onde está o pom.xml
+mvn clean               # Remove, caso exista, a pasta `target` na qual os resultados de compilação (packaging) do projeto são publicados
+mvn package             # Realiza a compilação (empacotamento) do projeto, executando testes unitários
+mvn spotless:apply      # Aplicação da ferramenta de formatação e linting do código-fonte, aplicando correções onde for necessário
+mvn spotless:check      # Aplicação da ferramenta de formatação e linting do código-fonte, sem aplicação de correções
+mvn verify              # Compila o projeto e executa todos os testes automatizados (unitários de integração)
+```
+
+> [!NOTE]
+>
+> - Os mesmos comandos acima podem ser também executados em modo não-interativo no terminal, e.g. como é feito nas pipelines de CI em [.github/workflows](../../../.github/workflows/). Esse modo de execução pode ser testado através de ``mvn -B -ntp <comando>`.
+>
+> - Caso você não queria sair da pasta-raíz do projeto, basta passar o argumento `-f` ao `mvn`, e.g. `mvn -f companyman/pom.xml <comando>`.
 
 ### Plataforma
 
