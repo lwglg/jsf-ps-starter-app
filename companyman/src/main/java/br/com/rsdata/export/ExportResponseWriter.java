@@ -1,8 +1,8 @@
 package br.com.rsdata.export;
 
+import br.com.rsdata.exception.ExportException;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -10,8 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-
-import br.com.rsdata.exception.ExportException;
 
 /**
  * Escreve um arquivo gerado em memória diretamente na resposta HTTP da

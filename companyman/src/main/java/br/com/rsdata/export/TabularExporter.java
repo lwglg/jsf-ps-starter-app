@@ -1,7 +1,6 @@
 package br.com.rsdata.export;
 
 import br.com.rsdata.exception.ExportException;
-
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -15,13 +14,6 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,6 +22,12 @@ import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * Utilitário genérico para exportação de dados tabulares (uma lista de
@@ -73,14 +71,14 @@ public final class TabularExporter {
 
     private static String formatarLinhaCsv(String[] campos) {
         StringBuilder linha = new StringBuilder();
-        
+
         for (int i = 0; i < campos.length; i++) {
             if (i > 0) {
                 linha.append(';');
             }
             linha.append(escaparCampoCsv(campos[i]));
         }
-        
+
         return linha.toString();
     }
 
@@ -211,7 +209,7 @@ public final class TabularExporter {
 
             documento.add(tabela);
             documento.close();
-            
+
             return out.toByteArray();
         } catch (Exception e) {
             throw new ExportException("Falha ao gerar arquivo PDF.", e);

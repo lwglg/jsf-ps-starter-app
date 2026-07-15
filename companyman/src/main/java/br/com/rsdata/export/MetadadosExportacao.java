@@ -37,13 +37,13 @@ public final class MetadadosExportacao {
 
     private static String lerNomeEmpresa() {
         String fromProperty = System.getProperty("APP_COMPANY_NAME");
-        
+
         if (fromProperty != null && !fromProperty.isBlank()) {
             return fromProperty;
         }
-        
+
         String value = System.getenv("APP_COMPANY_NAME");
-        
+
         return (value == null || value.isBlank()) ? "Empresa" : value;
     }
 

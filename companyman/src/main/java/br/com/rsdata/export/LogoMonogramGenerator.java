@@ -1,7 +1,6 @@
 package br.com.rsdata.export;
 
 import br.com.rsdata.exception.ExportException;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -50,27 +49,27 @@ public final class LogoMonogramGenerator {
     public static BufferedImage gerarBufferedImage(String nomeEmpresa) {
         BufferedImage imagem = new BufferedImage(TAMANHO_PIXELS, TAMANHO_PIXELS, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = imagem.createGraphics();
-        
+
         try {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setColor(new Color(31, 41, 55));
             g.fillRoundRect(0, 0, TAMANHO_PIXELS, TAMANHO_PIXELS, 10, 10);
 
             String iniciais = obterIniciais(nomeEmpresa);
-            
+
             g.setColor(Color.WHITE);
             g.setFont(new Font("SansSerif", Font.BOLD, 20));
-            
+
             FontMetrics metricas = g.getFontMetrics();
-            
+
             int x = (TAMANHO_PIXELS - metricas.stringWidth(iniciais)) / 2;
             int y = (TAMANHO_PIXELS - metricas.getHeight()) / 2 + metricas.getAscent();
-            
+
             g.drawString(iniciais, x, y);
         } finally {
             g.dispose();
         }
-        
+
         return imagem;
     }
 
@@ -78,10 +77,10 @@ public final class LogoMonogramGenerator {
         if (nomeEmpresa == null || nomeEmpresa.isBlank()) {
             return "E";
         }
-        
+
         String[] partes = nomeEmpresa.trim().split("\\s+");
         StringBuilder iniciais = new StringBuilder();
-        
+
         for (int i = 0; i < Math.min(2, partes.length) && iniciais.length() < 2; i++) {
             if (!partes[i].isEmpty()) {
                 iniciais.append(Character.toUpperCase(partes[i].charAt(0)));
