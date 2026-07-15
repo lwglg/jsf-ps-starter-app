@@ -3,7 +3,8 @@
     xmlns:h="jakarta.faces.html"
     xmlns:f="jakarta.faces.core"
     xmlns:ui="jakarta.faces.facelets"
-    xmlns:p="primefaces">
+    xmlns:p="primefaces"
+>
     <!-- Fragmento incluído via <ui:include> a partir do ponto de composição
          <ui:insert name="dialog"> em /WEB-INF/template/layout.xhtml.
          Não usa "template" (não é uma página própria) para evitar recursão
@@ -19,17 +20,20 @@
         width="440"
         showEffect="fade"
         closable="true"
-        styleClass="dialogo-sobre">
-        <div style="text-align:center; margin-bottom:18px;">
+        styleClass="dialogo-sobre"
+    >
+        <div style="text-align: center; margin-bottom: 18px">
             <h:outputLink
                 value="#{sobreSistemaBean.empresaUrl}"
                 target="_blank"
-                title="Visitar site: #{sobreSistemaBean.empresaNome}">
+                title="Visitar site: #{sobreSistemaBean.empresaNome}"
+            >
                 <h:graphicImage
                     library="img"
                     name="#{sobreSistemaBean.logoPath}"
-                    style="max-width:200px; height:auto; cursor:pointer;"
-                    alt="Logo #{sobreSistemaBean.empresaNome}"/>
+                    style="max-width: 200px; height: auto; cursor: pointer"
+                    alt="Logo #{sobreSistemaBean.empresaNome}"
+                />
             </h:outputLink>
         </div>
 

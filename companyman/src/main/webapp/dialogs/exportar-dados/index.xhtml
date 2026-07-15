@@ -3,7 +3,8 @@
     xmlns:h="jakarta.faces.html"
     xmlns:f="jakarta.faces.core"
     xmlns:ui="jakarta.faces.facelets"
-    xmlns:p="primefaces">
+    xmlns:p="primefaces"
+>
     <!-- Fragmento incluído via <ui:include> a partir do ponto de composição
          <ui:insert name="dialog"> em /WEB-INF/template/layout.xhtml.
          Modal único de exportação, compartilhado pelas telas de Empresas e
@@ -32,68 +33,64 @@
         modal="true"
         width="440"
         showEffect="fade"
-        closable="true">
+        closable="true"
+    >
+        <h:form id="formExportarDados">
+            <div id="statusExportacao" class="status-exportacao" style="display: none; margin-bottom: 12px"></div>
 
-        <div
-            id="statusExportacao"
-            class="status-exportacao"
-            style="display:none;
-            margin-bottom:12px;">
-        </div>
+            <div class="campo-exportar">
+                <label for="expOrigem">Dados a exportar</label>
+                <select id="expOrigem" class="input-exportar">
+                    <ui:repeat value="#{exportBean.origens}" var="o">
+                        <option value="#{o}">#{o.descricao}</option>
+                    </ui:repeat>
+                </select>
+            </div>
 
-        <div class="campo-exportar">
-            <label for="expOrigem">Dados a exportar</label>
-            <select id="expOrigem" class="input-exportar">
-                <ui:repeat value="#{exportBean.origens}" var="o">
-                    <option value="#{o}">#{o.descricao}</option>
-                </ui:repeat>
-            </select>
-        </div>
+            <div class="campo-exportar">
+                <label for="expFormato">Formato</label>
+                <select id="expFormato" class="input-exportar">
+                    <ui:repeat value="#{exportBean.formatos}" var="f">
+                        <option value="#{f}">#{f}</option>
+                    </ui:repeat>
+                </select>
+            </div>
 
-        <div class="campo-exportar">
-            <label for="expFormato">Formato</label>
-            <select id="expFormato" class="input-exportar">
-                <ui:repeat value="#{exportBean.formatos}" var="f">
-                    <option value="#{f}">#{f}</option>
-                </ui:repeat>
-            </select>
-        </div>
+            <div class="campo-exportar">
+                <label for="expEscopo">Registros a exportar</label>
+                <select id="expEscopo" class="input-exportar">
+                    <ui:repeat value="#{exportBean.escopos}" var="e">
+                        <option value="#{e}">#{e.descricao}</option>
+                    </ui:repeat>
+                </select>
+            </div>
 
-        <div class="campo-exportar">
-            <label for="expEscopo">Registros a exportar</label>
-            <select id="expEscopo" class="input-exportar">
-                <ui:repeat value="#{exportBean.escopos}" var="e">
-                    <option value="#{e}">#{e.descricao}</option>
-                </ui:repeat>
-            </select>
-        </div>
+            <div class="campo-exportar">
+                <label for="expNomeArquivo">Nome do arquivo</label>
+                <input
+                    type="text"
+                    id="expNomeArquivo"
+                    class="input-exportar"
+                    placeholder="opcional — gerado automaticamente se vazio"
+                />
+            </div>
 
-        <div class="campo-exportar">
-            <label for="expNomeArquivo">Nome do arquivo</label>
-            <input
-                type="text"
-                id="expNomeArquivo"
-                class="input-exportar"
-                placeholder="opcional — gerado automaticamente se vazio"/>
-        </div>
+            <div style="margin-top: 6px; font-size: 0.85rem; color: #6b7280">
+                "Somente os selecionados" considera as linhas marcadas na tabela da tela de origem (checkboxes);
+                "Somente a página atual" considera apenas os registros exibidos na página corrente da tabela paginada.
+                Ao exportar, o navegador abrirá a caixa de diálogo nativa "Salvar Como" (Chrome, Brave e Edge) para você
+                escolher a pasta e o nome do arquivo. No Firefox, isso depende da opção "Perguntar onde salvar cada
+                arquivo" estar habilitada nas configurações de download do navegador.
+            </div>
 
-        <div style="margin-top:6px; font-size:0.85rem; color:#6b7280;">
-            "Somente os selecionados" considera as linhas marcadas na
-            tabela da tela de origem (checkboxes); "Somente a página atual"
-            considera apenas os registros exibidos na página corrente da
-            tabela paginada. Ao exportar, o navegador abrirá a caixa de
-            diálogo nativa "Salvar Como" (Chrome, Brave e Edge) para você
-            escolher a pasta e o nome do arquivo. No Firefox, isso depende
-            da opção "Perguntar onde salvar cada arquivo" estar habilitada
-            nas configurações de download do navegador.
-        </div>
-
-        <p:commandButton
-            value="Exportar"
-            icon="pi pi-download"
-            type="button"
-            style="margin-top:15px"
-            onclick="exportarDadosSelecionados()"/>
+            <p:commandButton
+                value="Exportar"
+                icon="pi pi-download"
+                type="button"
+                style="margin-top: 15px"
+                onclick="exportarDadosSelecionados()"
+            />
+        </h:form>
     </p:dialog>
 
     <!-- Único trecho que precisa de EL do Facelets (o contextPath da aplicação);
@@ -101,7 +98,7 @@
          abaixo (resources/js/exportar-dados.js), que é um recurso estático e
          não passa pelo processamento do Facelets. -->
     <script>
-        window.COMPANYMAN_EXPORT_CONTEXT_PATH = '#{request.contextPath}';
+        window.COMPANYMAN_EXPORT_CONTEXT_PATH = "#{request.contextPath}";
     </script>
-    <h:outputScript library="js" name="exportar-dados.js"/>
+    <h:outputScript library="js" name="exportar-dados.js" />
 </ui:composition>
