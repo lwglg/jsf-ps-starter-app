@@ -23,9 +23,9 @@ Ferramenta web para gerenciamento de registros de empresas e de seus possíveis 
 
 ## Status de CI/CD
 
+- ![CI | Code Analysis](https://github.com/lwglg/rsdata-contactman/actions/workflows/code-analysis.yml/badge.svg)
 - ![CI | Docker Images](https://github.com/lwglg/rsdata-contactman/actions/workflows/image-analysis.yml/badge.svg)
 - ![CI | Automated Tests](https://github.com/lwglg/rsdata-contactman/actions/workflows/test-analysis.yml/badge.svg) 
-- ![CI | Static Analysis](https://github.com/lwglg/rsdata-contactman/actions/workflows/static-analysis.yml/badge.svg)
 
 ## O projeto
 

@@ -1,4 +1,4 @@
-name: Análise estática
+name: Análise de código-fonte
 
 on:
   pull_request:
