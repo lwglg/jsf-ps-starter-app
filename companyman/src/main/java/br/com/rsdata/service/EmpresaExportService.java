@@ -4,7 +4,6 @@ import br.com.rsdata.export.ExportFormat;
 import br.com.rsdata.export.MetadadosExportacao;
 import br.com.rsdata.export.TabularExporter;
 import br.com.rsdata.model.Empresa;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,14 +1,12 @@
 package br.com.rsdata.service;
 
+import br.com.rsdata.model.MenuPrincipal;
+import br.com.rsdata.model.SubMenu;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultSubMenu;
-
-import br.com.rsdata.model.MenuPrincipal;
-import br.com.rsdata.model.SubMenu;
 
 
 public class MenuPrincipalService {

@@ -5,7 +5,6 @@ import br.com.rsdata.exception.DuplicateEntityException;
 import br.com.rsdata.exception.EntityNotFoundException;
 import br.com.rsdata.model.RamoAtividade;
 import br.com.rsdata.util.EntityValidator;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -46,7 +45,7 @@ public class RamoAtividadeService {
         if (dao.buscarPorId(id) == null) {
             throw new EntityNotFoundException("Ramo de atividade não encontrado: " + id);
         }
-        
+
         dao.remover(id);
     }
 
