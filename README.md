@@ -1,9 +1,5 @@
 # RSData | CompanyMAN (WiP)
 
-![CI | Automated Tests](https://github.com/lwglg/rsdata-contactman/actions/workflows/automated-tests.yml/badge.svg) ![CI | Docker Images](https://github.com/lwglg/rsdata-contactman/actions/workflows/image-analysis.yml/badge.svg) ![CI | Static Analysis](https://github.com/lwglg/rsdata-contactman/actions/workflows/static-analysis.yml/badge.svg)
-
-
-
 Ferramenta web para gerenciamento de registros de empresas e de seus possíveis ramos de atividades. Projeto inicial na RSData para familiarização com JavaServer Faces e PrimeFaces. O escopo básico está sendo Baseado neste [curso](https://www.youtube.com/watch?v=ezwgBvsd6Ps) da AlgaWorks.
 
 ## TOC
@@ -12,6 +8,7 @@ Ferramenta web para gerenciamento de registros de empresas e de seus possíveis 
 
 - [RSData | CompanyMAN WiP](#rsdata--companyman-wip)
     - [TOC](#toc)
+    - [Status de CI/CD](#status-de-cicd)
     - [O projeto](#o-projeto)
         - [Topologia](#topologia)
         - [Ambientes](#ambientes)
@@ -23,6 +20,12 @@ Ferramenta web para gerenciamento de registros de empresas e de seus possíveis 
     - [O que deseja fazer?](#o-que-deseja-fazer)
 
 <!-- /TOC -->
+
+## Status de CI/CD
+
+- ![CI | Docker Images](https://github.com/lwglg/rsdata-contactman/actions/workflows/image-analysis.yml/badge.svg)
+- ![CI | Automated Tests](https://github.com/lwglg/rsdata-contactman/actions/workflows/test-analysis.yml/badge.svg) 
+- ![CI | Static Analysis](https://github.com/lwglg/rsdata-contactman/actions/workflows/static-analysis.yml/badge.svg)
 
 ## O projeto
 
