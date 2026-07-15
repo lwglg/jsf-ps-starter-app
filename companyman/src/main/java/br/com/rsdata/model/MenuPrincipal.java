@@ -13,7 +13,7 @@ public class MenuPrincipal {
         public SubMenuItemRecord {
             if (titulo == null) throw new NullPointerException("O títuto do item de submenu deve ser informado");
             if (icone == null) throw new NullPointerException("O ícone do item de submenu deve ser informado");
-        }    
+        }
     }
 
     public static record SubMenuRecord(

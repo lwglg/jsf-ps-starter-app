@@ -21,7 +21,7 @@ public enum SubMenu {
     public String getTitulo() {
         return titulo;
     }
-    
+
     public String getIcone() {
         return icone;
     }
