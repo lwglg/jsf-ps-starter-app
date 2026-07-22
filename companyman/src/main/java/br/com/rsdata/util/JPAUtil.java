@@ -3,7 +3,6 @@ package br.com.rsdata.util;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,11 +45,11 @@ public final class JPAUtil {
     private static Map<String, Object> buildOverrides() {
         Map<String, Object> overrides = new HashMap<>();
 
-        String host = env("DB_HOSTNAME", "");
-        String port = env("DB_PORT", "");
-        String name = env("DB_NAME", "");
-        String user = env("DB_USERNAME", "");
-        String password = env("DB_PASSWORD", "");
+        String host = EnvUtil.env("DB_HOSTNAME", "");
+        String port = EnvUtil.env("DB_PORT", "");
+        String name = EnvUtil.env("DB_NAME", "");
+        String user = EnvUtil.env("DB_USERNAME", "");
+        String password = EnvUtil.env("DB_PASSWORD", "");
 
         String url = "jdbc:postgresql://" + host + ":" + port + "/" + name;
 
@@ -68,23 +67,6 @@ public final class JPAUtil {
         overrides.put("hibernate.connection.password", password);
 
         return overrides;
-    }
-
-    /**
-     * Resolve a configuração dando prioridade a system properties (útil em testes,
-     * ex.: System.setProperty("DB_HOST", ...) com Testcontainers) e, na ausência
-     * destas, a variáveis de ambiente (usadas em produção via Docker Compose).
-     */
-    private static String env(String key, String defaultValue) {
-        String fromProperty = System.getProperty(key);
-
-        if (fromProperty != null && !fromProperty.isBlank()) {
-            return fromProperty;
-        }
-
-        String value = System.getenv(key);
-
-        return (value == null || value.isBlank()) ? defaultValue : value;
     }
 
     /**

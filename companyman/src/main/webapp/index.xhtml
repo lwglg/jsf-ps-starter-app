@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
-<h:head>
-    <f:metadata>
-        <f:viewAction action="#{facesContext.externalContext.redirect('empresa/index.xhtml')}"/>
-    </f:metadata>
-    <title>#{sobreSistemaBean.nomeSistema}</title>
-</h:head>
-<h:body>
-    <p>Redirecionando...</p>
-</h:body>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:f="jakarta.faces.core">
+    <h:head>
+        <f:metadata>
+            <f:viewAction action="#{facesContext.externalContext.redirect('empresa/index.xhtml')}" />
+        </f:metadata>
+        <title>#{sobreSistemaBean.empresaNome} | #{sobreSistemaBean.nomeSistema}</title>
+    </h:head>
+    <h:body>
+        <p>Redirecionando...</p>
+    </h:body>
 </html>

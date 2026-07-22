@@ -1,13 +1,15 @@
 package br.com.rsdata.export;
 
+import br.com.rsdata.exception.ExportException;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-
-import br.com.rsdata.exception.ExportException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Escreve um arquivo gerado em memória diretamente na resposta HTTP da
@@ -25,17 +27,38 @@ public final class ExportResponseWriter {
     private ExportResponseWriter() {
     }
 
-    public static void escreverDownload(byte[] conteudo, String nomeArquivo, String contentType) {
+    public static String constroiNomeArquivoFinal(String nomeArquivo, String nomeArquivoFallback, ExportFormat formato) {
+        if (nomeArquivo == null || nomeArquivo.trim().isEmpty()) {
+            nomeArquivo = nomeArquivoFallback;
+        }
+
+        LocalDateTime dataHora = LocalDateTime.of(LocalDate.now(), LocalTime.now());
+
+        DateTimeFormatter formatoSufixoDataHora = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
+
+        String sufixoDataHora = dataHora.format(formatoSufixoDataHora);
+        String nomeArquivoFinal = nomeArquivo +  "_" +  sufixoDataHora + "." + formato.getExtensao();
+
+        return nomeArquivoFinal;
+    }
+
+    public static void escreverDownload(byte[] conteudo, String nomeArquivo, String nomeArquivoFallback, ExportFormat formato) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
 
         try {
+            String nomeArquivoFinal = ExportResponseWriter.constroiNomeArquivoFinal(
+                nomeArquivo,
+                nomeArquivoFallback,
+                formato
+            );
+
             externalContext.responseReset();
-            externalContext.setResponseContentType(contentType);
+            externalContext.setResponseContentType(formato.getContentType());
             externalContext.setResponseCharacterEncoding(StandardCharsets.UTF_8.name());
             externalContext.setResponseContentLength(conteudo.length);
             externalContext.setResponseHeader(
-                "Content-Disposition", "attachment; filename=\"" + nomeArquivo + "\"");
+                "Content-Disposition", "attachment; filename=\"" + nomeArquivoFinal + "\"");
 
             try (OutputStream saida = externalContext.getResponseOutputStream()) {
                 saida.write(conteudo);

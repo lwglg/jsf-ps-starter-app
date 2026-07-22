@@ -1,38 +1,52 @@
 package br.com.rsdata.controller;
 
 import br.com.rsdata.exception.DuplicateEntityException;
-import br.com.rsdata.exception.ExportException;
 import br.com.rsdata.exception.ValidationException;
-import br.com.rsdata.export.ExportFormat;
-import br.com.rsdata.export.ExportResponseWriter;
 import br.com.rsdata.model.RamoAtividade;
-import br.com.rsdata.service.RamoAtividadeExportService;
 import br.com.rsdata.service.RamoAtividadeService;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
-
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Managed bean (Controller) responsável pela tela de gerenciamento de
  * Ramos de Atividade.
+ *
+ * A exportação de dados (CSV/XLS/ODT/PDF) foi convergida para um único
+ * modal compartilhado — ver {@link ExportBean} e
+ * {@code dialogs/exportar-dados/index.xhtml}. Este bean expõe a seleção de
+ * linhas ({@link #selecionados}) e a posição de paginação atual
+ * ({@link #primeiroRegistro}) do {@code p:dataTable} de
+ * {@code ramoAtividade/index.xhtml}, lidas por
+ * {@code br.com.rsdata.servlet.ExportDownloadServlet} (via injeção CDI) para
+ * resolver o escopo de exportação escolhido pelo usuário (todos os
+ * registros, apenas os selecionados, ou apenas a página atual).
  */
 @Named
 @SessionScoped
 public class RamoAtividadeBean implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
+    /** Deve ser mantido igual ao atributo {@code rows} do p:dataTable em ramoAtividade/index.xhtml. */
+    public static final int TAMANHO_PAGINA = 10;
+
     private final RamoAtividadeService service = new RamoAtividadeService();
-    private final RamoAtividadeExportService exportService = new RamoAtividadeExportService();
+
+    private static final Logger logger = LoggerFactory.getLogger(RamoAtividadeBean.class);
 
     private List<RamoAtividade> lista;
-    private RamoAtividade selecionado = new RamoAtividade();
+    private RamoAtividade selecionado;
     private RamoAtividade novoRegistro = new RamoAtividade();
+    private List<RamoAtividade> selecionados = new ArrayList<>();
+    private int primeiroRegistro = 0;
 
     public List<RamoAtividade> getLista() {
         if (lista == null) {
@@ -98,24 +112,50 @@ public class RamoAtividadeBean implements Serializable {
         addMensagem(FacesMessage.SEVERITY_INFO, "Sucesso", "Ramo de atividade removido com sucesso.");
     }
 
-    /**
-     * Exporta a listagem completa de ramos de atividade (não apenas a
-     * página atual da tabela) no formato solicitado, iniciando o download
-     * do arquivo. Deve ser chamado a partir de um componente com
-     * {@code ajax="false"}.
-     */
-    public void exportar(ExportFormat formato) {
-        try {
-            byte[] conteudo = exportService.exportar(getLista(), formato);
-            String nomeArquivo = "ramos-de-atividade." + formato.getExtensao();
-            ExportResponseWriter.escreverDownload(conteudo, nomeArquivo, formato.getContentType());
-        } catch (ExportException e) {
-            addMensagem(FacesMessage.SEVERITY_ERROR, "Erro ao exportar", e.getMessage());
-        }
+    public List<RamoAtividade> getSelecionados() {
+        logger.info("{} ramos de atividade sendo lidos: {}", selecionados.size(), selecionados.toString());
+
+        return selecionados;
     }
 
-    public ExportFormat[] getFormatosExportacao() {
-        return ExportFormat.values();
+    public void setSelecionados(List<RamoAtividade> selecionados) {
+        logger.info("{} ramos de atividade sendo setados: {}", selecionados.size(), selecionados.toString());
+
+        this.selecionados = selecionados;
+    }
+
+    /**
+     * Exposto como getter (e não acesso direto ao campo estático
+     * {@link #TAMANHO_PAGINA}) porque expressões EL só resolvem
+     * propriedades via métodos get/is, nunca campos públicos diretamente.
+     */
+    public int getTamanhoPagina() {
+        return TAMANHO_PAGINA;
+    }
+
+    public int getPrimeiroRegistro() {
+        return primeiroRegistro;
+    }
+
+    public void setPrimeiroRegistro(int primeiroRegistro) {
+        this.primeiroRegistro = primeiroRegistro;
+    }
+
+    /**
+     * Retorna apenas os registros da página atualmente exibida na tabela
+     * (com base em {@link #primeiroRegistro} e {@link #TAMANHO_PAGINA}),
+     * usado pelo escopo de exportação "Somente a página atual".
+     */
+    public List<RamoAtividade> getRegistrosDaPaginaAtual() {
+        List<RamoAtividade> todos = getLista();
+        if (todos.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        int inicio = Math.min(primeiroRegistro, todos.size());
+        int fim = Math.min(inicio + TAMANHO_PAGINA, todos.size());
+
+        return todos.subList(inicio, fim);
     }
 
     private void addMensagem(FacesMessage.Severity severidade, String titulo, String detalhe) {

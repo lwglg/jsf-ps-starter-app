@@ -88,4 +88,6 @@ stateDiagram-v2
 - [Entidades de domínio](./02-entidades-dominio.md)
 - [Casos de uso](./03-casos-de-uso.md)
 - [Sequências](./04-sequencias-principais.md)
-- [Release notes](./05-release-notes.md)
+- [Validação e exportação](./05-validacao-exportacao.md)
+- [Release notes](./06-release-notes.md)
+- [Referência rápida](./07-referencia-rapida.md)

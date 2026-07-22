@@ -5,7 +5,6 @@ import br.com.rsdata.exception.DuplicateEntityException;
 import br.com.rsdata.exception.EntityNotFoundException;
 import br.com.rsdata.model.Empresa;
 import br.com.rsdata.util.EntityValidator;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -20,12 +19,12 @@ public class EmpresaService {
         EntityValidator.validar(empresa);
 
         Empresa existente = dao.buscarPorCnpj(empresa.getCnpj());
-        
+
         if (existente != null) {
             throw new DuplicateEntityException(
                     "Já existe uma empresa cadastrada com o CNPJ '" + empresa.getCnpj() + "'.");
         }
-        
+
         return dao.salvar(empresa);
     }
 
@@ -33,12 +32,12 @@ public class EmpresaService {
         EntityValidator.validar(empresa);
 
         Empresa existente = dao.buscarPorCnpj(empresa.getCnpj());
-        
+
         if (existente != null && !existente.getId().equals(empresa.getId())) {
             throw new DuplicateEntityException(
                     "Já existe uma empresa cadastrada com o CNPJ '" + empresa.getCnpj() + "'.");
         }
-        
+
         return dao.atualizar(empresa);
     }
 
@@ -46,7 +45,7 @@ public class EmpresaService {
         if (dao.buscarPorId(id) == null) {
             throw new EntityNotFoundException("Empresa não encontrada: " + id);
         }
-        
+
         dao.remover(id);
     }
 

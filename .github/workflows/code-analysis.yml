@@ -1,0 +1,54 @@
+name: Análise de código-fonte
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - "feature/*"
+      - "bugfix/*"
+      - "docs/*"
+      - "refactor/*"
+      - "develop"
+      - "master"
+  push:
+    branches:
+      - "feature/*"
+      - "bugfix/*"
+      - "docs/*"
+      - "refactor/*"
+      - "develop"
+      - "master"
+  workflow_dispatch: {}
+
+# Evita execuções concorrentes desnecessárias para o mesmo branch/PR
+concurrency:
+  group: static-analysis-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: companyman
+
+jobs:
+  spotless:
+    name: Formatação/higiene de código-fonte (Spotless)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Verificar formatação (mvn spotless:check)
+        run: mvn -B -ntp spotless:check
+
+      - name: Diff sugerido em caso de falha
+        if: failure()
+        run: |
+          echo "::warning::mvn spotless:check falhou. Rode 'mvn spotless:apply' localmente, dentro de companyman/, e comite as correções."
+          echo "Nenhuma alteração é feita automaticamente por este job -- ele apenas verifica (spotless:check), nunca corrige (spotless:apply)."

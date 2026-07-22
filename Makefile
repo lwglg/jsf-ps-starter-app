@@ -51,6 +51,7 @@ HELP_FUN = \
 		ps \
 		imganalysisci \
 		imganalysisui \
+		volinspect \
 		topology \
 		maven \
 		psql
@@ -94,7 +95,7 @@ listsrvs: ## Lista todos os nomes de serviços declarados no YAML do Docker Comp
 	$(call compose_cmd, $(env), config --services)
 
 build: ## Realiza a build de todas as imagens Docker, ou para um c=<node de serviço> específico, dado um env=<dev | prod> ambiente de infra
-	$(call compose_cmd, $(env), build $(c))
+	$(call compose_cmd, $(env), build --no-cache $(c))
 
 confirm:
 	@( read -p "$(RED)Tem certeza? [y/N]$(RESET): " sure && case "$$sure" in [sSyY]) true;; *) false;; esac )
@@ -103,6 +104,7 @@ clean: confirm ## Realiza a limpeza de todos os dados associados aos contêinere
 	$(call compose_cmd, $(env), down)
 
 destroy: confirm ## Remove todas as imagens, volumes, networks e contêineres não utilizados. Use com cautela!
+	# @./scripts/docker-prune.sh
 	@docker system prune --all --volumes --force
 	@docker volume prune --all --force
 	@docker network prune --force
@@ -143,6 +145,9 @@ imganalysisui: ## Executa a análise de uma imagem Docker, em modo UI, dado uma 
 
 imganalysisci: ## Executa a análise de uma imagem Docker, em modo CI, dado uma img=<imagem Docker>
 	@./scripts/docker-analysis.sh ci $(img)
+
+volinspect: ## Realiza a insoeção dos volumes Docker associados a cada container, independente do ambiente de infra
+	@./scripts/docker-analysis.sh volumes
 
 topology: ## Gera um diagrama dos serviços listados no arquivo YML do Docker Compose
 	@./scripts/generate-topology.sh topology $(env)

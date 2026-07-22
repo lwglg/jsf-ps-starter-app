@@ -1,9 +1,9 @@
 package br.com.rsdata.service;
 
 import br.com.rsdata.export.ExportFormat;
+import br.com.rsdata.export.MetadadosExportacao;
 import br.com.rsdata.export.TabularExporter;
 import br.com.rsdata.model.Empresa;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,29 +17,31 @@ import java.util.Locale;
 public class EmpresaExportService {
 
     private static final String[] CABECALHOS = {
-        "Nome Fantasia",
-        "Razão Social",
-        "CNPJ",
-        "Data de Fundação",
-        "Ramo de Atividade",
-        "Tipo de Empresa",
-        "Faturamento (R$)"
+            "Nome Fantasia",
+            "Razão Social",
+            "CNPJ",
+            "Data de Fundação",
+            "Ramo de Atividade",
+            "Tipo de Empresa",
+            "Faturamento (R$)"
     };
 
     private static final String TITULO_RELATORIO = "Relatório de Empresas";
+    public static final String NOME_RELATORIO_FALLBACK = "relatorio-empresas";
 
     public byte[] exportar(List<Empresa> empresas, ExportFormat formato) {
         List<String[]> linhas = converterParaLinhas(empresas);
+        MetadadosExportacao metadados = MetadadosExportacao.criar(TITULO_RELATORIO, linhas.size());
 
         switch (formato) {
             case CSV:
-                return TabularExporter.paraCsv(CABECALHOS, linhas);
+                return TabularExporter.paraCsv(metadados, CABECALHOS, linhas);
             case XLS:
-                return TabularExporter.paraXls("Empresas", CABECALHOS, linhas);
+                return TabularExporter.paraXls(metadados, "Empresas", CABECALHOS, linhas);
             case ODT:
-                return TabularExporter.paraOdt(TITULO_RELATORIO, CABECALHOS, linhas);
+                return TabularExporter.paraOdt(metadados, CABECALHOS, linhas);
             case PDF:
-                return TabularExporter.paraPdf(TITULO_RELATORIO, CABECALHOS, linhas);
+                return TabularExporter.paraPdf(metadados, CABECALHOS, linhas);
             default:
                 throw new IllegalArgumentException("Formato de exportação não suportado: " + formato);
         }

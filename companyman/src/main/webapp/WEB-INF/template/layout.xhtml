@@ -4,45 +4,65 @@
     xmlns:h="jakarta.faces.html"
     xmlns:f="jakarta.faces.core"
     xmlns:ui="jakarta.faces.facelets"
-    xmlns:p="primefaces">
-<h:head>
-    <title>#{sobreSistemaBean.nomeSistema}</title>
-    <h:outputStylesheet library="css" name="app.css"/>
-</h:head>
-<h:body>
-    <h:form id="menuForm">
-        <p:menubar>
-            <p:menuitem
-                value="Inicial"
-                outcome="/index.xhtml"
-                icon="pi pi-home"/>
-            <p:menuitem
-                value="Empresas"
-                outcome="/empresa/index.xhtml"
-                icon="pi pi-building"/>
-            <p:menuitem
-                value="Ramos de Atividade"
-                outcome="/ramoAtividade/index.xhtml"
-                icon="pi pi-sitemap"/>
-            <p:menuitem
-                value="Sobre o Sistema"
-                icon="pi pi-info-circle"
-                onclick="PF('dlgSobreSistema').show(); return false;"/>
-        </p:menubar>
-    </h:form>
+    xmlns:p="primefaces"
+>
+    <h:head>
+        <title>#{sobreSistemaBean.empresaNome} | #{sobreSistemaBean.nomeSistema}</title>
+        <h:outputStylesheet library="css" name="app.css" />
+    </h:head>
+    <h:body>
+        <div class="app-layout">
+            <!-- Sidebar colapsável e responsiva: no desktop, o botão de alternância
+             encolhe/expande a largura (o conteúdo à direita se ajusta); em
+             telas estreitas (<=768px), ela vira um painel sobreposto
+             ("off-canvas"), com um backdrop para fechar ao clicar fora. -->
+            <div id="appSidebar" class="app-sidebar">
+                <a
+                    href="#{sobreSistemaBean.empresaUrl}"
+                    target="_blank"
+                    class="sidebar-logo"
+                    title="Visitar site: #{sobreSistemaBean.empresaNome}"
+                >
+                    <h:graphicImage
+                        library="img"
+                        name="#{sobreSistemaBean.logoPath}"
+                        alt="Logo #{sobreSistemaBean.empresaNome}"
+                    />
+                    <span class="sidebar-logo-text">#{sobreSistemaBean.nomeSistema}</span>
+                </a>
 
-    <div class="content-wrapper">
-        <ui:insert name="content">Conteúdo</ui:insert>
-    </div>
+                <h:form id="menuForm">
+                    <p:menu model="#{menuPrincipalBean.model}" />
+                </h:form>
+            </div>
 
-    <!-- Ponto de composição dedicado para dialogs/modais globais, separado do
+            <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+            <div class="app-main">
+                <div class="app-topbar">
+                    <button type="button" id="sidebarToggle" class="sidebar-toggle-btn" aria-label="Alternar menu">
+                        <span id="sidebarToggleIcon" class="pi pi-chevron-left" aria-hidden="true" />
+                    </button>
+                </div>
+
+                <div class="content-wrapper">
+                    <ui:insert name="content">Conteúdo</ui:insert>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ponto de composição dedicado para dialogs/modais globais, separado do
          conteúdo principal da página (ui:insert name="content"), para que a
          abertura de um modal nunca substitua o que está sendo exibido.
-         Por padrão, inclui o modal "Sobre o Sistema"; páginas podem
-         sobrescrever com <ui:define name="dialog"> se precisarem de outro
-         conjunto de modais. -->
-    <ui:insert name="dialog">
-        <ui:include src="/dialogs/sobre-sistema/index.xhtml"/>
-    </ui:insert>
-</h:body>
+         Por padrão, inclui os modais "Sobre o sistema" e "Exportar dados"
+         (este último convergindo a exportação de Empresas e de Ramos de
+         Atividade em um único modal); páginas podem sobrescrever com
+         <ui:define name="dialog"> se precisarem de outro conjunto de modais. -->
+        <ui:insert name="dialog">
+            <ui:include src="/dialogs/sobre-sistema/index.xhtml" />
+            <ui:include src="/dialogs/exportar-dados/index.xhtml" />
+        </ui:insert>
+
+        <h:outputScript library="js" name="menu-sidebar.js" />
+    </h:body>
 </html>

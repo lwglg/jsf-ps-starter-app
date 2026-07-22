@@ -4,141 +4,135 @@
     xmlns:f="jakarta.faces.core"
     xmlns:ui="jakarta.faces.facelets"
     xmlns:p="primefaces"
-    template="/WEB-INF/template/layout.xhtml">
+    template="/WEB-INF/template/layout.xhtml"
+>
     <ui:define name="content">
         <h:form id="form">
-            <p:growl id="growl" showDetail="true"/>
+            <p:growl id="growl" showDetail="true" />
 
             <p:toolbar>
                 <p:toolbarGroup>
                     <p:commandButton
-                        value="Novo Ramo de Atividade"
+                        value="Novo ramo de atividade"
                         icon="pi pi-plus"
                         actionListener="#{ramoAtividadeBean.prepararNovo()}"
                         oncomplete="PF('dlgNovo').show()"
-                        update=":formNovo:dlgNovoContent"/>
+                        update=":formNovo:dlgNovoContent"
+                    />
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:commandButton
+                        value="Exportar dados"
+                        icon="pi pi-download"
+                        onclick="PF('dlgExportarDados').show(); return false;"
+                        type="button"
+                    />
                 </p:toolbarGroup>
             </p:toolbar>
-            
-            <p:toolbarGroup align="right">
-                <span style="margin-right:8px; color:#6b7280;">Exportar:</span>
-                <p:commandButton
-                    value="CSV"
-                    icon="pi pi-file"
-                    ajax="false"
-                    actionListener="#{ramoAtividadeBean.exportar('CSV')}"/>
-                <p:commandButton
-                    value="XLS"
-                    icon="pi pi-file-excel"
-                    ajax="false"
-                    actionListener="#{ramoAtividadeBean.exportar('XLS')}"/>
-                <p:commandButton
-                    value="ODT"
-                    icon="pi pi-file-word"
-                    ajax="false"
-                    actionListener="#{ramoAtividadeBean.exportar('ODT')}"/>
-                <p:commandButton
-                    value="PDF"
-                    icon="pi pi-file-pdf"
-                    ajax="false"
-                    actionListener="#{ramoAtividadeBean.exportar('PDF')}"/>
-            </p:toolbarGroup>
 
             <p:dataTable
                 id="tabela"
                 var="ramo"
                 value="#{ramoAtividadeBean.lista}"
                 paginator="true"
-                rows="10"
+                rows="#{ramoAtividadeBean.tamanhoPagina}"
+                first="#{ramoAtividadeBean.primeiroRegistro}"
+                selection="#{ramoAtividadeBean.selecionados}"
+                rowKey="#{ramo.id}"
                 emptyMessage="Nenhum ramo de atividade cadastrado."
-                style="margin-top:15px">
+                style="margin-top: 15px"
+            >
+                <!-- Sem estes p:ajax, os checkboxes de seleção mudam apenas no
+                     widget do lado cliente e NUNCA são sincronizados com
+                     ramoAtividadeBean.selecionados no servidor, já que a
+                     exportação não faz postback deste formulário (é acionada
+                     via JavaScript/servlet, fora do ciclo do JSF). -->
+                <p:ajax event="rowSelectCheckbox" update="@none" />
+                <p:ajax event="rowUnselectCheckbox" update="@none" />
+                <p:ajax event="toggleSelect" update="@none" />
+                <p:column selectionMode="multiple" style="width: 3rem; text-align: center" />
                 <p:column headerText="Descrição">
-                    <h:outputText value="#{ramo.descricao}"/>
+                    <h:outputText value="#{ramo.descricao}" />
                 </p:column>
-                <p:column headerText="Ações" style="width:140px; text-align:center">
+                <p:column headerText="Ações" style="width: 140px; text-align: center">
                     <p:commandButton
                         icon="pi pi-pencil"
                         styleClass="rounded-button"
                         actionListener="#{ramoAtividadeBean.prepararEdicao(ramo)}"
                         oncomplete="PF('dlgEditar').show()"
-                        update=":formEditar:dlgEditarContent"/>
+                        update=":formEditar:dlgEditarContent"
+                    />
                     <p:commandButton
                         icon="pi pi-trash"
                         styleClass="rounded-button ui-button-danger"
                         actionListener="#{ramoAtividadeBean.remover(ramo.id)}"
-                        update=":form:tabela :form:growl">
+                        update=":form:tabela :form:growl"
+                    >
                         <p:confirm
                             header="Confirmação"
                             message="Deseja realmente remover este ramo de atividade?"
-                            icon="pi pi-exclamation-triangle"/>
+                            icon="pi pi-exclamation-triangle"
+                        />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
         </h:form>
 
-        <p:dialog
-            header="Novo Ramo de Atividade"
-            widgetVar="dlgNovo"
-            modal="true"
-            width="420"
-            showEffect="fade">
+        <p:dialog header="Novo ramo de atividade" widgetVar="dlgNovo" modal="true" width="420" showEffect="fade">
             <h:form id="formNovo">
-                <h:panelGroup
-                    id="dlgNovoContent"
-                    layout="block">
-                    <p:outputLabel for="descricao" value="Descrição *"/>
+                <h:panelGroup id="dlgNovoContent" layout="block">
+                    <p:outputLabel for="descricao" value="Descrição *" />
                     <p:inputText
                         id="descricao"
                         value="#{ramoAtividadeBean.novoRegistro.descricao}"
                         required="true"
                         requiredMessage="A descrição é obrigatória."
                         maxlength="150"
-                        style="width:100%"/>
-                    <p:message id="descricaoMsg" for="descricao" display="text"/>
+                        style="width: 100%"
+                    />
+                    <p:message id="descricaoMsg" for="descricao" display="text" />
 
                     <p:commandButton
                         value="Salvar"
                         icon="pi pi-check"
-                        style="margin-top:15px"
+                        style="margin-top: 15px"
                         actionListener="#{ramoAtividadeBean.salvar()}"
                         oncomplete="if (args &amp;&amp; !args.validationFailed) { PF('dlgNovo').hide(); }"
-                        update=":form:tabela :form:growl descricao descricaoMsg"/>
+                        update=":form:tabela :form:growl descricao descricaoMsg"
+                    />
                 </h:panelGroup>
             </h:form>
         </p:dialog>
 
-        <p:dialog
-            header="Editar Ramo de Atividade"
-            widgetVar="dlgEditar"
-            modal="true"
-            width="420"
-            showEffect="fade">
+        <p:dialog header="Editar ramo de atividade" widgetVar="dlgEditar" modal="true" width="420" showEffect="fade">
             <h:form id="formEditar">
                 <h:panelGroup id="dlgEditarContent" layout="block">
-                    <p:outputLabel for="descricaoEdit" value="Descrição *"/>
+                    <p:outputLabel for="descricaoEdit" value="Descrição *" />
                     <p:inputText
                         id="descricaoEdit"
                         value="#{ramoAtividadeBean.selecionado.descricao}"
                         required="true"
                         requiredMessage="A descrição é obrigatória."
                         maxlength="150"
-                        style="width:100%"/>
-                    <p:message id="descricaoEditMsg" for="descricaoEdit" display="text"/>
+                        style="width: 100%"
+                    />
+                    <p:message id="descricaoEditMsg" for="descricaoEdit" display="text" />
 
                     <p:commandButton
                         value="Atualizar"
                         icon="pi pi-check"
-                        style="margin-top:15px"
+                        style="margin-top: 15px"
                         actionListener="#{ramoAtividadeBean.atualizar()}"
                         oncomplete="if (args &amp;&amp; !args.validationFailed) { PF('dlgEditar').hide(); }"
-                        update=":form:tabela :form:growl descricaoEdit descricaoEditMsg"/>
+                        update=":form:tabela :form:growl descricaoEdit descricaoEditMsg"
+                    />
                 </h:panelGroup>
+
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                </p:confirmDialog>
             </h:form>
         </p:dialog>
-
-        <p:confirmDialog global="true">
-            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
-            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"/>
-        </p:confirmDialog>
     </ui:define>
 </ui:composition>

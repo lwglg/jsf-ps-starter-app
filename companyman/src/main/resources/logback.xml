@@ -1,0 +1,12 @@
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%level] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.rsdata.view.MainMenuBean" level="DEBUG"/>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

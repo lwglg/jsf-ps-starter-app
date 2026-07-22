@@ -113,13 +113,16 @@ erDiagram
 
 ## Camadas que operam sobre o domínio
 
-| Camada     | Classe                                                       | Responsabilidade                                                  |
-|------------|--------------------------------------------------------------|-------------------------------------------------------------------|
-| Model      | `Empresa`, `RamoAtividade`, `TipoEmpresa`                    | Representação das entidades e do objeto de valor                  |
-| DAO        | `EmpresaDAO`, `RamoAtividadeDAO`, `GenericDAO(Impl)`         | Acesso a dados via `EntityManager` (JPA/Hibernate)                |
-| Service    | `EmpresaService`, `RamoAtividadeService`                     | Regras de negócio (unicidade, existência) antes de delegar ao DAO |
-| Controller | `EmpresaBean`, `RamoAtividadeBean`, `RamoAtividadeConverter` | Managed beans CDI que conectam a View às regras de negócio        |
-| Exception  | `DuplicateEntityException`, `EntityNotFoundException`        | Sinalizam violações das invariantes de domínio                    |
+| Camada       | Classe                                    | Responsabilidade                                            |
+|--------------|--------------------------------------------|---------------------------------------------------------------|
+| Model        | `Empresa`, `MenuPrincipal`, `RamoAtividade`, `SubMenu`, `TipoEmpresa` | Representação das entidades e do objeto de valor              |
+| DAO          | `EmpresaDAO`, `RamoAtividadeDAO`, `GenericDAO`, `GenericDAO(Impl)` | Acesso a dados via `EntityManager` (JPA/Hibernate)     |
+| Service      | `EmpresaService`, `RamoAtividadeService`, `EmpresaExportService`, `RamoAtividadeExportService`  | Regras de negócio (unicidade, existência) antes de delegar ao DAO |
+| Controller   | `EmpresaBean`, `RamoAtividadeBean`, `RamoAtividadeConverter`, `MenuBean` | Managed beans CDI que conectam a View às regras de negócio (`MenuBean` constrói o `MenuModel` da sidebar programaticamente) |
+| Export       | `EscopoExportacao`, `ExportFormat`, `ExportResponseWriter`, `MetadadosExportacao`, `LogoMonogramGenerator`, `ÒrigemExportacao`, `TabularExporter`  | Geração dos arquivos CSV/XLS/ODT/PDF, servidos ao navegador para o "Salvar Como" nativo |
+| Exception    | `DuplicateEntityException`, `EntityNotFoundException`, `ExportException`, `ValidationException` | Sinalizam violações das invariantes de domínio       |
+| Servlet | `ExportDownloadServlet` | Serviets para tratamento de requisições HTTP entre a aplicação JSF e os respectivos clientes |
+
 
 ## Limitações conhecidas do modelo atual
 
@@ -135,4 +138,6 @@ erDiagram
 - [Regras de negócio](./01-regras-de-negocio.md)
 - [Casos de uso](./03-casos-de-uso.md)
 - [Sequências principais](./04-sequencias-principais.md)
-- [Release notes](./05-release-notes.md)
+- [Validação e exportação](./05-validacao-exportacao.md)
+- [Release notes](./06-release-notes.md)
+- [Referência rápida](./07-referencia-rapida.md)

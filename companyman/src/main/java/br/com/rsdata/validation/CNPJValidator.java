@@ -9,7 +9,7 @@ import jakarta.validation.ConstraintValidatorContext;
  * repetidos (ex.: "00.000.000/0000-00", "11.111.111/1111-11"), que são
  * numericamente "válidas" pelo algoritmo mas nunca correspondem a um CNPJ
  * real emitido pela Receita Federal.
- * 
+ *
  * Baseado em: https://www.macoratti.net/alg_cnpj.htm
  */
 public class CNPJValidator implements ConstraintValidator<CNPJ, String> {
@@ -44,7 +44,7 @@ public class CNPJValidator implements ConstraintValidator<CNPJ, String> {
 
     private boolean todosDigitosIguais(String digitos) {
         char primeiro = digitos.charAt(0);
-        
+
         for (int i = 1; i < digitos.length(); i++) {
             if (digitos.charAt(i) != primeiro) {
                 return false;
@@ -55,13 +55,13 @@ public class CNPJValidator implements ConstraintValidator<CNPJ, String> {
 
     private int calcularDigitoVerificador(String base, int[] pesos) {
         int soma = 0;
-        
+
         for (int i = 0; i < base.length(); i++) {
             soma += Character.getNumericValue(base.charAt(i)) * pesos[i];
         }
-        
+
         int resto = soma % 11;
-        
+
         return (resto < 2) ? 0 : 11 - resto;
     }
 }

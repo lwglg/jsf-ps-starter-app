@@ -1,4 +1,4 @@
-name: Testes (Unitários e Integração)
+name: Testes unitários e de integração
 
 on:
   pull_request:
